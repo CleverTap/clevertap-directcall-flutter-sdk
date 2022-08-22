@@ -18,12 +18,4 @@ void main() {
   test('$MethodChannelClevertapDirectcallFlutter is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelClevertapDirectcallFlutter>());
   });
-
-  test('getPlatformVersion', () async {
-    ClevertapDirectcallFlutter clevertapDirectcallFlutterPlugin = ClevertapDirectcallFlutter();
-    MockClevertapDirectcallFlutterPlatform fakePlatform = MockClevertapDirectcallFlutterPlatform();
-    ClevertapDirectcallFlutterPlatform.instance = fakePlatform;
-  
-    expect(await clevertapDirectcallFlutterPlugin.getPlatformVersion(), '42');
-  });
 }

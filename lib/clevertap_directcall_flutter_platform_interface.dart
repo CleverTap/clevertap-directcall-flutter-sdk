@@ -25,6 +25,10 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> init(Map<String, dynamic> initProperties,
-      DirectCallDidInitializeHandler initializeHandler);
+  ///Initializes the Direct Call SDK
+  ///
+  ///[initProperties] - configuration for initialization
+  ///[initHandler]    - to get the initialization update(i.e. success/failure)
+  Future<void> init(
+      Map<String, dynamic> initProperties, DirectCallInitHandler initHandler);
 }

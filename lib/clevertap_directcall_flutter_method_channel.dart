@@ -19,22 +19,29 @@ class MethodChannelClevertapDirectcallFlutter
     _methodChannel.setMethodCallHandler(_platformCallHandler);
   }
 
+  ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
     if (kDebugMode) {
-      print("_platformCallHandler call ${call.method} ${call.arguments}");
+      print(
+          "_platformCallHandler called: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
     }
 
     switch (call.method) {
       case "onDirectCallDidInitialize":
-        Map<dynamic, dynamic> args = call.arguments;
-        directCallInitializationHandler(args.cast<String, dynamic>());
+        Map<String, dynamic> args = call.arguments;
+        directCallInitializationHandler(args);
         break;
     }
   }
 
+  ///Initializes the Direct Call SDK
+  ///
+  ///[initProperties] - configuration for initialization
+  ///[initHandler]    - to get the initialization update(i.e. success/failure)
   @override
   Future<void> init(Map<String, dynamic> initProperties,
-      DirectCallDidInitializeHandler initializeHandler) async {
+      DirectCallInitHandler initHandler) async {
+    directCallInitializationHandler = initHandler;
     _methodChannel
         .invokeMethod<String>('init', {'initOptions': initProperties});
   }

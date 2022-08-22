@@ -1,6 +1,7 @@
 package com.example.clevertap_directcall_flutter
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.exception.InitException
@@ -15,12 +16,13 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.HashMap
 
 
 /** ClevertapDirectcallFlutterPlugin */
 class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
     DirectCallAndroidPlatformInterface {
-    /// The MethodChannel that will the communication between Flutter and native Android
+    /// The MethodChannel that will establish the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
@@ -40,6 +42,9 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context);
     }
 
+    /**
+     * Called when a method-call is invoked from flutterPlugin
+     */
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         if (call.method == "init") {
             initDirectCallSdk(call, result)
@@ -57,13 +62,12 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
         val initOptions = call.argument<Map<String, Any>>("initOptions")
 
         try {
-            val initJson = initOptions?.let {JSONObject(initOptions["initJson"] as String) }
+            val initJson = initOptions?.let { JSONObject(initOptions["initJson"] as String) }
             val allowPersistSocketConnection =
                 initOptions?.getOrElse("allowPersistSocketConnection") { false } as Boolean
 
             val directCallInitBuilder =
                 DirectCallInitOptions.Builder(initJson, allowPersistSocketConnection)
-                    .enableReadPhoneState(true)
                     .build()
 
             DirectCallAPI.getInstance()
@@ -73,19 +77,16 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
                     cleverTapAPI,
                     object : DirectCallInitResponse {
                         override fun onSuccess() {
-                            Toast.makeText(
-                                context,
-                                "Direct Call SDK Initialized!",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            channel.invokeMethod("onDirectCallDidInitialize", null)
                         }
 
                         override fun onFailure(initException: InitException) {
-                            Toast.makeText(
-                                context,
-                                "DC Init failed: " + initException.errorCode + "=" + initException.message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            val errorMap = HashMap<String, Any>()
+                            errorMap["errorCode"] = initException.errorCode
+                            errorMap["errorMessage"] = initException.message!!
+                            errorMap["errorDescription"] = initException.explanation
+
+                            channel.invokeMethod("onDirectCallDidInitialize", errorMap)
                         }
                     })
         } catch (e: Exception) {
@@ -93,5 +94,4 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
             //TODO : add error reporting here
         }
     }
-
 }
