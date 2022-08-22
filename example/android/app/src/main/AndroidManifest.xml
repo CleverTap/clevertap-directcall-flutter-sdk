@@ -2,7 +2,7 @@
     package="com.example.clevertap_directcall_flutter_example">
    <application
         android:label="clevertap_directcall_flutter_example"
-        android:name="${applicationName}"
+        android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -30,5 +30,15 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+       <meta-data
+           android:name="CLEVERTAP_ACCOUNT_ID"
+           android:value="679-8Z7-W66Z"/>
+       <meta-data
+           android:name="CLEVERTAP_TOKEN"
+           android:value="a1b-ca6"/>
+       <meta-data
+           android:name="CLEVERTAP_REGION"
+           android:value="sk1"/>
     </application>
 </manifest>
