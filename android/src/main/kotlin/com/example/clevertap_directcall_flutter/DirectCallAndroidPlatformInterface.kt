@@ -7,4 +7,6 @@ import io.flutter.plugin.common.MethodChannel
 
 interface DirectCallAndroidPlatformInterface {
     fun initDirectCallSdk(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
+
+    fun initiateVoipCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
 }

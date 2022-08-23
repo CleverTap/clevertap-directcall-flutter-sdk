@@ -1,7 +1,6 @@
-import 'clevertap_directcall_flutter_platform_interface.dart';
+import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 
-typedef DirectCallInitHandler = void Function(
-    Map<String, dynamic>? directCallInitError);
+import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Direct Call Native SDKs(Android/iOS)
 class ClevertapDirectcallFlutter {
@@ -14,5 +13,16 @@ class ClevertapDirectcallFlutter {
       required DirectCallInitHandler initHandler}) {
     return ClevertapDirectcallFlutterPlatform.instance
         .init(initProperties, initHandler);
+  }
+
+  ///Initiates a VoIP call
+  ///
+  ///[callProperties]  - configuration for a VoIP call
+  ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
+  Future<void> call(
+      {required Map<String, dynamic> callProperties,
+      required DirectCallVoIPCallHandler voIPCallHandler}) {
+    return ClevertapDirectcallFlutterPlatform.instance
+        .call(callProperties, voIPCallHandler);
   }
 }

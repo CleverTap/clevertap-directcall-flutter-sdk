@@ -1,12 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
-import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
 
 import 'constants.dart';
 
@@ -36,9 +34,19 @@ class _MyAppState extends State<MyApp> {
     _clevertapDirectcallFlutterPlugin = ClevertapDirectcallFlutter();
   }
 
-  void directCallInitHandler(Map<String, dynamic>? map) {
+  void directCallInitHandler(Map<String, dynamic>? directCallInitError) {
     if (kDebugMode) {
-      print("directCallInitHandler called = ${map.toString()}");
+      print("directCallInitHandler called = ${directCallInitError.toString()}");
+    }
+    if (directCallInitError != null) {
+      initiateVoIPCall();
+    }
+  }
+
+  void directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
+    if (kDebugMode) {
+      print(
+          "directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
     }
   }
 
@@ -82,5 +90,22 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void initiateVoIPCall() {
+    const callOptions = {
+      keyInitiatorImage: null,
+      keyReceiverCuid: null,
+    };
+
+    var callProperties = {
+      keyReceiverCuid: "ct_receiver",
+      keyCallContext: "test call",
+      keyCallOptions: jsonEncode(callOptions) // <--JSON String
+    };
+
+    _clevertapDirectcallFlutterPlugin.call(
+        callProperties: callProperties,
+        voIPCallHandler: directCallVoIPCallHandler);
   }
 }

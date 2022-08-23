@@ -1,11 +1,10 @@
+import 'package:clevertap_directcall_flutter/src/constants.dart';
+import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
+import 'package:clevertap_directcall_flutter/src/directcall_method_call_names.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'clevertap_directcall_flutter.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
-
-typedef DirectCallInitializationHandler = void Function(
-    Map<String, dynamic>? mapList);
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
 class MethodChannelClevertapDirectcallFlutter
@@ -13,7 +12,8 @@ class MethodChannelClevertapDirectcallFlutter
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('clevertap_directcall_flutter');
 
-  late DirectCallInitializationHandler directCallInitializationHandler;
+  late DirectCallInitHandler initHandler;
+  late DirectCallVoIPCallHandler voIPCallHandler;
 
   MethodChannelClevertapDirectcallFlutter() {
     _methodChannel.setMethodCallHandler(_platformCallHandler);
@@ -27,13 +27,13 @@ class MethodChannelClevertapDirectcallFlutter
     }
 
     switch (call.method) {
-      case "onDirectCallDidInitialize":
-        try {
-          Map<dynamic, dynamic>? args = call.arguments;
-          directCallInitializationHandler(args?.cast<String, dynamic>());
-        } catch (e) {
-          print(e);
-        }
+      case DCMethodCall.onDirectCallDidInitialize:
+        Map<dynamic, dynamic>? args = call.arguments;
+        initHandler(args?.cast<String, dynamic>());
+        break;
+      case DCMethodCall.onDirectCallDidVoIPCallInitiate:
+        Map<dynamic, dynamic>? args = call.arguments;
+        voIPCallHandler(args?.cast<String, dynamic>());
         break;
     }
   }
@@ -45,8 +45,16 @@ class MethodChannelClevertapDirectcallFlutter
   @override
   Future<void> init(Map<String, dynamic> initProperties,
       DirectCallInitHandler initHandler) async {
-    directCallInitializationHandler = initHandler;
-    _methodChannel
-        .invokeMethod<String>('init', {'initProperties': initProperties});
+    this.initHandler = initHandler;
+    _methodChannel.invokeMethod<String>(
+        DCMethodCall.init, {argInitProperties: initProperties});
+  }
+
+  @override
+  Future<void> call(Map<String, dynamic> callProperties,
+      DirectCallVoIPCallHandler voIPCallHandler) async {
+    this.voIPCallHandler = voIPCallHandler;
+    _methodChannel.invokeMethod<String>(
+        DCMethodCall.call, {argCallProperties: callProperties});
   }
 }
