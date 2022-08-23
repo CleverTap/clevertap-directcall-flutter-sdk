@@ -3,5 +3,5 @@ const String dcApiKey = "9dcced09dae16c5e3606c22346d92361b77efdb360425913850bea4
 const String keyAccountId = "accountId";
 const String keyApiKey = "apikey";
 const String keyCuid = "cuid";
-const String keyInitJson = "initJson";
+const String keyInitOptions = "initOptions";
 const String keyAllowPersistSocketConnection = "allowPersistSocketConnection";

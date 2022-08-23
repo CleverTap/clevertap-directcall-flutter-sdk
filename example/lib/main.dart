@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -36,11 +37,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void directCallInitHandler(Map<String, dynamic>? map) {
-    print("directCallDidInitialize called = ${map.toString()}");
-
-    setState(() {
-      print("directCallDidInitialize called = ${map.toString()}");
-    });
+    if (kDebugMode) {
+      print("directCallInitHandler called = ${map.toString()}");
+    }
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -48,19 +47,19 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      const initJson = {
+      const initOptions = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
-        keyCuid: "clevertap_dev"
+        keyCuid: "clevertap@dev"
       };
 
-      var initOptions = {
-        keyInitJson: jsonEncode(initJson), // <--JSON String
+      var initProperties = {
+        keyInitOptions: jsonEncode(initOptions), // <--JSON String
         keyAllowPersistSocketConnection: true
       };
 
       _clevertapDirectcallFlutterPlugin.init(
-          initProperties: initOptions, initHandler: directCallInitHandler);
+          initProperties: initProperties, initHandler: directCallInitHandler);
     } on PlatformException {
       _directCallInitStatus = 'Failed to initialize the Direct Call SDK.';
     }

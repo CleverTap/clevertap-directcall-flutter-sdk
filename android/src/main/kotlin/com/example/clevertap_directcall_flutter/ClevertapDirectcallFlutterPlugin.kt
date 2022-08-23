@@ -59,12 +59,13 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
     }
 
     override fun initDirectCallSdk(call: MethodCall, result: Result) {
-        val initOptions = call.argument<Map<String, Any>>("initOptions")
+        val initProperties = call.argument<Map<String, Any>>("initProperties")
 
         try {
-            val initJson = initOptions?.let { JSONObject(initOptions["initJson"] as String) }
+            val initJson =
+                initProperties?.let { JSONObject(initProperties["initOptions"] as String) }
             val allowPersistSocketConnection =
-                initOptions?.getOrElse("allowPersistSocketConnection") { false } as Boolean
+                initProperties?.getOrElse("allowPersistSocketConnection") { false } as Boolean
 
             val directCallInitBuilder =
                 DirectCallInitOptions.Builder(initJson, allowPersistSocketConnection)

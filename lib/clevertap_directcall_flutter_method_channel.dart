@@ -5,7 +5,7 @@ import 'clevertap_directcall_flutter.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 typedef DirectCallInitializationHandler = void Function(
-    Map<String, dynamic> mapList);
+    Map<String, dynamic>? mapList);
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
 class MethodChannelClevertapDirectcallFlutter
@@ -28,8 +28,12 @@ class MethodChannelClevertapDirectcallFlutter
 
     switch (call.method) {
       case "onDirectCallDidInitialize":
-        Map<String, dynamic> args = call.arguments;
-        directCallInitializationHandler(args);
+        try {
+          Map<dynamic, dynamic>? args = call.arguments;
+          directCallInitializationHandler(args?.cast<String, dynamic>());
+        } catch (e) {
+          print(e);
+        }
         break;
     }
   }
@@ -43,6 +47,6 @@ class MethodChannelClevertapDirectcallFlutter
       DirectCallInitHandler initHandler) async {
     directCallInitializationHandler = initHandler;
     _methodChannel
-        .invokeMethod<String>('init', {'initOptions': initProperties});
+        .invokeMethod<String>('init', {'initProperties': initProperties});
   }
 }
