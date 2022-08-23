@@ -36,9 +36,9 @@ class _MyAppState extends State<MyApp> {
 
   void directCallInitHandler(Map<String, dynamic>? directCallInitError) {
     if (kDebugMode) {
-      print("directCallInitHandler called = ${directCallInitError.toString()}");
+      print("CleverTap:DirectCall: directCallInitHandler called = ${directCallInitError.toString()}");
     }
-    if (directCallInitError != null) {
+    if (directCallInitError == null) {
       initiateVoIPCall();
     }
   }
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
   void directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
     if (kDebugMode) {
       print(
-          "directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
+          "CleverTap:DirectCall: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
     }
   }
 
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       const initOptions = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
-        keyCuid: "clevertap@dev"
+        keyCuid: "clevertap_dev"
       };
 
       var initProperties = {
