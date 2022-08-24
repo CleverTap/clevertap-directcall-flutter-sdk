@@ -12,7 +12,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE)
         DirectCallAPI.setDebugLevel(DirectCallAPI.DCLogLevel.VERBOSE)
-        CleverTapAPI.setNotificationHandler(DirectCallNotificationHandler())
+        CleverTapAPI.setDirectCallNotificationHandler(DirectCallNotificationHandler())
         ActivityLifecycleCallback.register(this)
         super.onCreate()
     }
