@@ -48,4 +48,7 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
 
   ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
   Future<bool> isEnabled();
+
+  ///Ends the active call, if any.
+  Future<void> hangUpCall();
 }

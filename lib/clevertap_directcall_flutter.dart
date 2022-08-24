@@ -9,8 +9,9 @@ class ClevertapDirectcallFlutter {
   ///
   ///[initProperties] - configuration for initialization
   ///[initHandler]        - to get the initialization update(i.e. success/failure)
-  Future<void> init({required Map<String, dynamic> initProperties,
-    required DirectCallInitHandler initHandler}) {
+  Future<void> init(
+      {required Map<String, dynamic> initProperties,
+      required DirectCallInitHandler initHandler}) {
     return ClevertapDirectcallFlutterPlatform.instance
         .init(initProperties, initHandler);
   }
@@ -19,8 +20,9 @@ class ClevertapDirectcallFlutter {
   ///
   ///[callProperties]  - configuration for a VoIP call
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
-  Future<void> call({required Map<String, dynamic> callProperties,
-    required DirectCallVoIPCallHandler voIPCallHandler}) {
+  Future<void> call(
+      {required Map<String, dynamic> callProperties,
+      required DirectCallVoIPCallHandler voIPCallHandler}) {
     return ClevertapDirectcallFlutterPlatform.instance
         .call(callProperties, voIPCallHandler);
   }
@@ -35,7 +37,12 @@ class ClevertapDirectcallFlutter {
   }
 
   ///Logs out the user from the Direct Call SDK session
-  Future<bool> isEnabled() {
+  Future<bool?> isEnabled() {
     return ClevertapDirectcallFlutterPlatform.instance.isEnabled();
+  }
+
+  ///Ends the active call, if any.
+  Future<void> hangUpCall() {
+    return ClevertapDirectcallFlutterPlatform.instance.hangUpCall();
   }
 }

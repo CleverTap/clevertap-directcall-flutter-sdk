@@ -17,6 +17,7 @@ import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_OPTIONS
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.CALL
+import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.HANG_UP_CALL
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.INIT
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.IS_ENABLED
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.LOGOUT
@@ -59,6 +60,10 @@ class DirectcallFlutterAndroidPlugin :
             }
             IS_ENABLED -> {
                 result.success(isDirectCallSdkEnabled())
+            }
+            HANG_UP_CALL -> {
+                hangUpCall()
+                result.success(null)
             }
             else -> result.notImplemented()
         }
@@ -142,6 +147,11 @@ class DirectcallFlutterAndroidPlugin :
     //Checks and returns the state of Direct Call SDK services(i.e. call initiation or reception) are enabled or not
     override fun isDirectCallSdkEnabled(): Boolean {
         return DirectCallAPI.getInstance().isEnabled
+    }
+
+    //Ends the active call, if any.
+    override fun hangUpCall() {
+        DirectCallAPI.getInstance().callController?.endCall()
     }
 
     //Handles a request to set up an event stream.

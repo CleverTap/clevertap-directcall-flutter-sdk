@@ -6,6 +6,7 @@ object DCMethodCallNames {
     const val CALL = "call"
     const val LOGOUT = "logout"
     const val IS_ENABLED = "isEnabled"
+    const val HANG_UP_CALL = "hangUpCall"
 
     //Platform to Flutter
     const val ON_DIRECT_CALL_DID_INITIALIZE = "onDirectCallDidInitialize"

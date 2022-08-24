@@ -57,10 +57,10 @@ class MethodChannelClevertapDirectcallFlutter
   ///[initProperties] - configuration for initialization
   ///[initHandler]    - to get the initialization update(i.e. success/failure)
   @override
-  Future<void> init(Map<String, dynamic> initProperties,
-      DirectCallInitHandler initHandler) async {
+  Future<void> init(
+      Map<String, dynamic> initProperties, DirectCallInitHandler initHandler) {
     _initHandler = initHandler;
-    _methodChannel
+    return _methodChannel
         .invokeMethod(DCMethodCall.init, {argInitProperties: initProperties});
   }
 
@@ -70,21 +70,29 @@ class MethodChannelClevertapDirectcallFlutter
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
   @override
   Future<void> call(Map<String, dynamic> callProperties,
-      DirectCallVoIPCallHandler voIPCallHandler) async {
+      DirectCallVoIPCallHandler voIPCallHandler) {
     _voIPCallHandler = voIPCallHandler;
-    _methodChannel
+    return _methodChannel
         .invokeMethod(DCMethodCall.call, {argCallProperties: callProperties});
   }
 
   ///Logs out the user from the Direct Call SDK session
   @override
-  Future<void> logout() async {
-    _methodChannel.invokeMethod(DCMethodCall.logout);
+  Future<void> logout() {
+    return _methodChannel.invokeMethod(DCMethodCall.logout);
   }
 
   ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
   @override
-  Future<bool> isEnabled() async {
-    return await _methodChannel.invokeMethod(DCMethodCall.isEnabled);
+  Future<bool> isEnabled() {
+    return _methodChannel
+        .invokeMethod<bool>(DCMethodCall.isEnabled)
+        .then<bool>((bool? value) => value ?? false);
+  }
+
+  ///Ends the active call, if any.
+  @override
+  Future<void> hangUpCall() {
+    return _methodChannel.invokeMethod(DCMethodCall.hangUpCall);
   }
 }

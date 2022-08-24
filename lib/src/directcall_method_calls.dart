@@ -4,10 +4,10 @@ class DCMethodCall {
   static const String call = "call";
   static const String logout = "logout";
   static const String isEnabled = "isEnabled";
+  static const String hangUpCall = "hangUpCall";
 
   //Platform to Flutter
   static const String onDirectCallDidInitialize = "onDirectCallDidInitialize";
-  static const String onDirectCallDidVoIPCallInitiate = "onDirectCallDidVoIPCallInitiate";
-
-
+  static const String onDirectCallDidVoIPCallInitiate =
+      "onDirectCallDidVoIPCallInitiate";
 }

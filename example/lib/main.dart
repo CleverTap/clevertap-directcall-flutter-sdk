@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:clevertap_directcall_flutter/call_events.dart';
 import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _directCallInitStatus = 'Unknown';
   late ClevertapDirectcallFlutter _clevertapDirectcallFlutterPlugin;
+  static const int _callMeterDurationInSeconds = 5;
 
   @override
   void initState() {
@@ -34,25 +36,25 @@ class _MyAppState extends State<MyApp> {
     _clevertapDirectcallFlutterPlugin = ClevertapDirectcallFlutter();
   }
 
-  Future<void> directCallInitHandler(
+  Future<void> _directCallInitHandler(
       Map<String, dynamic>? directCallInitError) async {
     if (kDebugMode) {
       print(
           "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError.toString()}");
     }
     if (directCallInitError == null) {
-      observeCallEvents();
+      _observeCallEvents();
 
       //_clevertapDirectcallFlutterPlugin.logout();
       var isEnabled = await _clevertapDirectcallFlutterPlugin.isEnabled();
       //isEnabled is true when the Direct Call SDK is enabled to initiate or receive a call otherwise false
-      if (isEnabled) {
+      if (isEnabled == true) {
         initiateVoIPCall();
       }
     }
   }
 
-  void directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
+  void _directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
     if (kDebugMode) {
       print(
           "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
@@ -76,7 +78,7 @@ class _MyAppState extends State<MyApp> {
       };
 
       _clevertapDirectcallFlutterPlugin.init(
-          initProperties: initProperties, initHandler: directCallInitHandler);
+          initProperties: initProperties, initHandler: _directCallInitHandler);
     } on PlatformException {
       _directCallInitStatus = 'Failed to initialize the Direct Call SDK.';
     }
@@ -115,16 +117,26 @@ class _MyAppState extends State<MyApp> {
 
     _clevertapDirectcallFlutterPlugin.call(
         callProperties: callProperties,
-        voIPCallHandler: directCallVoIPCallHandler);
+        voIPCallHandler: _directCallVoIPCallHandler);
   }
 
   //Listens to the real-time stream of call-events
-  void observeCallEvents() {
+  void _observeCallEvents() {
     _clevertapDirectcallFlutterPlugin.callEventListener.listen((event) {
       if (kDebugMode) {
         print(
             "CleverTap:DirectCallFlutter: callEventListener called = ${event.toString()}");
       }
+      if (event == CallEvent.answered) {
+        _startCallDurationMeterToEndCall();
+      }
+    });
+  }
+
+  //Starts a timer and hang up the active call when timer finishes
+  void _startCallDurationMeterToEndCall() {
+    Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
+      _clevertapDirectcallFlutterPlugin.hangUpCall();
     });
   }
 }

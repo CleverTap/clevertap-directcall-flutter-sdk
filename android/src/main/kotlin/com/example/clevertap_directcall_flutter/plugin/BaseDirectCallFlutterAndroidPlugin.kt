@@ -34,4 +34,9 @@ interface BaseDirectCallFlutterAndroidPlugin {
      * are enabled or not.
      */
     fun isDirectCallSdkEnabled() : Boolean
+
+    /**
+     * Ends the active call, if any.
+     */
+    fun hangUpCall()
 }
