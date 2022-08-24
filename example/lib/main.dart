@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       const initOptions = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
-        keyCuid: "clevertap_dev"
+        keyCuid: "clevertap@dev"
       };
 
       var initProperties = {

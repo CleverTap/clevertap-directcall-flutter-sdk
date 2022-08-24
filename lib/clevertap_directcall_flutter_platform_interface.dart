@@ -38,4 +38,6 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
   Future<void> call(Map<String, dynamic> callProperties,
       DirectCallVoIPCallHandler voIPCallHandler);
+
+  Stream<dynamic> get callEventsListener;
 }

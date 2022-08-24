@@ -1,6 +1,5 @@
 package com.example.clevertap_directcall_flutter
 
-import android.content.Context
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.exception.CallException
 import com.clevertap.android.directcall.exception.InitException
@@ -14,9 +13,6 @@ import com.example.clevertap_directcall_flutter.util.Constants.KEY_ALLOW_PERSIST
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_directcall_flutter.util.Constants.KEY_ERROR_CODE
-import com.example.clevertap_directcall_flutter.util.Constants.KEY_ERROR_DESCRIPTION
-import com.example.clevertap_directcall_flutter.util.Constants.KEY_ERROR_MESSAGE
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_OPTIONS
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_RECEIVER_CUID
@@ -24,35 +20,22 @@ import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.CALL
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.INIT
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
-import io.flutter.embedding.engine.plugins.FlutterPlugin
+import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMap
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
-
 /** ClevertapDirectcallFlutterPlugin */
-class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
-    DirectCallAndroidPlatformInterface {
-    /// The MethodChannel that will establish the communication between Flutter and native Android
-    ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-    /// when the Flutter Engine is detached from the Activity
-    private lateinit var channel: MethodChannel
-    private lateinit var context: Context
+class DirectcallFlutterAndroidPlugin : FlutterPluginLifecycleHandler(), MethodCallHandler,
+    BaseDirectCallFlutterAndroidPlugin {
+
     private var cleverTapAPI: CleverTapAPI? = null
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        setupPlugin(flutterPluginBinding)
-    }
-
-    private fun setupPlugin(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel =
-            MethodChannel(flutterPluginBinding.binaryMessenger, "clevertap_directcall_flutter")
-        context = flutterPluginBinding.applicationContext
-        channel.setMethodCallHandler(this)
-        cleverTapAPI = CleverTapAPI.getDefaultInstance(context);
+    init {
+        super.setupFlutterPlugin(methodCallHandler = this) {
+            cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
+        }
     }
 
     /**
@@ -72,10 +55,7 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
         }
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-    }
-
+    //Retrieves the init-properties from call-arguments  Initializes the Direct Call Android SDK
     override fun initDirectCallSdk(call: MethodCall, result: Result) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
@@ -95,12 +75,12 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
                     cleverTapAPI,
                     object : DirectCallInitResponse {
                         override fun onSuccess() {
-                            channel.invokeMethod(ON_DIRECT_CALL_DID_INITIALIZE, null)
+                            methodChannel.invokeMethod(ON_DIRECT_CALL_DID_INITIALIZE, null)
                         }
 
                         override fun onFailure(initException: InitException) {
-                            channel.invokeMethod(
-                                ON_DIRECT_CALL_DID_INITIALIZE, getErrorMap(initException)
+                            methodChannel.invokeMethod(
+                                ON_DIRECT_CALL_DID_INITIALIZE, parseExceptionToMap(initException)
                             )
                         }
                     })
@@ -110,6 +90,7 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
         }
     }
 
+    //Retrieves the call-properties from call-arguments and initiates a VoIP call
     override fun initiateVoipCall(call: MethodCall, result: Result) {
         try {
             val callProperties = call.argument<Map<String, Any>>(KEY_CALL_PROPERTIES)
@@ -128,13 +109,13 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
                     }
 
                     override fun onSuccess() {
-                        channel.invokeMethod(ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE, null)
+                        methodChannel.invokeMethod(ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE, null)
                     }
 
                     override fun onFailure(callException: CallException) {
-                        channel.invokeMethod(
+                        methodChannel.invokeMethod(
                             ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE,
-                            getErrorMap(callException)
+                            parseExceptionToMap(callException)
                         )
                     }
                 })
@@ -142,14 +123,5 @@ class ClevertapDirectcallFlutterPlugin : FlutterPlugin, MethodCallHandler,
             e.printStackTrace()
             //TODO : add here error reporting
         }
-    }
-
-    private fun getErrorMap(exception: Any): HashMap<String, Any> {
-        val error = if (exception is InitException) exception else exception as CallException
-        val errorMap = HashMap<String, Any>()
-        errorMap[KEY_ERROR_CODE] = error.errorCode
-        errorMap[KEY_ERROR_MESSAGE] = error.message!!
-        errorMap[KEY_ERROR_DESCRIPTION] = error.explanation
-        return errorMap
     }
 }

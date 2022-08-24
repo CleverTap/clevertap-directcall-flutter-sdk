@@ -25,4 +25,8 @@ class ClevertapDirectcallFlutter {
     return ClevertapDirectcallFlutterPlatform.instance
         .call(callProperties, voIPCallHandler);
   }
+
+  ///Returns the listener to listen the call-events stream
+  Stream<dynamic> get callEventListener =>
+      ClevertapDirectcallFlutterPlatform.instance.callEventsListener;
 }

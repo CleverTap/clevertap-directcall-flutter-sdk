@@ -6,4 +6,6 @@ class DCMethodCall {
   //Platform to Flutter
   static const String onDirectCallDidInitialize = "onDirectCallDidInitialize";
   static const String onDirectCallDidVoIPCallInitiate = "onDirectCallDidVoIPCallInitiate";
+
+
 }

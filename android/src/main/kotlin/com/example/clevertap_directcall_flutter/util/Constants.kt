@@ -1,6 +1,7 @@
 package com.example.clevertap_directcall_flutter.util
 
 object Constants {
+    const val CHANNEL_NAME = "clevertap_directcall_flutter"
     const val KEY_INIT_PROPERTIES = "initProperties"
     const val KEY_INIT_OPTIONS = "initOptions"
     const val KEY_ALLOW_PERSIST_SOCKET_CONNECTION = "allowPersistSocketConnection"

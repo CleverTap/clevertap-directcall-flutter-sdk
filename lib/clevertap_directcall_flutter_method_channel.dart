@@ -1,7 +1,7 @@
 import 'package:clevertap_directcall_flutter/src/constants.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
-import 'package:clevertap_directcall_flutter/src/directcall_method_call_names.dart';
-import 'package:flutter/foundation.dart';
+import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
+import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
 import 'clevertap_directcall_flutter_platform_interface.dart';
@@ -10,30 +10,44 @@ import 'clevertap_directcall_flutter_platform_interface.dart';
 class MethodChannelClevertapDirectcallFlutter
     extends ClevertapDirectcallFlutterPlatform {
   /// The method channel used to interact with the native platform.
-  final _methodChannel = const MethodChannel('clevertap_directcall_flutter');
+  final _methodChannel = const MethodChannel('$channelName/methods');
 
-  late DirectCallInitHandler initHandler;
-  late DirectCallVoIPCallHandler voIPCallHandler;
+  /// The event channel used to listen the data stream from the native platform.
+  final EventChannel _eventChannel =
+      const EventChannel('$channelName/events');
+
+  Stream<dynamic>? _callEventsListener;
+
+  late DirectCallInitHandler _initHandler;
+  late DirectCallVoIPCallHandler _voIPCallHandler;
 
   MethodChannelClevertapDirectcallFlutter() {
+    //sets the methodCallHandler to receive the method calls from native platform
     _methodChannel.setMethodCallHandler(_platformCallHandler);
+  }
+
+  /// broadcasts the call events
+  @override
+  Stream<dynamic> get callEventsListener {
+    _callEventsListener ??= _eventChannel
+        .receiveBroadcastStream()
+        .map((dynamic event) => Utils.parseCallEvent(event));
+    return _callEventsListener!;
   }
 
   ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
-    if (kDebugMode) {
-      print(
-          "_platformCallHandler called: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
-    }
+    print(
+        "_platformCallHandler called: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
 
     switch (call.method) {
       case DCMethodCall.onDirectCallDidInitialize:
         Map<dynamic, dynamic>? args = call.arguments;
-        initHandler(args?.cast<String, dynamic>());
+        _initHandler(args?.cast<String, dynamic>());
         break;
       case DCMethodCall.onDirectCallDidVoIPCallInitiate:
         Map<dynamic, dynamic>? args = call.arguments;
-        voIPCallHandler(args?.cast<String, dynamic>());
+        _voIPCallHandler(args?.cast<String, dynamic>());
         break;
     }
   }
@@ -45,7 +59,7 @@ class MethodChannelClevertapDirectcallFlutter
   @override
   Future<void> init(Map<String, dynamic> initProperties,
       DirectCallInitHandler initHandler) async {
-    this.initHandler = initHandler;
+    _initHandler = initHandler;
     _methodChannel.invokeMethod<String>(
         DCMethodCall.init, {argInitProperties: initProperties});
   }
@@ -53,7 +67,7 @@ class MethodChannelClevertapDirectcallFlutter
   @override
   Future<void> call(Map<String, dynamic> callProperties,
       DirectCallVoIPCallHandler voIPCallHandler) async {
-    this.voIPCallHandler = voIPCallHandler;
+    _voIPCallHandler = voIPCallHandler;
     _methodChannel.invokeMethod<String>(
         DCMethodCall.call, {argCallProperties: callProperties});
   }
