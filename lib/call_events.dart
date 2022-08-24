@@ -1,23 +1,24 @@
 ///Holds all the possible statuses of a VoIP call
 enum CallEvent {
-  //When the call is cancelled from the initiator's end
+  //When a call is cancelled from the initiator's end
   cancelled,
 
-  //When the call is declined from the receiver's end
+  //When a call is declined from the receiver's end
   declined,
 
-  //When the call is missed at the receiver's end
+  //When a call is missed at the receiver's end
   missed,
 
-  //When the call is picked up by the receiver
+  //When a call is picked up by the receiver
   answered,
 
-  //The connection to the receiver is established and the audio transfer begins at this state
+  //When connection to the receiver is established after the call is answered.
+  //Audio transfer begins at this state.
   callInProgress,
 
-  //The call has been disconnected.
+  //When a call has been ended.
   ended,
 
-  //When the receiver is already busy on another call
+  //When the receiver is busy on another call
   receiverBusyOnAnotherCall
 }
