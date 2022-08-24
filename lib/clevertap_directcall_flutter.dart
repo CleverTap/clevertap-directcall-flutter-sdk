@@ -33,4 +33,9 @@ class ClevertapDirectcallFlutter {
   Future<void> logout() {
     return ClevertapDirectcallFlutterPlatform.instance.logout();
   }
+
+  ///Logs out the user from the Direct Call SDK session
+  Future<bool> isEnabled() {
+    return ClevertapDirectcallFlutterPlatform.instance.isEnabled();
+  }
 }

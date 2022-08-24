@@ -60,8 +60,8 @@ class MethodChannelClevertapDirectcallFlutter
   Future<void> init(Map<String, dynamic> initProperties,
       DirectCallInitHandler initHandler) async {
     _initHandler = initHandler;
-    _methodChannel.invokeMethod<String>(
-        DCMethodCall.init, {argInitProperties: initProperties});
+    _methodChannel
+        .invokeMethod(DCMethodCall.init, {argInitProperties: initProperties});
   }
 
   ///Initiates a VoIP call
@@ -72,13 +72,19 @@ class MethodChannelClevertapDirectcallFlutter
   Future<void> call(Map<String, dynamic> callProperties,
       DirectCallVoIPCallHandler voIPCallHandler) async {
     _voIPCallHandler = voIPCallHandler;
-    _methodChannel.invokeMethod<String>(
-        DCMethodCall.call, {argCallProperties: callProperties});
+    _methodChannel
+        .invokeMethod(DCMethodCall.call, {argCallProperties: callProperties});
   }
 
   ///Logs out the user from the Direct Call SDK session
   @override
   Future<void> logout() async {
-    _methodChannel.invokeMethod<String>(DCMethodCall.logout);
+    _methodChannel.invokeMethod(DCMethodCall.logout);
+  }
+
+  ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
+  @override
+  Future<bool> isEnabled() async {
+    return await _methodChannel.invokeMethod(DCMethodCall.isEnabled);
   }
 }

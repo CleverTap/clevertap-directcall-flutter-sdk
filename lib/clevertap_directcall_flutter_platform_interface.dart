@@ -45,4 +45,7 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
 
   ///Logs out the user from the Direct Call SDK session
   Future<void> logout();
+
+  ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
+  Future<bool> isEnabled();
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-ll_flutter.dart';
+import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,23 +34,28 @@ class _MyAppState extends State<MyApp> {
     _clevertapDirectcallFlutterPlugin = ClevertapDirectcallFlutter();
   }
 
-  void directCallInitHandler(Map<String, dynamic>? directCallInitError) {
+  Future<void> directCallInitHandler(
+      Map<String, dynamic>? directCallInitError) async {
     if (kDebugMode) {
       print(
-          "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError
-              .toString()}");
+          "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError.toString()}");
     }
     if (directCallInitError == null) {
       observeCallEvents();
-      initiateVoIPCall();
+
+      //_clevertapDirectcallFlutterPlugin.logout();
+      var isEnabled = await _clevertapDirectcallFlutterPlugin.isEnabled();
+      //isEnabled is true when the Direct Call SDK is enabled to initiate or receive a call otherwise false
+      if (isEnabled) {
+        initiateVoIPCall();
+      }
     }
   }
 
   void directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
     if (kDebugMode) {
       print(
-          "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError
-              .toString()}");
+          "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
     }
   }
 
@@ -118,8 +123,7 @@ class _MyAppState extends State<MyApp> {
     _clevertapDirectcallFlutterPlugin.callEventListener.listen((event) {
       if (kDebugMode) {
         print(
-            "CleverTap:DirectCallFlutter: callEventListener called = ${event
-                .toString()}");
+            "CleverTap:DirectCallFlutter: callEventListener called = ${event.toString()}");
       }
     });
   }

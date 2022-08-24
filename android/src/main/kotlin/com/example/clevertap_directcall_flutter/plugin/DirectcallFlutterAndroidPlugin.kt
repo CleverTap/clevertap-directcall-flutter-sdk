@@ -18,6 +18,7 @@ import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_PROPERTI
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.CALL
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.INIT
+import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.IS_ENABLED
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.LOGOUT
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
@@ -41,9 +42,7 @@ class DirectcallFlutterAndroidPlugin :
         }
     }
 
-    /**
-     * Called when a method-call is invoked from flutterPlugin
-     */
+    //Called when a method-call is invoked from flutterPlugin
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             INIT -> {
@@ -57,6 +56,9 @@ class DirectcallFlutterAndroidPlugin :
             LOGOUT -> {
                 logout()
                 result.success(null)
+            }
+            IS_ENABLED -> {
+                result.success(isDirectCallSdkEnabled())
             }
             else -> result.notImplemented()
         }
@@ -132,19 +134,28 @@ class DirectcallFlutterAndroidPlugin :
         }
     }
 
+    //Logs out the Direct Call SDK session
     override fun logout() {
         DirectCallAPI.getInstance().logout(context)
     }
 
+    //Checks and returns the state of Direct Call SDK services(i.e. call initiation or reception) are enabled or not
+    override fun isDirectCallSdkEnabled(): Boolean {
+        return DirectCallAPI.getInstance().isEnabled
+    }
+
+    //Handles a request to set up an event stream.
     override fun onListen(arguments: Any?, eventSink: EventChannel.EventSink?) {
         this.eventSink = eventSink;
     }
 
+    //Gets called when the most recently created event stream is closed
     override fun onCancel(arguments: Any?) {
         this.eventSink = null
     }
 
-    private fun streamCallEvent(event: VoIPCallStatus) {
+    //Sends the real-time changes in the call-state in an observable event-stream
+    override fun streamCallEvent(event: VoIPCallStatus) {
         eventSink?.let { sink ->
             val eventDescription = when (event) {
                 VoIPCallStatus.CALL_CANCELLED -> "Cancelled"

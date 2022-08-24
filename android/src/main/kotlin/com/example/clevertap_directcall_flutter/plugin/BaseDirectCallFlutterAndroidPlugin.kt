@@ -1,6 +1,7 @@
 package com.example.clevertap_directcall_flutter.plugin
 
 import androidx.annotation.NonNull
+import com.clevertap.android.directcall.javaclasses.VoIPCallStatus
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -19,7 +20,18 @@ interface BaseDirectCallFlutterAndroidPlugin {
     fun initiateVoipCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
 
     /**
+     * Sends the real-time changes in the call-state in an observable event-stream
+     */
+    fun streamCallEvent(event: VoIPCallStatus)
+
+    /**
      * Defines implementation to logout the Direct Call SDK session
      */
     fun logout()
+
+    /**
+     * Defines implementation to check whether the Direct Call SDK services(i.e. call initiation or reception)
+     * are enabled or not.
+     */
+    fun isDirectCallSdkEnabled() : Boolean
 }
