@@ -4,6 +4,7 @@ import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
 import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
+import 'call_events.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
@@ -16,7 +17,7 @@ class MethodChannelClevertapDirectcallFlutter
   final EventChannel _eventChannel =
       const EventChannel('$channelName/events');
 
-  Stream<dynamic>? _callEventsListener;
+  Stream<CallEvent>? _callEventsListener;
 
   late DirectCallInitHandler _initHandler;
   late DirectCallVoIPCallHandler _voIPCallHandler;
@@ -28,7 +29,7 @@ class MethodChannelClevertapDirectcallFlutter
 
   /// broadcasts the call events
   @override
-  Stream<dynamic> get callEventsListener {
+  Stream<CallEvent> get callEventsListener {
     _callEventsListener ??= _eventChannel
         .receiveBroadcastStream()
         .map((dynamic event) => Utils.parseCallEvent(event));

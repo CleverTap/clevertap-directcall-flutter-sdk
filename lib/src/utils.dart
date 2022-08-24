@@ -1,7 +1,6 @@
-import 'call_event.dart';
+import '../call_events.dart';
 
 class Utils {
-
   //Private constructor
   Utils._();
 

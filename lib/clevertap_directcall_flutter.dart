@@ -1,5 +1,6 @@
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 
+import 'call_events.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Direct Call Native SDKs(Android/iOS)
@@ -27,6 +28,6 @@ class ClevertapDirectcallFlutter {
   }
 
   ///Returns the listener to listen the call-events stream
-  Stream<dynamic> get callEventListener =>
+  Stream<CallEvent> get callEventListener =>
       ClevertapDirectcallFlutterPlatform.instance.callEventsListener;
 }

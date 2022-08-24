@@ -1,4 +1,4 @@
-package com.example.clevertap_directcall_flutter
+package com.example.clevertap_directcall_flutter.plugin
 
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.exception.CallException
@@ -21,19 +21,21 @@ import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.INIT
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
 import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMap
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
 /** ClevertapDirectcallFlutterPlugin */
-class DirectcallFlutterAndroidPlugin : FlutterPluginLifecycleHandler(), MethodCallHandler,
-    BaseDirectCallFlutterAndroidPlugin {
+class DirectcallFlutterAndroidPlugin :
+    BaseDirectCallFlutterAndroidPlugin, FlutterPluginLifecycleHandler(),
+    MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
 
     init {
-        super.setupFlutterPlugin(methodCallHandler = this) {
+        super.setupFlutterPlugin(methodCallHandler = this, eventStreamHandler = this) {
             cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
         }
     }
@@ -105,7 +107,7 @@ class DirectcallFlutterAndroidPlugin : FlutterPluginLifecycleHandler(), MethodCa
                 callOptions,
                 object : OutgoingCallResponse {
                     override fun callStatus(callStatus: VoIPCallStatus) {
-                        //TODO : report call status via Flutter-Stream
+                        streamCallEvent(callStatus)
                     }
 
                     override fun onSuccess() {
@@ -122,6 +124,29 @@ class DirectcallFlutterAndroidPlugin : FlutterPluginLifecycleHandler(), MethodCa
         } catch (e: Exception) {
             e.printStackTrace()
             //TODO : add here error reporting
+        }
+    }
+
+    override fun onListen(arguments: Any?, eventSink: EventChannel.EventSink?) {
+        this.eventSink = eventSink;
+    }
+
+    override fun onCancel(arguments: Any?) {
+        this.eventSink = null
+    }
+
+    private fun streamCallEvent(event: VoIPCallStatus) {
+        eventSink?.let { sink ->
+            val eventDescription = when (event) {
+                VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
+                VoIPCallStatus.CALL_DECLINED -> "Declined"
+                VoIPCallStatus.CALL_MISSED -> "Missed"
+                VoIPCallStatus.CALL_ANSWERED -> "Answered"
+                VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
+                VoIPCallStatus.CALL_OVER -> "Ended"
+                VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
+            }
+            sink.success(eventDescription)
         }
     }
 }

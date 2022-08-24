@@ -1,4 +1,4 @@
-package com.example.clevertap_directcall_flutter
+package com.example.clevertap_directcall_flutter.plugin
 
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.init.DirectCallInitOptions

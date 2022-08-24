@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
+ll_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,9 +36,12 @@ class _MyAppState extends State<MyApp> {
 
   void directCallInitHandler(Map<String, dynamic>? directCallInitError) {
     if (kDebugMode) {
-      print("CleverTap:DirectCall: directCallInitHandler called = ${directCallInitError.toString()}");
+      print(
+          "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError
+              .toString()}");
     }
     if (directCallInitError == null) {
+      observeCallEvents();
       initiateVoIPCall();
     }
   }
@@ -46,7 +49,8 @@ class _MyAppState extends State<MyApp> {
   void directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
     if (kDebugMode) {
       print(
-          "CleverTap:DirectCall: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
+          "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError
+              .toString()}");
     }
   }
 
@@ -58,7 +62,7 @@ class _MyAppState extends State<MyApp> {
       const initOptions = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
-        keyCuid: "clevertap@dev"
+        keyCuid: "clevertap_dev"
       };
 
       var initProperties = {
@@ -107,5 +111,16 @@ class _MyAppState extends State<MyApp> {
     _clevertapDirectcallFlutterPlugin.call(
         callProperties: callProperties,
         voIPCallHandler: directCallVoIPCallHandler);
+  }
+
+  //Listens to the real-time stream of call-events
+  void observeCallEvents() {
+    _clevertapDirectcallFlutterPlugin.callEventListener.listen((event) {
+      if (kDebugMode) {
+        print(
+            "CleverTap:DirectCallFlutter: callEventListener called = ${event
+                .toString()}");
+      }
+    });
   }
 }
