@@ -18,6 +18,7 @@ import com.example.clevertap_directcall_flutter.util.Constants.KEY_INIT_PROPERTI
 import com.example.clevertap_directcall_flutter.util.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.CALL
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.INIT
+import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.LOGOUT
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.util.DCMethodCallNames.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
 import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMap
@@ -51,6 +52,10 @@ class DirectcallFlutterAndroidPlugin :
             }
             CALL -> {
                 initiateVoipCall(call, result)
+                result.success(null)
+            }
+            LOGOUT -> {
+                logout()
                 result.success(null)
             }
             else -> result.notImplemented()
@@ -125,6 +130,10 @@ class DirectcallFlutterAndroidPlugin :
             e.printStackTrace()
             //TODO : add here error reporting
         }
+    }
+
+    override fun logout() {
+        DirectCallAPI.getInstance().logout(context)
     }
 
     override fun onListen(arguments: Any?, eventSink: EventChannel.EventSink?) {

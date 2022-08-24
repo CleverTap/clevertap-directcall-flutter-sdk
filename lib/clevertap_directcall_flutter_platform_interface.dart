@@ -40,5 +40,9 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   Future<void> call(Map<String, dynamic> callProperties,
       DirectCallVoIPCallHandler voIPCallHandler);
 
+  ///Returns the instance of [CallEvent] stream to listen the real-time changes in the call-state
   Stream<CallEvent> get callEventsListener;
+
+  ///Logs out the user from the Direct Call SDK session
+  Future<void> logout();
 }

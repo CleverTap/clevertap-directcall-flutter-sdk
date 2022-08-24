@@ -4,6 +4,7 @@ object DCMethodCallNames {
     //Flutter to Platform
     const val INIT = "int";
     const val CALL = "call";
+    const val LOGOUT = "logout";
 
     //Platform to Flutter
     const val ON_DIRECT_CALL_DID_INITIALIZE = "onDirectCallDidInitialize";

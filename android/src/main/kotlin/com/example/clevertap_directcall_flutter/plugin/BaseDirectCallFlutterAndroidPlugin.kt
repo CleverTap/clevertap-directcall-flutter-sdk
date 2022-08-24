@@ -1,8 +1,6 @@
 package com.example.clevertap_directcall_flutter.plugin
 
 import androidx.annotation.NonNull
-import com.clevertap.android.directcall.init.DirectCallInitOptions
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -19,4 +17,9 @@ interface BaseDirectCallFlutterAndroidPlugin {
      * Defines implementation to initiate a VoIP call
      */
     fun initiateVoipCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
+
+    /**
+     * Defines implementation to logout the Direct Call SDK session
+     */
+    fun logout()
 }

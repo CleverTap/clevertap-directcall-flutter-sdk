@@ -14,8 +14,7 @@ class MethodChannelClevertapDirectcallFlutter
   final _methodChannel = const MethodChannel('$channelName/methods');
 
   /// The event channel used to listen the data stream from the native platform.
-  final EventChannel _eventChannel =
-      const EventChannel('$channelName/events');
+  final EventChannel _eventChannel = const EventChannel('$channelName/events');
 
   Stream<CallEvent>? _callEventsListener;
 
@@ -65,11 +64,21 @@ class MethodChannelClevertapDirectcallFlutter
         DCMethodCall.init, {argInitProperties: initProperties});
   }
 
+  ///Initiates a VoIP call
+  ///
+  ///[callProperties]  - configuration for a VoIP call
+  ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
   @override
   Future<void> call(Map<String, dynamic> callProperties,
       DirectCallVoIPCallHandler voIPCallHandler) async {
     _voIPCallHandler = voIPCallHandler;
     _methodChannel.invokeMethod<String>(
         DCMethodCall.call, {argCallProperties: callProperties});
+  }
+
+  ///Logs out the user from the Direct Call SDK session
+  @override
+  Future<void> logout() async {
+    _methodChannel.invokeMethod<String>(DCMethodCall.logout);
   }
 }
