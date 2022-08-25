@@ -1,7 +1,7 @@
 package com.example.clevertap_directcall_flutter.plugin
 
 import android.content.Context
-import com.example.clevertap_directcall_flutter.util.Constants
+import com.example.clevertap_directcall_flutter.Constants
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink

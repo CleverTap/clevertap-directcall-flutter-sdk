@@ -1,4 +1,4 @@
-package com.example.clevertap_directcall_flutter.util
+package com.example.clevertap_directcall_flutter
 
 object DCMethodCallNames {
     //Flutter to Platform
