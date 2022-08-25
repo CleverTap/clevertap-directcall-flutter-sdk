@@ -2,7 +2,7 @@ package com.example.clevertap_directcall_flutter
 
 object DCMethodCallNames {
     //Flutter to Platform
-    const val INIT = "int"
+    const val INIT = "init"
     const val CALL = "call"
     const val LOGOUT = "logout"
     const val IS_ENABLED = "isEnabled"

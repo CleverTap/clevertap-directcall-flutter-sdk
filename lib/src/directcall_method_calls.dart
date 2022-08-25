@@ -1,6 +1,6 @@
 class DCMethodCall {
   //Flutter to Platform
-  static const String init = "int";
+  static const String init = "init";
   static const String call = "call";
   static const String logout = "logout";
   static const String isEnabled = "isEnabled";
