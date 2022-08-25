@@ -18,13 +18,17 @@ class ClevertapDirectcallFlutter {
 
   ///Initiates a VoIP call
   ///
-  ///[callProperties]  - configuration for a VoIP call
+  ///[receiverCuid]    - cuid of the person whomsoever call needs to be initiated
+  ///[callContext]     - context(reason) of the call that is displayed on the call screen
+  ///[callOptions]     - configuration(metadata) for a VoIP call
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
   Future<void> call(
-      {required Map<String, dynamic> callProperties,
+      {required String receiverCuid,
+      required String callContext,
+      Map<String, dynamic>? callOptions,
       required DirectCallVoIPCallHandler voIPCallHandler}) {
     return ClevertapDirectcallFlutterPlatform.instance
-        .call(callProperties, voIPCallHandler);
+        .call(receiverCuid, callContext, callOptions, voIPCallHandler);
   }
 
   ///Returns the listener to listen the call-events stream

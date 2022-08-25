@@ -8,7 +8,7 @@ const String keyInitOptions = "initOptions";
 const String keyReceiverCuid = "receiverCuid";
 const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
-const String keyInitiatorImage = "initiatorImage";
-const String keyReceiverImage = "receiverImage";
+const String keyInitiatorImage = "initiator_image";
+const String keyReceiverImage = "receiver_image";
 
 

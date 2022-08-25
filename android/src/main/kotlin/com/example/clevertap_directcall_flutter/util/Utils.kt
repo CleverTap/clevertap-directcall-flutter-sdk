@@ -36,7 +36,7 @@ object Utils {
         initOptionsJson.put(Constants.KEY_CUID, initProperties[Constants.KEY_CUID])
         initOptionsJson.put(Constants.KEY_APP_ID, initProperties[Constants.KEY_APP_ID])
         initOptionsJson.put(Constants.KEY_NAME, initProperties[Constants.KEY_NAME])
-        initOptionsJson.put(Constants.KEY_RINGTONE, initProperties[Constants.KEY_API_KEY])
+        initOptionsJson.put(Constants.KEY_RINGTONE, initProperties[Constants.KEY_RINGTONE])
         return initOptionsJson
     }
 }

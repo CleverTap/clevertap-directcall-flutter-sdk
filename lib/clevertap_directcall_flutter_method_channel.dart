@@ -66,12 +66,22 @@ class MethodChannelClevertapDirectcallFlutter
 
   ///Initiates a VoIP call
   ///
-  ///[callProperties]  - configuration for a VoIP call
+  ///[receiverCuid]    - cuid of the person whomsoever call needs to be initiated
+  ///[callContext]     - context(reason) of the call that is displayed on the call screen
+  ///[callOptions]     - configuration(metadata) for a VoIP call
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
   @override
-  Future<void> call(Map<String, dynamic> callProperties,
+  Future<void> call(
+      String receiverCuid,
+      String callContext,
+      Map<String, dynamic>? callOptions,
       DirectCallVoIPCallHandler voIPCallHandler) {
     _voIPCallHandler = voIPCallHandler;
+
+    final callProperties = <String, dynamic>{};
+    callProperties[keyReceiverCuid] = receiverCuid;
+    callProperties[keyCallContext] = callContext;
+    callProperties[keyCallOptions] = callOptions;
     return _methodChannel
         .invokeMethod(DCMethodCall.call, {argCallProperties: callProperties});
   }

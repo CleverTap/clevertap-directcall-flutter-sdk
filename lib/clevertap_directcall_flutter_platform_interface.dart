@@ -35,9 +35,14 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
 
   ///Initiates a VoIP call
   ///
-  ///[callProperties]  - configuration for a VoIP call
+  ///[receiverCuid]    - cuid of the person whomsoever call needs to be initiated
+  ///[callContext]     - context(reason) of the call that is displayed on the call screen
+  ///[callOptions]     - configuration(metadata) for a VoIP call
   ///[voIPCallHandler] - to get the initialization update(i.e. success/failure)
-  Future<void> call(Map<String, dynamic> callProperties,
+  Future<void> call(
+      String receiverCuid,
+      String callContext,
+      Map<String, dynamic>? callOptions,
       DirectCallVoIPCallHandler voIPCallHandler);
 
   ///Returns the instance of [CallEvent] stream to listen the real-time changes in the call-state

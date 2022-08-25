@@ -1,6 +1,6 @@
 package com.example.clevertap_directcall_flutter
 
-object DCMethodCallNames {
+object DCMethodCall {
     //Flutter to Platform
     const val INIT = "init"
     const val CALL = "call"

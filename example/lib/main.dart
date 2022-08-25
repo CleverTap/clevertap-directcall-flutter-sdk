@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:clevertap_directcall_flutter/call_events.dart';
 import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
@@ -100,19 +99,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initiateVoIPCall() {
-    const callOptions = {
-      keyInitiatorImage: null,
-      keyReceiverCuid: null,
-    };
-
-    var callProperties = {
-      keyReceiverCuid: "ct_receiver",
-      keyCallContext: "test call",
-      keyCallOptions: jsonEncode(callOptions) // <--JSON String
-    };
+    const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
 
     _clevertapDirectcallFlutterPlugin.call(
-        callProperties: callProperties,
+        receiverCuid: "ct_receiver",
+        callContext: "test call",
+        callOptions: callOptions,
         voIPCallHandler: _directCallVoIPCallHandler);
   }
 
