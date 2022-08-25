@@ -2,7 +2,13 @@ package com.example.clevertap_directcall_flutter.util
 
 import com.clevertap.android.directcall.exception.CallException
 import com.clevertap.android.directcall.exception.InitException
+import com.clevertap.android.directcall.models.DCCallScreenBranding
 import com.example.clevertap_directcall_flutter.Constants
+import com.example.clevertap_directcall_flutter.Constants.DARK_THEME
+import com.example.clevertap_directcall_flutter.Constants.KEY_BG_COLOR
+import com.example.clevertap_directcall_flutter.Constants.KEY_BUTTON_THEME
+import com.example.clevertap_directcall_flutter.Constants.KEY_FONT_COLOR
+import com.example.clevertap_directcall_flutter.Constants.KEY_LOGO_URL
 import org.json.JSONObject
 
 object Utils {
@@ -38,5 +44,26 @@ object Utils {
         initOptionsJson.put(Constants.KEY_NAME, initProperties[Constants.KEY_NAME])
         initOptionsJson.put(Constants.KEY_RINGTONE, initProperties[Constants.KEY_RINGTONE])
         return initOptionsJson
+    }
+
+    /**
+     * Retrieves the call screen branding from the input initProperties object and
+     * parses into the `DCCallScreenBranding` object
+     */
+    @JvmStatic
+    @Throws(Exception::class)
+    fun parseBrandingFromInitOptions(brandingMap: Map<*, *>): DCCallScreenBranding {
+        val bgColor = brandingMap[KEY_BG_COLOR] as String
+        val fontColor = brandingMap[KEY_FONT_COLOR] as String
+        val logoUrl = brandingMap[KEY_LOGO_URL] as String
+        val buttonTheme = brandingMap[KEY_BUTTON_THEME] as String
+
+        return DCCallScreenBranding(
+            bgColor, fontColor, logoUrl,
+            if (buttonTheme == DARK_THEME)
+                DCCallScreenBranding.ButtonTheme.DARK
+            else
+                DCCallScreenBranding.ButtonTheme.LIGHT
+        )
     }
 }

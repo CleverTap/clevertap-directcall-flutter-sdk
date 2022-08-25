@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:clevertap_directcall_flutter/call_events.dart';
 import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
+import 'package:clevertap_directcall_flutter/models/call_events.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _directCallInitStatus = 'Unknown';
   late ClevertapDirectcallFlutter _clevertapDirectcallFlutterPlugin;
-  static const int _callMeterDurationInSeconds = 5;
+  static const int _callMeterDurationInSeconds = 15;
 
   @override
   void initState() {
@@ -65,12 +65,21 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
+      var callScreenBranding = {
+        keyBgColor: "#000000",
+        keyFontColor: "#ffffff",
+        keyLogoUrl:
+            "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
+        keyButtonTheme: "light"
+      };
+
       var initProperties = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
         keyCuid: "clevertap_dev",
         keyAllowPersistSocketConnection: true,
-        keyEnableReadPhoneState: true
+        keyEnableReadPhoneState: true,
+        keyOverrideDefaultBranding: callScreenBranding
       };
 
       _clevertapDirectcallFlutterPlugin.init(
@@ -100,12 +109,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initiateVoIPCall() {
-    const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
+    //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
 
     _clevertapDirectcallFlutterPlugin.call(
         receiverCuid: "ct_receiver",
         callContext: "test call",
-        callOptions: callOptions,
+        callOptions: null,
         voIPCallHandler: _directCallVoIPCallHandler);
   }
 

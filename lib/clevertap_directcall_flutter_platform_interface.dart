@@ -1,7 +1,7 @@
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'call_events.dart';
+import 'models/call_events.dart';
 import 'clevertap_directcall_flutter_method_channel.dart';
 
 abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {

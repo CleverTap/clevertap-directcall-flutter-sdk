@@ -11,6 +11,11 @@ object Constants {
     const val KEY_RINGTONE = "ringtone"
     const val KEY_ALLOW_PERSIST_SOCKET_CONNECTION = "allowPersistSocketConnection"
     const val KEY_ENABLE_READ_PHONE_STATE = "enableReadPhoneState"
+    const val KEY_OVERRIDE_DEFAULT_BRANDING = "overrideDefaultBranding"
+    const val KEY_BG_COLOR = "bgColor"
+    const val KEY_FONT_COLOR = "fontColor"
+    const val KEY_LOGO_URL = "logoUrl"
+    const val KEY_BUTTON_THEME = "buttonTheme"
     const val KEY_CALL_PROPERTIES = "callProperties"
     const val KEY_RECEIVER_CUID = "receiverCuid";
     const val KEY_CALL_CONTEXT = "callContext";
@@ -18,4 +23,5 @@ object Constants {
     const val KEY_ERROR_CODE = "errorCode"
     const val KEY_ERROR_MESSAGE = "errorMessage"
     const val KEY_ERROR_DESCRIPTION = "errorDescription"
+    const val DARK_THEME = "dark"
 }

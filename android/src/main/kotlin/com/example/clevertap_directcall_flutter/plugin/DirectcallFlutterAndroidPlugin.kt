@@ -15,6 +15,7 @@ import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_PROPERTIES
 import com.example.clevertap_directcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_directcall_flutter.Constants.KEY_INIT_PROPERTIES
+import com.example.clevertap_directcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.example.clevertap_directcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.DCMethodCall.CALL
 import com.example.clevertap_directcall_flutter.DCMethodCall.HANG_UP_CALL
@@ -23,6 +24,7 @@ import com.example.clevertap_directcall_flutter.DCMethodCall.IS_ENABLED
 import com.example.clevertap_directcall_flutter.DCMethodCall.LOGOUT
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
+import com.example.clevertap_directcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMapObject
 import com.example.clevertap_directcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import io.flutter.plugin.common.EventChannel
@@ -80,10 +82,14 @@ class DirectcallFlutterAndroidPlugin :
                 initProperties?.getOrElse(KEY_ALLOW_PERSIST_SOCKET_CONNECTION) { false } as Boolean
             val enableReadPhoneState =
                 initProperties.getOrElse(KEY_ENABLE_READ_PHONE_STATE) { false } as Boolean
+            val callScreenBranding = parseBrandingFromInitOptions(
+                initProperties[KEY_OVERRIDE_DEFAULT_BRANDING] as Map<*, *>
+            )
 
             val directCallInitBuilder =
                 DirectCallInitOptions.Builder(initOptions, allowPersistSocketConnection)
                     .enableReadPhoneState(enableReadPhoneState)
+                    .overrideDefaultBranding(callScreenBranding)
                     .build()
 
             DirectCallAPI.getInstance().init(
@@ -113,7 +119,9 @@ class DirectcallFlutterAndroidPlugin :
             val callProperties = call.argument<Map<String, Any>>(KEY_CALL_PROPERTIES)
             val receiverCuid = callProperties?.let { it[KEY_RECEIVER_CUID] as String }
             val callContext = callProperties?.let { it[KEY_CALL_CONTEXT] as String }
-            val callOptions = callProperties?.let { JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) }
+            val callOptions = callProperties?.let {
+                if (it[KEY_CALL_OPTIONS] != null) JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) else null
+            }
 
             DirectCallAPI.getInstance().call(
                 context,
