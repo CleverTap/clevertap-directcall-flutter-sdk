@@ -10,6 +10,7 @@ object Constants {
     const val KEY_NAME = "name"
     const val KEY_RINGTONE = "ringtone"
     const val KEY_ALLOW_PERSIST_SOCKET_CONNECTION = "allowPersistSocketConnection"
+    const val KEY_ENABLE_READ_PHONE_STATE = "enableReadPhoneState"
     const val KEY_CALL_PROPERTIES = "callProperties"
     const val KEY_RECEIVER_CUID = "receiverCuid";
     const val KEY_CALL_CONTEXT = "callContext";

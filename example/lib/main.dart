@@ -69,7 +69,8 @@ class _MyAppState extends State<MyApp> {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
         keyCuid: "clevertap_dev",
-        keyAllowPersistSocketConnection: true
+        keyAllowPersistSocketConnection: true,
+        keyEnableReadPhoneState: true
       };
 
       _clevertapDirectcallFlutterPlugin.init(

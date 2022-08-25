@@ -13,6 +13,7 @@ import com.example.clevertap_directcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCK
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_PROPERTIES
+import com.example.clevertap_directcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_directcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_directcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.DCMethodCall.CALL
@@ -77,9 +78,12 @@ class DirectcallFlutterAndroidPlugin :
             val initOptions = initProperties?.let { parseInitOptionsFromInitProperties(it) }
             val allowPersistSocketConnection =
                 initProperties?.getOrElse(KEY_ALLOW_PERSIST_SOCKET_CONNECTION) { false } as Boolean
+            val enableReadPhoneState =
+                initProperties.getOrElse(KEY_ENABLE_READ_PHONE_STATE) { false } as Boolean
 
             val directCallInitBuilder =
                 DirectCallInitOptions.Builder(initOptions, allowPersistSocketConnection)
+                    .enableReadPhoneState(enableReadPhoneState)
                     .build()
 
             DirectCallAPI.getInstance().init(
