@@ -7,6 +7,7 @@ const String keyCuid = "cuid";
 const String keyAllowPersistSocketConnection = "allowPersistSocketConnection";
 const String keyEnableReadPhoneState = "enableReadPhoneState";
 const String keyOverrideDefaultBranding = "overrideDefaultBranding";
+const String keyMissedCallActions = "missedCallActions";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

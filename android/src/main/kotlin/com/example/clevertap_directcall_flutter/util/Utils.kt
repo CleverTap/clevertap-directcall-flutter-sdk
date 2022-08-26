@@ -3,6 +3,8 @@ package com.example.clevertap_directcall_flutter.util
 import com.clevertap.android.directcall.exception.CallException
 import com.clevertap.android.directcall.exception.InitException
 import com.clevertap.android.directcall.models.DCCallScreenBranding
+import com.clevertap.android.directcall.models.MissedCallActions
+import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import com.example.clevertap_directcall_flutter.Constants
 import com.example.clevertap_directcall_flutter.Constants.DARK_THEME
 import com.example.clevertap_directcall_flutter.Constants.KEY_BG_COLOR
@@ -47,8 +49,8 @@ object Utils {
     }
 
     /**
-     * Retrieves the call screen branding from the input initProperties object and
-     * parses into the `DCCallScreenBranding` object
+     * Retrieves the branding details from the input initProperties object and
+     * parses into the [DCCallScreenBranding] object
      */
     @JvmStatic
     @Throws(Exception::class)
@@ -66,4 +68,20 @@ object Utils {
                 DCCallScreenBranding.ButtonTheme.LIGHT
         )
     }
+
+    /**
+     * Retrieves the missed call actions from the input initProperties object and
+     * parses into the list of [MissedCallActions]
+     */
+    @JvmStatic
+    @Throws(Exception::class)
+    fun parseMissedCallActionsFromInitOptions(missedCallActionsMap: Map<*, *>): List<MissedCallActions> {
+        return missedCallActionsMap.toList().map {
+            MissedCallActions(
+                it.first as String?,
+                it.second as String?
+            )
+        }
+    }
 }
+

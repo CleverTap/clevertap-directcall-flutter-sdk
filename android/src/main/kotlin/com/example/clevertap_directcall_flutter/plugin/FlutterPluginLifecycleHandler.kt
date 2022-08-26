@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.clevertap_directcall_flutter.Constants
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 
 abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
@@ -14,7 +13,7 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
      * This local reference serves to register the plugin with the Flutter Engine and unregister it
      * when the Flutter Engine is detached from the Activity
      */
-    lateinit var methodChannel: MethodChannel
+    var methodChannel: MethodChannel? = null
     private lateinit var methodCallHandler: MethodChannel.MethodCallHandler
 
     /**
@@ -23,20 +22,17 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
      * This local reference serves to create the pipeline and set the streamHandler
      *
      */
-    lateinit var eventChannel: EventChannel
-    private lateinit var eventStreamHandler: EventChannel.StreamHandler
-    var eventSink: EventSink? = null
+    var callEventChannel: EventChannel? = null
+    var missedCallActionClickEventChannel: EventChannel? = null
 
     var context: Context? = null
     private lateinit var onPluginSetupCompleteListener: () -> Unit
 
     fun setupFlutterPlugin(
         methodCallHandler: MethodChannel.MethodCallHandler,
-        eventStreamHandler: EventChannel.StreamHandler,
         onPluginSetupCompleteListener: () -> Unit
     ) {
         this.methodCallHandler = methodCallHandler
-        this.eventStreamHandler = eventStreamHandler
         this.onPluginSetupCompleteListener = onPluginSetupCompleteListener
     }
 
@@ -45,15 +41,24 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        methodChannel.setMethodCallHandler(null)
-        eventChannel.setStreamHandler(null)
+        methodChannel?.setMethodCallHandler(null)
+        methodChannel = null
+        callEventChannel?.setStreamHandler(null)
+        callEventChannel = null
+        missedCallActionClickEventChannel?.setStreamHandler(null)
+        missedCallActionClickEventChannel = null
     }
 
     private fun setupPlugin(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel = MethodChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/methods")
-        methodChannel.setMethodCallHandler(methodCallHandler)
-        eventChannel = EventChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/events")
-        eventChannel.setStreamHandler(eventStreamHandler);
+        methodChannel!!.setMethodCallHandler(methodCallHandler)
+        callEventChannel =
+            EventChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/events/call_event")
+        missedCallActionClickEventChannel = EventChannel(
+            binding.binaryMessenger,
+            "${Constants.CHANNEL_NAME}/events/missed_call_action_click"
+        )
+
         context = binding.applicationContext
 
         //Call below callback only when the plugin setup is completed

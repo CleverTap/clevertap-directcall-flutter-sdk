@@ -2,6 +2,7 @@ package com.example.clevertap_directcall_flutter.plugin
 
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.javaclasses.VoIPCallStatus
+import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -20,9 +21,14 @@ interface BaseDirectCallFlutterAndroidPlugin {
     fun initiateVoipCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
 
     /**
-     * Sends the real-time changes in the call-state in an observable event-stream
+     * Sends the real-time changes in the call-state in an observable event stream
      */
     fun streamCallEvent(event: VoIPCallStatus)
+
+    /**
+     * Sends the payload result of a missed call action click in an observable event stream
+     */
+    fun streamMissedCallActionClickResult(result: MissedCallNotificationOpenResult)
 
     /**
      * Defines implementation to logout the Direct Call SDK session

@@ -1,11 +1,12 @@
+import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/src/constants.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
 import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
-import 'models/call_events.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
+import 'models/call_events.dart';
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
 class MethodChannelClevertapDirectcallFlutter
@@ -13,10 +14,8 @@ class MethodChannelClevertapDirectcallFlutter
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
-  /// The event channel used to listen the data stream from the native platform.
-  final EventChannel _eventChannel = const EventChannel('$channelName/events');
-
   Stream<CallEvent>? _callEventsListener;
+  Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
 
   late DirectCallInitHandler _initHandler;
   late DirectCallVoIPCallHandler _voIPCallHandler;
@@ -26,13 +25,28 @@ class MethodChannelClevertapDirectcallFlutter
     _methodChannel.setMethodCallHandler(_platformCallHandler);
   }
 
-  /// broadcasts the call events
+  ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   @override
   Stream<CallEvent> get callEventsListener {
-    _callEventsListener ??= _eventChannel
+    /// The event channel used to listen the data stream from the native platform.
+    const callEventChannel = EventChannel('$channelName/events/call_event');
+    _callEventsListener ??= callEventChannel
         .receiveBroadcastStream()
         .map((dynamic event) => Utils.parseCallEvent(event));
     return _callEventsListener!;
+  }
+
+  ///Broadcasts the [MissedCallActionClickResult]  data stream to listen the
+  ///missed call action click events.
+  @override
+  Stream<MissedCallActionClickResult> get missedCallActionClickListener {
+    const missedCallActionClickEventChannel =
+        EventChannel('$channelName/events/missed_call_action_click');
+    _missedCallActionClickListener ??= missedCallActionClickEventChannel
+        .receiveBroadcastStream()
+        .map((dynamic missedCallActionClickResult) =>
+            MissedCallActionClickResult.fromMap(missedCallActionClickResult));
+    return _missedCallActionClickListener!;
   }
 
   ///Handles the Platform-specific method-calls

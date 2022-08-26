@@ -1,8 +1,9 @@
+import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'models/call_events.dart';
 import 'clevertap_directcall_flutter_method_channel.dart';
+import 'models/call_events.dart';
 
 abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   /// Constructs a ClevertapDirectcallFlutterPlatform.
@@ -45,8 +46,12 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
       Map<String, dynamic>? callOptions,
       DirectCallVoIPCallHandler voIPCallHandler);
 
-  ///Returns the instance of [CallEvent] stream to listen the real-time changes in the call-state
+  ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   Stream<CallEvent> get callEventsListener;
+
+  ///Broadcasts the [MissedCallActionClickResult]  data stream to listen the
+  ///missed call action click events.
+  Stream<MissedCallActionClickResult> get missedCallActionClickListener;
 
   ///Logs out the user from the Direct Call SDK session
   Future<void> logout();

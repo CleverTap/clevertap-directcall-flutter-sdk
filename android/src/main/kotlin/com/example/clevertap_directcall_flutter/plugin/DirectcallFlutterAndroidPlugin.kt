@@ -8,6 +8,7 @@ import com.clevertap.android.directcall.init.DirectCallInitOptions
 import com.clevertap.android.directcall.interfaces.DirectCallInitResponse
 import com.clevertap.android.directcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.directcall.javaclasses.VoIPCallStatus
+import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.sdk.CleverTapAPI
 import com.example.clevertap_directcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_CONTEXT
@@ -15,6 +16,7 @@ import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_PROPERTIES
 import com.example.clevertap_directcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_directcall_flutter.Constants.KEY_INIT_PROPERTIES
+import com.example.clevertap_directcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
 import com.example.clevertap_directcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.example.clevertap_directcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_directcall_flutter.DCMethodCall.CALL
@@ -24,10 +26,14 @@ import com.example.clevertap_directcall_flutter.DCMethodCall.IS_ENABLED
 import com.example.clevertap_directcall_flutter.DCMethodCall.LOGOUT
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
+import com.example.clevertap_directcall_flutter.extensions.toMap
+import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
+import com.example.clevertap_directcall_flutter.handlers.MissedCallActionClickHandler
+import com.example.clevertap_directcall_flutter.handlers.MissedCallActionEventStreamHandler
 import com.example.clevertap_directcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMapObject
 import com.example.clevertap_directcall_flutter.util.Utils.parseInitOptionsFromInitProperties
-import io.flutter.plugin.common.EventChannel
+import com.example.clevertap_directcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -36,13 +42,15 @@ import org.json.JSONObject
 /** ClevertapDirectcallFlutterPlugin */
 class DirectcallFlutterAndroidPlugin :
     BaseDirectCallFlutterAndroidPlugin, FlutterPluginLifecycleHandler(),
-    MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
+    MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
 
     init {
-        super.setupFlutterPlugin(methodCallHandler = this, eventStreamHandler = this) {
+        super.setupFlutterPlugin(methodCallHandler = this) {
             cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
+            callEventChannel?.setStreamHandler(CallEventStreamHandler)
+            missedCallActionClickEventChannel?.setStreamHandler(MissedCallActionEventStreamHandler);
         }
     }
 
@@ -85,11 +93,21 @@ class DirectcallFlutterAndroidPlugin :
             val callScreenBranding = parseBrandingFromInitOptions(
                 initProperties[KEY_OVERRIDE_DEFAULT_BRANDING] as Map<*, *>
             )
+            val missedCallActionsList = initProperties[KEY_MISSED_CALL_ACTIONS]?.let {
+                parseMissedCallActionsFromInitOptions(it as Map<*, *>)
+            }
+
+            val missedCallActionClickHandlerPath =
+                MissedCallActionClickHandler::class.java.canonicalName
 
             val directCallInitBuilder =
                 DirectCallInitOptions.Builder(initOptions, allowPersistSocketConnection)
                     .enableReadPhoneState(enableReadPhoneState)
                     .overrideDefaultBranding(callScreenBranding)
+                    .setMissedCallReceiverActions(
+                        missedCallActionsList,
+                        missedCallActionClickHandlerPath
+                    )
                     .build()
 
             DirectCallAPI.getInstance().init(
@@ -98,11 +116,11 @@ class DirectcallFlutterAndroidPlugin :
                 cleverTapAPI,
                 object : DirectCallInitResponse {
                     override fun onSuccess() {
-                        methodChannel.invokeMethod(ON_DIRECT_CALL_DID_INITIALIZE, null)
+                        methodChannel?.invokeMethod(ON_DIRECT_CALL_DID_INITIALIZE, null)
                     }
 
                     override fun onFailure(initException: InitException) {
-                        methodChannel.invokeMethod(
+                        methodChannel?.invokeMethod(
                             ON_DIRECT_CALL_DID_INITIALIZE, parseExceptionToMapObject(initException)
                         )
                     }
@@ -134,11 +152,11 @@ class DirectcallFlutterAndroidPlugin :
                     }
 
                     override fun onSuccess() {
-                        methodChannel.invokeMethod(ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE, null)
+                        methodChannel?.invokeMethod(ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE, null)
                     }
 
                     override fun onFailure(callException: CallException) {
-                        methodChannel.invokeMethod(
+                        methodChannel?.invokeMethod(
                             ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE,
                             parseExceptionToMapObject(callException)
                         )
@@ -165,19 +183,9 @@ class DirectcallFlutterAndroidPlugin :
         DirectCallAPI.getInstance().callController?.endCall()
     }
 
-    //Handles a request to set up an event stream.
-    override fun onListen(arguments: Any?, eventSink: EventChannel.EventSink?) {
-        this.eventSink = eventSink;
-    }
-
-    //Gets called when the most recently created event stream is closed
-    override fun onCancel(arguments: Any?) {
-        this.eventSink = null
-    }
-
     //Sends the real-time changes in the call-state in an observable event-stream
     override fun streamCallEvent(event: VoIPCallStatus) {
-        eventSink?.let { sink ->
+        CallEventStreamHandler.eventSink?.let { sink ->
             val eventDescription = when (event) {
                 VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
                 VoIPCallStatus.CALL_DECLINED -> "Declined"
@@ -189,5 +197,10 @@ class DirectcallFlutterAndroidPlugin :
             }
             sink.success(eventDescription)
         }
+    }
+
+    //Sends the real-time changes in the call-state in an observable event-stream
+    override fun streamMissedCallActionClickResult(result: MissedCallNotificationOpenResult) {
+        MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
     }
 }

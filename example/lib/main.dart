@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:clevertap_directcall_flutter/clevertap_directcall_flutter.dart';
 import 'package:clevertap_directcall_flutter/models/call_events.dart';
+import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,9 @@ class _MyAppState extends State<MyApp> {
   String _directCallInitStatus = 'Unknown';
   late ClevertapDirectcallFlutter _clevertapDirectcallFlutterPlugin;
   static const int _callMeterDurationInSeconds = 15;
+  late StreamSubscription<CallEvent>? _callEventSubscription;
+  late StreamSubscription<MissedCallActionClickResult>?
+      _missedCallActionClickEventSubscription;
 
   @override
   void initState() {
@@ -42,7 +47,8 @@ class _MyAppState extends State<MyApp> {
           "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError.toString()}");
     }
     if (directCallInitError == null) {
-      _observeCallEvents();
+      _startObservingCallEvents();
+      _startObservingMissedCallActionClickEvents();
 
       //_clevertapDirectcallFlutterPlugin.logout();
       var isEnabled = await _clevertapDirectcallFlutterPlugin.isEnabled();
@@ -65,7 +71,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      var callScreenBranding = {
+      const callScreenBranding = {
         keyBgColor: "#000000",
         keyFontColor: "#ffffff",
         keyLogoUrl:
@@ -73,13 +79,20 @@ class _MyAppState extends State<MyApp> {
         keyButtonTheme: "light"
       };
 
+      const missedCallActionsMap = {
+        "1": "Call me back",
+        "2": "Start Chat",
+        "3": "Not Interested"
+      };
+
       var initProperties = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
         keyCuid: "clevertap_dev",
-        keyAllowPersistSocketConnection: true,
-        keyEnableReadPhoneState: true,
-        keyOverrideDefaultBranding: callScreenBranding
+        keyAllowPersistSocketConnection: true, //Android Platform
+        keyEnableReadPhoneState: true, //Android Platform
+        keyOverrideDefaultBranding: callScreenBranding, //Android Platform
+        keyMissedCallActions: missedCallActionsMap //Android Platform
       };
 
       _clevertapDirectcallFlutterPlugin.init(
@@ -119,14 +132,26 @@ class _MyAppState extends State<MyApp> {
   }
 
   //Listens to the real-time stream of call-events
-  void _observeCallEvents() {
-    _clevertapDirectcallFlutterPlugin.callEventListener.listen((event) {
+  void _startObservingCallEvents() {
+    _callEventSubscription =
+        _clevertapDirectcallFlutterPlugin.callEventListener.listen((event) {
       if (kDebugMode) {
         print(
-            "CleverTap:DirectCallFlutter: callEventListener called = ${event.toString()}");
+            "CleverTap:DirectCallFlutter: received callEvent stream with ${event.toString()}");
       }
       if (event == CallEvent.answered) {
         _startCallDurationMeterToEndCall();
+      }
+    });
+  }
+
+  void _startObservingMissedCallActionClickEvents() {
+    _missedCallActionClickEventSubscription = _clevertapDirectcallFlutterPlugin
+        .missedCallActionClickListener
+        .listen((result) {
+      if (kDebugMode) {
+        print(
+            "CleverTap:DirectCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
       }
     });
   }
@@ -136,5 +161,12 @@ class _MyAppState extends State<MyApp> {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
       _clevertapDirectcallFlutterPlugin.hangUpCall();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _callEventSubscription?.cancel();
+    _missedCallActionClickEventSubscription?.cancel();
   }
 }
