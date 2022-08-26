@@ -1,8 +1,8 @@
 import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 
+import '../models/call_events.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
-import 'models/call_events.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Direct Call Native SDKs(Android/iOS)
 class ClevertapDirectcallFlutter {

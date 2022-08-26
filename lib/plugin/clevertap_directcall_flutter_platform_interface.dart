@@ -1,9 +1,9 @@
-import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
-import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
+import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'clevertap_directcall_flutter_method_channel.dart';
-import 'models/call_events.dart';
+import '../models/call_events.dart';
+import '../models/missed_call_action_click_result.dart';
+import '../src/directcall_handlers.dart';
 
 abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   /// Constructs a ClevertapDirectcallFlutterPlatform.

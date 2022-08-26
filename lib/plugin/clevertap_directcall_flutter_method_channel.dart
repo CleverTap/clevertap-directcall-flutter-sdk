@@ -5,8 +5,8 @@ import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
 import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
+import '../models/call_events.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
-import 'models/call_events.dart';
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
 class MethodChannelClevertapDirectcallFlutter
