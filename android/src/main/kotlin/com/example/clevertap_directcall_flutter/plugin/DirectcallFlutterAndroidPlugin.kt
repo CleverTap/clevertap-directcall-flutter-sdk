@@ -14,6 +14,7 @@ import com.example.clevertap_directcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCK
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_PROPERTIES
+import com.example.clevertap_directcall_flutter.Constants.KEY_DEBUG_LEVEL
 import com.example.clevertap_directcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_directcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_directcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
@@ -23,9 +24,11 @@ import com.example.clevertap_directcall_flutter.DCMethodCall.CALL
 import com.example.clevertap_directcall_flutter.DCMethodCall.HANG_UP_CALL
 import com.example.clevertap_directcall_flutter.DCMethodCall.INIT
 import com.example.clevertap_directcall_flutter.DCMethodCall.IS_ENABLED
+import com.example.clevertap_directcall_flutter.DCMethodCall.LOGGING
 import com.example.clevertap_directcall_flutter.DCMethodCall.LOGOUT
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_INITIALIZE
 import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
+import com.example.clevertap_directcall_flutter.extensions.toDCLogLevel
 import com.example.clevertap_directcall_flutter.extensions.toMap
 import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
 import com.example.clevertap_directcall_flutter.handlers.MissedCallActionClickHandler
@@ -57,12 +60,16 @@ class DirectcallFlutterAndroidPlugin :
     //Called when a method-call is invoked from flutterPlugin
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
+            LOGGING -> {
+                setDebugLevel(call)
+                result.success(null)
+            }
             INIT -> {
-                initDirectCallSdk(call, result)
+                initDirectCallSdk(call)
                 result.success(null)
             }
             CALL -> {
-                initiateVoipCall(call, result)
+                initiateVoipCall(call)
                 result.success(null)
             }
             LOGOUT -> {
@@ -80,8 +87,13 @@ class DirectcallFlutterAndroidPlugin :
         }
     }
 
+    override fun setDebugLevel(call: MethodCall) {
+        val debugLevel = call.argument<Int>(KEY_DEBUG_LEVEL)
+        debugLevel?.let { DirectCallAPI.setDebugLevel(debugLevel.toDCLogLevel()) }
+    }
+
     //Retrieves the init-properties from call-arguments  Initializes the Direct Call Android SDK
-    override fun initDirectCallSdk(call: MethodCall, result: Result) {
+    override fun initDirectCallSdk(call: MethodCall) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
 
@@ -132,7 +144,7 @@ class DirectcallFlutterAndroidPlugin :
     }
 
     //Retrieves the call-properties from call-arguments and initiates a VoIP call
-    override fun initiateVoipCall(call: MethodCall, result: Result) {
+    override fun initiateVoipCall(call: MethodCall) {
         try {
             val callProperties = call.argument<Map<String, Any>>(KEY_CALL_PROPERTIES)
             val receiverCuid = callProperties?.let { it[KEY_RECEIVER_CUID] as String }

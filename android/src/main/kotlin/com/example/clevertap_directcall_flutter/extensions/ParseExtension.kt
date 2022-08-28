@@ -1,5 +1,6 @@
 package com.example.clevertap_directcall_flutter.extensions
 
+import com.clevertap.android.directcall.init.DirectCallAPI
 import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import com.example.clevertap_directcall_flutter.Constants.KEY_ACTION
 import com.example.clevertap_directcall_flutter.Constants.KEY_ACTION_ID
@@ -27,4 +28,18 @@ fun MissedCallNotificationOpenResult.toMap(): HashMap<String, Any> {
     resultMap[KEY_ACTION] = actionMap
     resultMap[KEY_CALL_DETAILS] = callDetailsMap
     return resultMap
+}
+
+/**
+ * Parses the integer to the [DirectCallAPI.DCLogLevel]
+ * @return - returns a parsed DCLogLevel value
+ */
+fun Int.toDCLogLevel(): Int {
+    return when (this) {
+        -1 -> DirectCallAPI.DCLogLevel.OFF
+        0 -> DirectCallAPI.DCLogLevel.INFO
+        2 -> DirectCallAPI.DCLogLevel.DEBUG
+        3 -> DirectCallAPI.DCLogLevel.VERBOSE
+        else -> throw IllegalStateException("Invalid value of debug level")
+    }
 }

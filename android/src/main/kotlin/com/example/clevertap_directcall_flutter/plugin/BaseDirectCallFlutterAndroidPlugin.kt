@@ -13,12 +13,17 @@ interface BaseDirectCallFlutterAndroidPlugin {
     /**
      * Defines implementation to initialize the Direct Call Android SDK
      */
-    fun initDirectCallSdk(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
+    fun setDebugLevel(@NonNull call: MethodCall)
+
+    /**
+     * Defines implementation to initialize the Direct Call Android SDK
+     */
+    fun initDirectCallSdk(@NonNull call: MethodCall)
 
     /**
      * Defines implementation to initiate a VoIP call
      */
-    fun initiateVoipCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result)
+    fun initiateVoipCall(@NonNull call: MethodCall)
 
     /**
      * Sends the real-time changes in the call-state in an observable event stream

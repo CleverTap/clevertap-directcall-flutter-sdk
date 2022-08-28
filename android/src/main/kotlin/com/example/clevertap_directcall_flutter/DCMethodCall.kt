@@ -7,6 +7,7 @@ object DCMethodCall {
     const val LOGOUT = "logout"
     const val IS_ENABLED = "isEnabled"
     const val HANG_UP_CALL = "hangUpCall"
+    const val LOGGING = "logging"
 
     //Platform to Flutter
     const val ON_DIRECT_CALL_DID_INITIALIZE = "onDirectCallDidInitialize"

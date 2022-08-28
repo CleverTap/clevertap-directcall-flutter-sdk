@@ -3,6 +3,7 @@ package com.example.clevertap_directcall_flutter
 object Constants {
     const val LOG_TAG = "DCFlutter:Android"
     const val CHANNEL_NAME = "clevertap_directcall_flutter"
+    const val KEY_DEBUG_LEVEL = "debugLevel"
     const val KEY_INIT_PROPERTIES = "initProperties"
     const val KEY_ACCOUNT_ID = "accountId"
     const val KEY_API_KEY = "apikey"

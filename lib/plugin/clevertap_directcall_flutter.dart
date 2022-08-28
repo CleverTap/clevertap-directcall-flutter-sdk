@@ -2,10 +2,19 @@ import 'package:clevertap_directcall_flutter/models/missed_call_action_click_res
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 
 import '../models/call_events.dart';
+import '../models/log_level.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Direct Call Native SDKs(Android/iOS)
 class ClevertapDirectcallFlutter {
+  /// Enables or disables debugging. If enabled, see debug messages logcat utility.
+  /// Debug messages are tagged as CleverTap.
+  ///
+  /// [level] - an enum value from [LogLevel] class
+  static Future<void> setDebugLevel(LogLevel level) {
+    return ClevertapDirectcallFlutterPlatform.instance.setDebugLevel(level);
+  }
+
   ///Initializes the Direct Call SDK
   ///
   ///[initProperties] - configuration for initialization

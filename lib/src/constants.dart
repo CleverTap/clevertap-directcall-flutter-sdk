@@ -1,4 +1,5 @@
 const String channelName = "clevertap_directcall_flutter";
+const String argDebugLevel = "debugLevel";
 const String argInitProperties = "initProperties";
 const String argCallProperties = "callProperties";
 const String keyReceiverCuid = "receiverCuid";

@@ -1,3 +1,4 @@
+import 'package:clevertap_directcall_flutter/models/log_level.dart';
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -26,6 +27,16 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
+
+  /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
+  /// Debug messages are tagged as CleverTap.
+  ///
+  /// [level] Can be one of the following:
+  /// 1) [LogLevel.off] (disables all debugging),
+  /// 2) [LogLevel.info] (default, shows minimal SDK integration related logging)
+  /// 3) [LogLevel.DEBUG] (shows debug output)
+  /// 4) [LogLevel.verbose] (shows verbose output)
+  Future<void> setDebugLevel(LogLevel level);
 
   ///Initializes the Direct Call SDK
   ///

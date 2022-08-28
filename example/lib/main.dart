@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clevertap_directcall_flutter/models/call_events.dart';
+import 'package:clevertap_directcall_flutter/models/log_level.dart';
 import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -31,8 +32,19 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     setup();
     initDirectCallSdk();
+  }
+
+  Future<void> initPlatformState() async {
+    //Enables the verbose debugging in Direct Call Plugin
+    ClevertapDirectcallFlutter.setDebugLevel(LogLevel.verbose);
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
   }
 
   void setup() {
@@ -47,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     }
     if (directCallInitError == null) {
       _startObservingCallEvents();
-      _startObservingMissedCallActionClickEvents();
+      _startObservingMissedCallActionClickEvent();
 
       //_clevertapDirectcallFlutterPlugin.logout();
       var isEnabled = await _clevertapDirectcallFlutterPlugin.isEnabled();
@@ -99,11 +111,6 @@ class _MyAppState extends State<MyApp> {
     } on PlatformException {
       _directCallInitStatus = 'Failed to initialize the Direct Call SDK.';
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
   }
 
   @override
@@ -144,7 +151,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _startObservingMissedCallActionClickEvents() {
+  //Listens to the missed call action click events
+  void _startObservingMissedCallActionClickEvent() {
     _missedCallActionClickEventSubscription = _clevertapDirectcallFlutterPlugin
         .missedCallActionClickListener
         .listen((result) {

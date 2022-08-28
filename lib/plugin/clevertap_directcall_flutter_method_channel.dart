@@ -2,10 +2,12 @@ import 'package:clevertap_directcall_flutter/models/missed_call_action_click_res
 import 'package:clevertap_directcall_flutter/src/constants.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
+import 'package:clevertap_directcall_flutter/src/extensions/log_level_extension.dart';
 import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
+import '../models/log_level.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
@@ -23,6 +25,20 @@ class MethodChannelClevertapDirectcallFlutter
   MethodChannelClevertapDirectcallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
     _methodChannel.setMethodCallHandler(_platformCallHandler);
+  }
+
+  /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
+  /// Debug messages are tagged as CleverTap.
+  ///
+  /// [level] Can be one of the following:
+  /// 1) [LogLevel.off] (disables all debugging),
+  /// 2) [LogLevel.info] (default, shows minimal SDK integration related logging)
+  /// 3) [LogLevel.DEBUG] (shows debug output)
+  /// 4) [LogLevel.verbose] (shows verbose output)
+  @override
+  Future<void> setDebugLevel(LogLevel level) {
+    return _methodChannel
+        .invokeMethod(DCMethodCall.logging, {argDebugLevel: level.rawValue});
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.

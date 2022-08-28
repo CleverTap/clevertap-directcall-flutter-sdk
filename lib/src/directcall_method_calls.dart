@@ -5,6 +5,7 @@ class DCMethodCall {
   static const String logout = "logout";
   static const String isEnabled = "isEnabled";
   static const String hangUpCall = "hangUpCall";
+  static const String logging = "logging";
 
   //Platform to Flutter
   static const String onDirectCallDidInitialize = "onDirectCallDidInitialize";
