@@ -1,11 +1,9 @@
-import '../models/call_events.dart';
+import 'package:clevertap_directcall_flutter/models/call_events.dart';
 
-class Utils {
-  //Private constructor
-  Utils._();
-
-  ///parses the state of the call in a [CallEvent]
-  static CallEvent parseCallEvent(String state) {
+///Extension of [LogLevel] enum class
+extension CallEventExtension on CallEvent {
+  ///Takes the [state] as a target and returns the parsed [CallEvent] type.
+  CallEvent fromString(String state) {
     switch (state) {
       case "Cancelled":
         return CallEvent.cancelled;

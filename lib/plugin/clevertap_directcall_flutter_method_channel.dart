@@ -3,14 +3,13 @@ import 'package:clevertap_directcall_flutter/src/constants.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
 import 'package:clevertap_directcall_flutter/src/extensions/log_level_extension.dart';
-import 'package:clevertap_directcall_flutter/src/utils.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
-/// An implementation of [ClevertapDirectcallFlutterPlatform] that uses method channels.
+/// An implementation of [ClevertapDirectcallFlutterPlatform] that provides communication b/w flutter and platform.
 class MethodChannelClevertapDirectcallFlutter
     extends ClevertapDirectcallFlutterPlatform {
   /// The method channel used to interact with the native platform.
@@ -48,7 +47,7 @@ class MethodChannelClevertapDirectcallFlutter
     const callEventChannel = EventChannel('$channelName/events/call_event');
     _callEventsListener ??= callEventChannel
         .receiveBroadcastStream()
-        .map((dynamic event) => Utils.parseCallEvent(event));
+        .map((event) => CallEvent.fromString(event.toString()));
     return _callEventsListener!;
   }
 
