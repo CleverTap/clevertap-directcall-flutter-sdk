@@ -16,10 +16,10 @@ class RouteGenerator {
               clevertapDirectcallFlutterPlugin:
                   _clevertapDirectcallFlutterPlugin));
     } else if (settings.name == DiallerPage.routeName) {
-      Map loggedInCuid = settings.arguments as Map;
+      Map arguments = settings.arguments as Map;
       return MaterialPageRoute(
           builder: (context) => DiallerPage(
-              loggedInCuid: loggedInCuid[keyLoggedInCuid],
+              loggedInCuid: arguments[keyLoggedInCuid],
               clevertapDirectcallFlutterPlugin:
                   _clevertapDirectcallFlutterPlugin));
     } else {

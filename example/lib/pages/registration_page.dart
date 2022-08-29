@@ -166,6 +166,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     isLoadingVisible = true;
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return const Center(
             child: CircularProgressIndicator(),

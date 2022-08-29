@@ -50,7 +50,7 @@ class _DiallerPageState extends State<DiallerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset : false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Dialler Screen'),
         automaticallyImplyLeading: false,
@@ -83,8 +83,11 @@ class _DiallerPageState extends State<DiallerPage> {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                initiateVoIPCall(
-                    receiverCuidController.text, callContextController.text);
+                Utils.dismissKeyboard(context);
+                Utils.askMicroPhonePermission().then((value) => {
+                      initiateVoIPCall(receiverCuidController.text,
+                          callContextController.text)
+                    });
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -140,7 +143,8 @@ class _DiallerPageState extends State<DiallerPage> {
       final errorCode = directCallVoIPError[keyErrorCode];
       final errorMessage = directCallVoIPError[keyErrorMessage];
 
-      Utils.showSnack(context, 'VoIP call is failed: $errorCode = $errorMessage');
+      Utils.showSnack(
+          context, 'VoIP call is failed: $errorCode = $errorMessage');
     }
   }
 
@@ -151,6 +155,7 @@ class _DiallerPageState extends State<DiallerPage> {
         .listen((event) {
       print(
           "CleverTap:DirectCallFlutter: received callEvent stream with ${event.toString()}");
+      Utils.showSnack(context, event.name);
       if (event == CallEvent.answered) {
         _startCallDurationMeterToEndCall();
       }
@@ -164,6 +169,8 @@ class _DiallerPageState extends State<DiallerPage> {
         .listen((result) {
       print(
           "CleverTap:DirectCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
+
+      Navigator.pushNamed(context, RegistrationPage.routeName);
     });
   }
 
