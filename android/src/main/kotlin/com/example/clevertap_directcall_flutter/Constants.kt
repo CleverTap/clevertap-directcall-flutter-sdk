@@ -20,18 +20,19 @@ object Constants {
     const val KEY_LOGO_URL = "logoUrl"
     const val KEY_BUTTON_THEME = "buttonTheme"
     const val KEY_CALL_PROPERTIES = "callProperties"
-    const val KEY_RECEIVER_CUID = "receiverCuid";
-    const val KEY_CALL_CONTEXT = "callContext";
-    const val KEY_CALL_OPTIONS = "callOptions";
+    const val KEY_RECEIVER_CUID = "receiverCuid"
+    const val KEY_CALL_CONTEXT = "callContext"
+    const val KEY_CALL_OPTIONS = "callOptions"
     const val KEY_ERROR_CODE = "errorCode"
     const val KEY_ERROR_MESSAGE = "errorMessage"
     const val KEY_ERROR_DESCRIPTION = "errorDescription"
     const val DARK_THEME = "dark"
-    const val KEY_ACTION = "action";
-    const val KEY_ACTION_ID = "actionId";
-    const val KEY_ACTION_LABEL = "actionLabel";
-    const val KEY_CALL_DETAILS = "callDetails";
-    const val KEY_CALLER_CUID = "callerCuid";
-    const val KEY_CALLEE_CUID = "calleeCuid";
-
+    const val KEY_ACTION = "action"
+    const val KEY_ACTION_ID = "actionId"
+    const val KEY_ACTION_LABEL = "actionLabel"
+    const val KEY_CALL_DETAILS = "callDetails"
+    const val KEY_CALLER_CUID = "callerCuid"
+    const val KEY_CALLEE_CUID = "calleeCuid"
+    const val KEY_CALL_EVENT_CHANNEL = "callEventChannel"
+    const val KEY_MISSED_CALL_ACTION_CLICK_EVENT_CHANNEL = "missedCallActionClickEventChannel"
 }

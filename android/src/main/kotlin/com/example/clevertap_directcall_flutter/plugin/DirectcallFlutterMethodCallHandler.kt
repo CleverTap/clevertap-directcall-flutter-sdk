@@ -1,5 +1,6 @@
 package com.example.clevertap_directcall_flutter.plugin
 
+import android.content.Context
 import androidx.annotation.NonNull
 import com.clevertap.android.directcall.exception.CallException
 import com.clevertap.android.directcall.exception.InitException
@@ -42,19 +43,17 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
-/** ClevertapDirectcallFlutterPlugin */
-class DirectcallFlutterAndroidPlugin :
-    BaseDirectCallFlutterAndroidPlugin, FlutterPluginLifecycleHandler(),
+class DirectcallFlutterMethodCallHandler(
+    private val context: Context?,
+    private val methodChannel: MethodChannel?
+) :
+    IDirectCallTask,
     MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
 
     init {
-        super.setupFlutterPlugin(methodCallHandler = this) {
-            cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
-            callEventChannel?.setStreamHandler(CallEventStreamHandler)
-            missedCallActionClickEventChannel?.setStreamHandler(MissedCallActionEventStreamHandler);
-        }
+        cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
     }
 
     //Called when a method-call is invoked from flutterPlugin

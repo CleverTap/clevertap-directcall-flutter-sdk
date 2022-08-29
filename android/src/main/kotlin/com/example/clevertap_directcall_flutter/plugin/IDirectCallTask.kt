@@ -4,12 +4,11 @@ import androidx.annotation.NonNull
 import com.clevertap.android.directcall.javaclasses.VoIPCallStatus
 import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 
 /**
  * Defines all the operations that needs to be performed via Direct Call Android SDK
  */
-interface BaseDirectCallFlutterAndroidPlugin {
+interface IDirectCallTask {
     /**
      * Defines implementation to initialize the Direct Call Android SDK
      */
@@ -44,7 +43,7 @@ interface BaseDirectCallFlutterAndroidPlugin {
      * Defines implementation to check whether the Direct Call SDK services(i.e. call initiation or reception)
      * are enabled or not.
      */
-    fun isDirectCallSdkEnabled() : Boolean
+    fun isDirectCallSdkEnabled(): Boolean
 
     /**
      * Ends the active call, if any.

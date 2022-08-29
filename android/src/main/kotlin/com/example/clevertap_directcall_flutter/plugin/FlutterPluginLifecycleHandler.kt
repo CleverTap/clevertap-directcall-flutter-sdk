@@ -2,11 +2,12 @@ package com.example.clevertap_directcall_flutter.plugin
 
 import android.content.Context
 import com.example.clevertap_directcall_flutter.Constants
+import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
+class FlutterPluginLifecycleHandler : FlutterPlugin {
     /**
      * The MethodChannel that will used to establish the communication between Flutter and Android
      *
@@ -26,15 +27,6 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
     var missedCallActionClickEventChannel: EventChannel? = null
 
     var context: Context? = null
-    private lateinit var onPluginSetupCompleteListener: () -> Unit
-
-    fun setupFlutterPlugin(
-        methodCallHandler: MethodChannel.MethodCallHandler,
-        onPluginSetupCompleteListener: () -> Unit
-    ) {
-        this.methodCallHandler = methodCallHandler
-        this.onPluginSetupCompleteListener = onPluginSetupCompleteListener
-    }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         setupPlugin(flutterPluginBinding)
@@ -50,8 +42,12 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
     }
 
     private fun setupPlugin(binding: FlutterPlugin.FlutterPluginBinding) {
+        context = binding.applicationContext
+
         methodChannel = MethodChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/methods")
+        methodCallHandler = DirectcallFlutterMethodCallHandler(context, methodChannel)
         methodChannel!!.setMethodCallHandler(methodCallHandler)
+
         callEventChannel =
             EventChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/events/call_event")
         missedCallActionClickEventChannel = EventChannel(
@@ -59,9 +55,7 @@ abstract class FlutterPluginLifecycleHandler : FlutterPlugin {
             "${Constants.CHANNEL_NAME}/events/missed_call_action_click"
         )
 
-        context = binding.applicationContext
-
-        //Call below callback only when the plugin setup is completed
-        onPluginSetupCompleteListener()
+        callEventChannel?.setStreamHandler(CallEventStreamHandler)
+        missedCallActionClickEventChannel?.setStreamHandler(CallEventStreamHandler)
     }
 }

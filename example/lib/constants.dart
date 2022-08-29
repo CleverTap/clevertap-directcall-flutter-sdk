@@ -17,3 +17,6 @@ const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
 const String keyInitiatorImage = "initiator_image";
 const String keyReceiverImage = "receiver_image";
+const String keyErrorCode = "errorCode";
+const String keyErrorMessage = "errorMessage";
+const String keyLoggedInCuid = "loggedInCuid";
