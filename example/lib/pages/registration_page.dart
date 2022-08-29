@@ -1,4 +1,5 @@
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
+import 'package:clevertap_directcall_flutter_example/Utils.dart';
 import 'package:clevertap_directcall_flutter_example/constants.dart';
 import 'package:clevertap_directcall_flutter_example/pages/dialler_page.dart';
 import 'package:flutter/foundation.dart';
@@ -25,6 +26,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
+  bool isLoadingVisible = false;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
         title: const Text('Direct Call'),
         automaticallyImplyLeading: false,
@@ -79,12 +82,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initDirectCallSdk(String cuid) async {
+  // Initializes the Direct Call SDK
+  void initDirectCallSdk(String inputCuid) {
     showLoading();
 
-    _userCuid = cuidController.text;
-
+    _userCuid = inputCuid;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
@@ -105,7 +107,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       var initProperties = {
         keyAccountId: dcAccountId,
         keyApiKey: dcApiKey,
-        keyCuid: cuid,
+        keyCuid: _userCuid,
         keyAllowPersistSocketConnection: true, //Android Platform
         keyEnableReadPhoneState: true, //Android Platform
         keyOverrideDefaultBranding: callScreenBranding, //Android Platform
@@ -115,8 +117,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       widget.clevertapDirectcallFlutterPlugin.init(
           initProperties: initProperties, initHandler: _directCallInitHandler);
     } on PlatformException {
-      const snackBar = SnackBar(content: Text('PlatformException occurs!'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Utils.showSnack(context, 'PlatformException occurs!');
     }
   }
 
@@ -136,9 +137,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       final errorCode = directCallInitError[keyErrorCode];
       final errorMessage = directCallInitError[keyErrorMessage];
 
-      final snackBar =
-          SnackBar(content: Text('DC Init failed: $errorCode = $errorMessage'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      hideLoading();
+      Utils.showSnack(context, 'DC Init failed: $errorCode = $errorMessage');
     }
   }
 
@@ -148,22 +148,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
-        arguments: {"loggedInCuid": _userCuid});
+        arguments: {keyLoggedInCuid: _userCuid});
   }
 
-  /// Initialized the DC SDK directly if any account is already signed in
   void initDCSDKIfCuIDSignedIn() {
-    SharedPreferenceManager.getLoggedInCuid().then((result) {
+    SharedPreferenceManager.getLoggedInCuid().then((loggedInCuid) {
       setState(() {
-        if (result != null) {
-          _userCuid = result;
-          initDirectCallSdk(result);
+        if (loggedInCuid != null) {
+          _userCuid = loggedInCuid;
+          initDirectCallSdk(loggedInCuid);
         }
       });
     });
   }
 
   void showLoading() {
+    isLoadingVisible = true;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -171,5 +171,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: CircularProgressIndicator(),
           );
         });
+  }
+
+  void hideLoading() {
+    if (isLoadingVisible) {
+      Navigator.pop(context);
+      isLoadingVisible = false;
+    }
   }
 }

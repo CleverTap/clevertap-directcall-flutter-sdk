@@ -4,9 +4,11 @@ import 'package:clevertap_directcall_flutter/models/call_events.dart';
 import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
 import 'package:clevertap_directcall_flutter_example/pages/registration_page.dart';
+import 'package:clevertap_directcall_flutter_example/shared_preference_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils.dart';
 import '../constants.dart';
 
 class DiallerPage extends StatefulWidget {
@@ -48,8 +50,9 @@ class _DiallerPageState extends State<DiallerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        title: const Text('Call Screen'),
+        title: const Text('Dialler Screen'),
         automaticallyImplyLeading: false,
       ),
       body: Container(
@@ -118,32 +121,26 @@ class _DiallerPageState extends State<DiallerPage> {
             voIPCallHandler: _directCallVoIPCallHandler);
       }
     } else {
-      const snackBar = SnackBar(
-          content:
-              Text('Both Receiver cuid and context of the call are required!'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Utils.showSnack(
+          context, 'Both Receiver cuid and context of the call are required!');
     }
   }
 
   void _directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
     if (kDebugMode) {
       print(
-        "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
+          "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
     }
 
     if (directCallVoIPError == null) {
       //Initialization is successful here
-      const snackBar =
-          SnackBar(content: Text('VoIP call is placed successfully!'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Utils.showSnack(context, 'VoIP call is placed successfully!');
     } else {
       //Initialization is failed here
       final errorCode = directCallVoIPError[keyErrorCode];
       final errorMessage = directCallVoIPError[keyErrorMessage];
 
-      final snackBar = SnackBar(
-          content: Text('VoIP call is failed: $errorCode = $errorMessage'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Utils.showSnack(context, 'VoIP call is failed: $errorCode = $errorMessage');
     }
   }
 
@@ -186,6 +183,7 @@ class _DiallerPageState extends State<DiallerPage> {
 
   void logoutSession() {
     widget.clevertapDirectcallFlutterPlugin.logout();
+    SharedPreferenceManager.clearData();
     Navigator.pushNamed(context, RegistrationPage.routeName);
   }
 }

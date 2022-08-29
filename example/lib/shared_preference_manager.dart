@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 
 class SharedPreferenceManager {
-  static Future<bool> saveLoggedInCuid(String token) async {
+  static Future<bool> saveLoggedInCuid(String cuid) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(keyLoggedInCuid, token);
+    return prefs.setString(keyLoggedInCuid, cuid);
   }
 
   static Future<String?> getLoggedInCuid() async {
@@ -13,7 +13,7 @@ class SharedPreferenceManager {
     return prefs.getString(keyLoggedInCuid);
   }
 
-  static removeValues() async {
+  static clearData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(keyLoggedInCuid);
   }

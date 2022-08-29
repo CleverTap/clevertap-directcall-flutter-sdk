@@ -1,4 +1,5 @@
 import 'package:clevertap_directcall_flutter/models/call_events.dart';
+import 'package:clevertap_directcall_flutter/models/log_level.dart';
 import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter_method_channel.dart';
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter_platform_interface.dart';
@@ -52,6 +53,12 @@ class MockClevertapDirectcallFlutterPlatform
   // TODO: implement missedCallActionClickListener
   Stream<MissedCallActionClickResult> get missedCallActionClickListener =>
       throw UnimplementedError();
+
+  @override
+  Future<void> setDebugLevel(LogLevel level) {
+    // TODO: implement setDebugLevel
+    throw UnimplementedError();
+  }
 }
 
 void main() {

@@ -1,4 +1,5 @@
 import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
+import 'package:clevertap_directcall_flutter_example/constants.dart';
 import 'package:clevertap_directcall_flutter_example/pages/dialler_page.dart';
 import 'package:clevertap_directcall_flutter_example/pages/registration_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class RouteGenerator {
       Map loggedInCuid = settings.arguments as Map;
       return MaterialPageRoute(
           builder: (context) => DiallerPage(
-              loggedInCuid: loggedInCuid["loggedInCuid"],
+              loggedInCuid: loggedInCuid[keyLoggedInCuid],
               clevertapDirectcallFlutterPlugin:
                   _clevertapDirectcallFlutterPlugin));
     } else {
