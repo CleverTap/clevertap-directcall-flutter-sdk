@@ -38,7 +38,7 @@ flutter:
     platforms:
       android:
         package: com.example.clevertap_directcall_flutter.plugin
-        pluginClass: FlutterPluginLifecycleHandler
+        pluginClass: DirectCallFlutterPluginRegistrant
       ios:
         pluginClass: ClevertapDirectcallFlutterPlugin
 

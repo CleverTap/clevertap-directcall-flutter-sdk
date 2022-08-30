@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-class FlutterPluginLifecycleHandler : FlutterPlugin {
+class DirectCallFlutterPluginRegistrant : FlutterPlugin {
     /**
      * The MethodChannel that will used to establish the communication between Flutter and Android
      *
