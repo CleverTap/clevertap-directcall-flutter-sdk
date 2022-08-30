@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
    <application
-        android:label="clevertap_directcall_flutter_example"
+        android:label="DC Flutter"
         android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
