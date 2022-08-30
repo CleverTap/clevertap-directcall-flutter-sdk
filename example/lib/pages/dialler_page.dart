@@ -49,65 +49,70 @@ class _DiallerPageState extends State<DiallerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Dialler Screen'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            Text(
-              'Welcome: ${widget.loggedInCuid}',
-              // textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return WillPopScope(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: const Text('Dialler Screen'),
+            automaticallyImplyLeading: false,
+          ),
+          body: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                Text(
+                  'Welcome: ${widget.loggedInCuid}',
+                  // textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 40),
+                TextField(
+                  controller: receiverCuidController,
+                  decoration: const InputDecoration(
+                    hintText: 'Receiver CUID',
+                  ),
+                ),
+                const SizedBox(height: 30),
+                TextField(
+                  controller: callContextController,
+                  decoration: const InputDecoration(
+                    hintText: 'Context of the call',
+                  ),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    Utils.dismissKeyboard(context);
+                    Utils.askMicroPhonePermission().then((value) => {
+                          initiateVoIPCall(receiverCuidController.text,
+                              callContextController.text)
+                        });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                  ),
+                  child: const Text('Initiate VOIP Call'),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    logoutSession();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  child: const Text('Logout'),
+                ),
+              ],
             ),
-            const SizedBox(height: 40),
-            TextField(
-              controller: receiverCuidController,
-              decoration: const InputDecoration(
-                hintText: 'Receiver CUID',
-              ),
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: callContextController,
-              decoration: const InputDecoration(
-                hintText: 'Context of the call',
-              ),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Utils.dismissKeyboard(context);
-                Utils.askMicroPhonePermission().then((value) => {
-                      initiateVoIPCall(receiverCuidController.text,
-                          callContextController.text)
-                    });
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-              ),
-              child: const Text('Initiate VOIP Call'),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                logoutSession();
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.blue),
-              ),
-              child: const Text('Logout'),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+        onWillPop: () {
+          return Future.value(false);
+        });
   }
 
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
@@ -170,7 +175,7 @@ class _DiallerPageState extends State<DiallerPage> {
       print(
           "CleverTap:DirectCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
 
-      Navigator.pushNamed(context, RegistrationPage.routeName);
+      Navigator.pushNamed(context, DiallerPage.routeName);
     });
   }
 

@@ -3,6 +3,7 @@ package com.example.clevertap_directcall_flutter.plugin
 import android.content.Context
 import com.example.clevertap_directcall_flutter.Constants
 import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
+import com.example.clevertap_directcall_flutter.handlers.MissedCallActionEventStreamHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
@@ -56,6 +57,6 @@ class FlutterPluginLifecycleHandler : FlutterPlugin {
         )
 
         callEventChannel?.setStreamHandler(CallEventStreamHandler)
-        missedCallActionClickEventChannel?.setStreamHandler(CallEventStreamHandler)
+        missedCallActionClickEventChannel?.setStreamHandler(MissedCallActionEventStreamHandler)
     }
 }

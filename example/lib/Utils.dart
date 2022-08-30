@@ -15,14 +15,14 @@ class Utils {
   static Future<bool?> askMicroPhonePermission() async {
     PermissionStatus status = await Permission.microphone.request();
     if (status == PermissionStatus.granted) {
-      print('Permission granted');
+      print('Microphone permission granted!');
       return true;
     } else if (status == PermissionStatus.denied) {
       print(
-          'Permission denied. Show a dialog and again ask for the permission');
+          'Microphone permission denied!');
       askMicroPhonePermission();
     } else if (status == PermissionStatus.permanentlyDenied) {
-      print('Take the user to the settings page.');
+      print('Takes the user to the settings page');
       await openAppSettings();
     }
     return null;

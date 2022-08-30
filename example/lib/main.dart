@@ -3,7 +3,6 @@ import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter
 import 'package:clevertap_directcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(const MyApp());
 }

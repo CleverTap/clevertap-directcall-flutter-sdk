@@ -24,10 +24,10 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
         try {
             Log.d(
                 LOG_TAG, "actionID: " + result.action.actionID
-                        + "actionLabel: " + result.action.actionLabel
-                        + "context of call: " + result.callDetails.callContext
-                        + "cuid of caller: " + result.callDetails.callerCuid
-                        + "cuid of callee: " + result.callDetails.calleeCuid
+                        + ", actionLabel: " + result.action.actionLabel
+                        + ", context of call: " + result.callDetails.callContext
+                        + ", cuid of caller: " + result.callDetails.callerCuid
+                        + ", cuid of callee: " + result.callDetails.calleeCuid
             )
 
             MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
