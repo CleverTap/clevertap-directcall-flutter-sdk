@@ -160,9 +160,9 @@ class _DiallerPageState extends State<DiallerPage> {
         .listen((event) {
       print(
           "CleverTap:DirectCallFlutter: received callEvent stream with ${event.toString()}");
-      Utils.showSnack(context, event.name);
+      //Utils.showSnack(context, event.name);
       if (event == CallEvent.answered) {
-        _startCallDurationMeterToEndCall();
+       //_startCallDurationMeterToEndCall();
       }
     });
   }
