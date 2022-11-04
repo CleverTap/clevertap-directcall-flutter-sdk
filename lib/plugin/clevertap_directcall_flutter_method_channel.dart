@@ -2,11 +2,11 @@ import 'package:clevertap_directcall_flutter/models/missed_call_action_click_res
 import 'package:clevertap_directcall_flutter/src/constants.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
 import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
-import 'package:clevertap_directcall_flutter/src/extensions/log_level_extension.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
+import '../src/direct_call_logger.dart';
 import 'clevertap_directcall_flutter_platform_interface.dart';
 
 /// An implementation of [ClevertapDirectcallFlutterPlatform] that provides communication b/w flutter and platform.
@@ -35,9 +35,10 @@ class MethodChannelClevertapDirectcallFlutter
   /// 3) [LogLevel.DEBUG] (shows debug output)
   /// 4) [LogLevel.verbose] (shows verbose output)
   @override
-  Future<void> setDebugLevel(LogLevel level) {
+  Future<void> setDebugLevel(LogLevel logLevel) {
+    DCLogger.setLogLevel(logLevel);
     return _methodChannel
-        .invokeMethod(DCMethodCall.logging, {argDebugLevel: level.rawValue});
+        .invokeMethod(DCMethodCall.logging, {argDebugLevel: logLevel});
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
@@ -66,8 +67,8 @@ class MethodChannelClevertapDirectcallFlutter
 
   ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
-    print(
-        "_platformCallHandler called: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
+    DCLogger.d(
+        "Inside platformCallHandler: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
 
     switch (call.method) {
       case DCMethodCall.onDirectCallDidInitialize:

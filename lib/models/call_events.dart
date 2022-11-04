@@ -1,3 +1,5 @@
+import '../src/direct_call_logger.dart';
+
 ///Holds all the possible statuses of a VoIP call
 enum CallEvent {
   //When a call is cancelled from the initiator's end
@@ -40,7 +42,7 @@ enum CallEvent {
       case "ReceiverBusyOnAnotherCall":
         return CallEvent.receiverBusyOnAnotherCall;
       default:
-        print('$state is not a valid CallState.');
+        DCLogger.d('$state is not a valid CallState.');
         throw ArgumentError('$state is not a valid CallState.');
     }
   }
