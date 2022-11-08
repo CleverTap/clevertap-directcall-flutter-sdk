@@ -36,9 +36,10 @@ class MethodChannelClevertapSignedCallFlutter
   /// 4) [LogLevel.verbose] (shows verbose output)
   @override
   Future<void> setDebugLevel(LogLevel logLevel) {
-    SignedCallLogger.setLogLevel(logLevel);
+    int logLevelValue = logLevel.value;
+    SignedCallLogger.setLogLevel(logLevelValue);
     return _methodChannel
-        .invokeMethod(SCMethodCall.logging, {argDebugLevel: logLevel});
+        .invokeMethod(SCMethodCall.logging, {argLogLevel: logLevelValue});
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.

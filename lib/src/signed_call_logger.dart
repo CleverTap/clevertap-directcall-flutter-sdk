@@ -8,8 +8,8 @@ class SignedCallLogger {
   ///SET APP LOG LEVEL, Default ALL
   static int _currentLogLevel = LogLevel.info.value;
 
-  static setLogLevel(LogLevel priority) {
-    _currentLogLevel = priority.value;
+  static setLogLevel(int priority) {
+    _currentLogLevel = priority;
   }
 
   ///Print general logs

@@ -175,7 +175,7 @@ class _DiallerPageState extends State<DiallerPage> {
       print(
           "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
 
-      Navigator.pushNamed(context, DiallerPage.routeName);
+      //Navigator.pushNamed(context, DiallerPage.routeName);
     });
   }
 

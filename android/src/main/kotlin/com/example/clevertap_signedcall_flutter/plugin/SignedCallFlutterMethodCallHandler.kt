@@ -15,7 +15,7 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCK
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_signedcall_flutter.Constants.KEY_DEBUG_LEVEL
+import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
@@ -87,7 +87,7 @@ class SignedCallFlutterMethodCallHandler(
     }
 
     override fun setDebugLevel(call: MethodCall) {
-        val debugLevel = call.argument<Int>(KEY_DEBUG_LEVEL)
+        val debugLevel = call.argument<Int>(KEY_LOG_LEVEL)
         debugLevel?.let { SignedCallAPI.setDebugLevel(debugLevel.toSignedCallLogLevel()) }
     }
 

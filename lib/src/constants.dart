@@ -1,5 +1,5 @@
 const String channelName = "clevertap_signedcall_flutter";
-const String argDebugLevel = "debugLevel";
+const String argLogLevel = "logLevel";
 const String argInitProperties = "initProperties";
 const String argCallProperties = "callProperties";
 const String keyReceiverCuid = "receiverCuid";
