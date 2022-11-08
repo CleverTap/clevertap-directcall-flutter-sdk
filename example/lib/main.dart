@@ -1,6 +1,6 @@
-import 'package:clevertap_directcall_flutter/models/log_level.dart';
-import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
-import 'package:clevertap_directcall_flutter_example/route_generator.dart';
+import 'package:clevertap_signedcall_flutter/models/log_level.dart';
+import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
+import 'package:clevertap_signedcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,8 +19,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    //Enables the verbose debugging in Direct Call Plugin
-    ClevertapDirectcallFlutter.setDebugLevel(LogLevel.verbose);
+    //Enables the verbose debugging in Signed Call Plugin
+    ClevertapSignedCallFlutter.setDebugLevel(LogLevel.verbose);
   }
 
   @override

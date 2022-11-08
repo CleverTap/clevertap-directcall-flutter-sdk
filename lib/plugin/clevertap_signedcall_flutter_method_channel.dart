@@ -1,27 +1,27 @@
-import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
-import 'package:clevertap_directcall_flutter/src/constants.dart';
-import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
-import 'package:clevertap_directcall_flutter/src/directcall_method_calls.dart';
+import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
+import 'package:clevertap_signedcall_flutter/src/constants.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
-import '../src/direct_call_logger.dart';
-import 'clevertap_directcall_flutter_platform_interface.dart';
+import '../src/signed_call_logger.dart';
+import '../src/signedcall_handlers.dart';
+import '../src/signedcall_method_calls.dart';
+import 'clevertap_signedcall_flutter_platform_interface.dart';
 
-/// An implementation of [ClevertapDirectcallFlutterPlatform] that provides communication b/w flutter and platform.
-class MethodChannelClevertapDirectcallFlutter
-    extends ClevertapDirectcallFlutterPlatform {
+/// An implementation of [ClevertapSignedCallFlutterPlatform] that provides communication b/w flutter and platform.
+class MethodChannelClevertapSignedCallFlutter
+    extends ClevertapSignedCallFlutterPlatform {
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
   Stream<CallEvent>? _callEventsListener;
   Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
 
-  late DirectCallInitHandler _initHandler;
-  late DirectCallVoIPCallHandler _voIPCallHandler;
+  late SignedCallInitHandler _initHandler;
+  late SignedCallVoIPCallHandler _voIPCallHandler;
 
-  MethodChannelClevertapDirectcallFlutter() {
+  MethodChannelClevertapSignedCallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
     _methodChannel.setMethodCallHandler(_platformCallHandler);
   }
@@ -36,9 +36,9 @@ class MethodChannelClevertapDirectcallFlutter
   /// 4) [LogLevel.verbose] (shows verbose output)
   @override
   Future<void> setDebugLevel(LogLevel logLevel) {
-    DCLogger.setLogLevel(logLevel);
+    SignedCallLogger.setLogLevel(logLevel);
     return _methodChannel
-        .invokeMethod(DCMethodCall.logging, {argDebugLevel: logLevel});
+        .invokeMethod(SCMethodCall.logging, {argDebugLevel: logLevel});
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
@@ -67,31 +67,31 @@ class MethodChannelClevertapDirectcallFlutter
 
   ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
-    DCLogger.d(
+    SignedCallLogger.d(
         "Inside platformCallHandler: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
 
     switch (call.method) {
-      case DCMethodCall.onDirectCallDidInitialize:
+      case SCMethodCall.onSignedCallDidInitialize:
         Map<dynamic, dynamic>? args = call.arguments;
         _initHandler(args?.cast<String, dynamic>());
         break;
-      case DCMethodCall.onDirectCallDidVoIPCallInitiate:
+      case SCMethodCall.onSignedCallDidVoIPCallInitiate:
         Map<dynamic, dynamic>? args = call.arguments;
         _voIPCallHandler(args?.cast<String, dynamic>());
         break;
     }
   }
 
-  ///Initializes the Direct Call SDK
+  ///Initializes the Signed Call SDK
   ///
   ///[initProperties] - configuration for initialization
   ///[initHandler]    - to get the initialization update(i.e. success/failure)
   @override
   Future<void> init(
-      Map<String, dynamic> initProperties, DirectCallInitHandler initHandler) {
+      Map<String, dynamic> initProperties, SignedCallInitHandler initHandler) {
     _initHandler = initHandler;
     return _methodChannel
-        .invokeMethod(DCMethodCall.init, {argInitProperties: initProperties});
+        .invokeMethod(SCMethodCall.init, {argInitProperties: initProperties});
   }
 
   ///Initiates a VoIP call
@@ -105,7 +105,7 @@ class MethodChannelClevertapDirectcallFlutter
       String receiverCuid,
       String callContext,
       Map<String, dynamic>? callOptions,
-      DirectCallVoIPCallHandler voIPCallHandler) {
+      SignedCallVoIPCallHandler voIPCallHandler) {
     _voIPCallHandler = voIPCallHandler;
 
     final callProperties = <String, dynamic>{};
@@ -113,26 +113,26 @@ class MethodChannelClevertapDirectcallFlutter
     callProperties[keyCallContext] = callContext;
     callProperties[keyCallOptions] = callOptions;
     return _methodChannel
-        .invokeMethod(DCMethodCall.call, {argCallProperties: callProperties});
+        .invokeMethod(SCMethodCall.call, {argCallProperties: callProperties});
   }
 
-  ///Logs out the user from the Direct Call SDK session
+  ///Logs out the user from the Signed Call SDK session
   @override
   Future<void> logout() {
-    return _methodChannel.invokeMethod(DCMethodCall.logout);
+    return _methodChannel.invokeMethod(SCMethodCall.logout);
   }
 
-  ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
+  ///Checks whether Signed Call SDK is enabled or not and returns true/false based on state
   @override
   Future<bool> isEnabled() {
     return _methodChannel
-        .invokeMethod<bool>(DCMethodCall.isEnabled)
+        .invokeMethod<bool>(SCMethodCall.isEnabled)
         .then<bool>((bool? value) => value ?? false);
   }
 
   ///Ends the active call, if any.
   @override
   Future<void> hangUpCall() {
-    return _methodChannel.invokeMethod(DCMethodCall.hangUpCall);
+    return _methodChannel.invokeMethod(SCMethodCall.hangUpCall);
   }
 }

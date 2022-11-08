@@ -1,14 +1,14 @@
-package com.example.clevertap_directcall_flutter.plugin
+package com.example.clevertap_signedcall_flutter.plugin
 
 import android.content.Context
-import com.example.clevertap_directcall_flutter.Constants
-import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
-import com.example.clevertap_directcall_flutter.handlers.MissedCallActionEventStreamHandler
+import com.example.clevertap_signedcall_flutter.Constants
+import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
+import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-class DirectCallFlutterPluginRegistrant : FlutterPlugin {
+class SignedCallFlutterPluginRegistrant : FlutterPlugin {
     /**
      * The MethodChannel that will used to establish the communication between Flutter and Android
      *
@@ -46,7 +46,7 @@ class DirectCallFlutterPluginRegistrant : FlutterPlugin {
         context = binding.applicationContext
 
         methodChannel = MethodChannel(binding.binaryMessenger, "${Constants.CHANNEL_NAME}/methods")
-        methodCallHandler = DirectcallFlutterMethodCallHandler(context, methodChannel)
+        methodCallHandler = SignedCallFlutterMethodCallHandler(context, methodChannel)
         methodChannel!!.setMethodCallHandler(methodCallHandler)
 
         callEventChannel =

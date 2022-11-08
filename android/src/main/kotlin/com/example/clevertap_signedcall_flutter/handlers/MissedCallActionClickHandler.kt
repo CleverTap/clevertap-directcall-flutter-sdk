@@ -1,18 +1,18 @@
-package com.example.clevertap_directcall_flutter.handlers
+package com.example.clevertap_signedcall_flutter.handlers
 
 import android.content.Context
 import android.util.Log
-import com.clevertap.android.directcall.interfaces.MissedCallNotificationOpenedHandler
-import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
-import com.example.clevertap_directcall_flutter.Constants.LOG_TAG
-import com.example.clevertap_directcall_flutter.extensions.toMap
+import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
+import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
+import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
+import com.example.clevertap_signedcall_flutter.extensions.toMap
 
 /**
- * Missed Call CTA handler for DirectCall Missed Call Notifications
+ * Missed Call CTA handler for SignedCall Missed Call Notifications
  */
 class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
     /**
-     * Gets called from the DC SDK when the user taps on the missed call CTA
+     * Gets called from the SC SDK when the user taps on the missed call CTA
      *
      * @param context - the app context
      * @param result  a [MissedCallNotificationOpenResult] object having call related details

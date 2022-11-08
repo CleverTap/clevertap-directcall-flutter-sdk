@@ -1,12 +1,10 @@
-package com.example.clevertap_directcall_flutter.handlers
+package com.example.clevertap_signedcall_flutter.handlers
 
 import io.flutter.plugin.common.EventChannel
 
 /**
  * Following file contains all the handlers for stream setup and teardown requests.
  */
-
-//
 object CallEventStreamHandler : EventChannel.StreamHandler {
     internal var eventSink: EventChannel.EventSink? = null
 

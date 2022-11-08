@@ -1,4 +1,4 @@
-name: clevertap_directcall_flutter
+name: clevertap_signedcall_flutter
 description: A new Flutter plugin project.
 version: 0.0.1
 homepage:
@@ -37,8 +37,8 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.clevertap_directcall_flutter.plugin
-        pluginClass: DirectCallFlutterPluginRegistrant
+        package: com.example.clevertap_signedcall_flutter.plugin
+        pluginClass: SignedCallFlutterPluginRegistrant
       ios:
         pluginClass: ClevertapDirectcallFlutterPlugin
 

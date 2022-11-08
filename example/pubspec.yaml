@@ -1,5 +1,5 @@
-name: clevertap_directcall_flutter_example
-description: Demonstrates how to use the clevertap_directcall_flutter plugin.
+name: clevertap_signedcall_flutter_example
+description: Demonstrates how to use the clevertap_signedcall_flutter plugin.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -18,9 +18,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  clevertap_directcall_flutter:
+  clevertap_signedcall_flutter:
     # When depending on this package from a real application you should use:
-    #   clevertap_directcall_flutter: ^x.y.z
+    #   clevertap_signedcall_flutter: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.

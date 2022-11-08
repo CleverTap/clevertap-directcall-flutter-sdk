@@ -1,29 +1,30 @@
-import 'package:clevertap_directcall_flutter/models/log_level.dart';
-import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter_method_channel.dart';
+import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../models/call_events.dart';
+import '../models/log_level.dart';
 import '../models/missed_call_action_click_result.dart';
-import '../src/directcall_handlers.dart';
+import '../src/signedcall_handlers.dart';
+import 'clevertap_signedcall_flutter_method_channel.dart';
 
-abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
-  /// Constructs a ClevertapDirectcallFlutterPlatform.
-  ClevertapDirectcallFlutterPlatform() : super(token: _token);
+abstract class ClevertapSignedCallFlutterPlatform extends PlatformInterface {
+  /// Constructs a [ClevertapSignedCallFlutterPlatform].
+  ClevertapSignedCallFlutterPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static ClevertapDirectcallFlutterPlatform _instance =
-      MethodChannelClevertapDirectcallFlutter();
+  static ClevertapSignedCallFlutterPlatform _instance =
+      MethodChannelClevertapSignedCallFlutter();
 
-  /// The default instance of [ClevertapDirectcallFlutterPlatform] to use.
+  /// The default instance of [ClevertapSignedCallFlutterPlatform] to use.
   ///
-  /// Defaults to [MethodChannelClevertapDirectcallFlutter].
-  static ClevertapDirectcallFlutterPlatform get instance => _instance;
+  /// Defaults to [MethodChannelClevertapSignedCallFlutter].
+  static ClevertapSignedCallFlutterPlatform get instance => _instance;
 
   /// Platform-specific implementations should set this with their own
-  /// platform-specific class that extends [ClevertapDirectcallFlutterPlatform] when
+  /// platform-specific class that extends [ClevertapSignedCallFlutterPlatform] when
   /// they register themselves.
-  static set instance(ClevertapDirectcallFlutterPlatform instance) {
+  static set instance(ClevertapSignedCallFlutterPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -38,12 +39,12 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   /// 4) [LogLevel.verbose] (shows verbose output)
   Future<void> setDebugLevel(LogLevel level);
 
-  ///Initializes the Direct Call SDK
+  ///Initializes the Signed Call SDK
   ///
   ///[initProperties] - configuration for the initialization
   ///[initHandler]    - to handle the initialization success or failure
   Future<void> init(
-      Map<String, dynamic> initProperties, DirectCallInitHandler initHandler);
+      Map<String, dynamic> initProperties, SignedCallInitHandler initHandler);
 
   ///Initiates a VoIP call
   ///
@@ -55,7 +56,7 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
       String receiverCuid,
       String callContext,
       Map<String, dynamic>? callOptions,
-      DirectCallVoIPCallHandler voIPCallHandler);
+      SignedCallVoIPCallHandler voIPCallHandler);
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   Stream<CallEvent> get callEventsListener;
@@ -64,10 +65,10 @@ abstract class ClevertapDirectcallFlutterPlatform extends PlatformInterface {
   ///missed call action click events.
   Stream<MissedCallActionClickResult> get missedCallActionClickListener;
 
-  ///Logs out the user from the Direct Call SDK session
+  ///Logs out the user from the Signed Call SDK session
   Future<void> logout();
 
-  ///Checks whether Direct Call SDK is enabled or not and returns true/false based on state
+  ///Checks whether Signed Call SDK is enabled or not and returns true/false based on state
   Future<bool> isEnabled();
 
   ///Ends the active call, if any.

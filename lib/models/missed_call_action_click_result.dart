@@ -1,4 +1,4 @@
-import 'package:clevertap_directcall_flutter/src/constants.dart';
+import 'package:clevertap_signedcall_flutter/src/constants.dart';
 
 ///Provides the call and action-button details associated to a missed call notification
 class MissedCallActionClickResult {

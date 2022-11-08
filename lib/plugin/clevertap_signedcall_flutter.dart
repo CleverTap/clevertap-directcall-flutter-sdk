@@ -1,28 +1,28 @@
-import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
-import 'package:clevertap_directcall_flutter/src/directcall_handlers.dart';
+import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
-import 'clevertap_directcall_flutter_platform_interface.dart';
+import '../src/signedcall_handlers.dart';
+import 'clevertap_signedcall_flutter_platform_interface.dart';
 
-/// Plugin class to handle the communication b/w the flutter app and Direct Call Native SDKs(Android/iOS)
-class ClevertapDirectcallFlutter {
+/// Plugin class to handle the communication b/w the flutter app and Signed Call Native SDKs(Android/iOS)
+class ClevertapSignedCallFlutter {
   /// Enables or disables debugging. If enabled, see debug messages logcat utility.
   /// Debug messages are tagged as CleverTap.
   ///
   /// [level] - an enum value from [LogLevel] class
   static Future<void> setDebugLevel(LogLevel level) {
-    return ClevertapDirectcallFlutterPlatform.instance.setDebugLevel(level);
+    return ClevertapSignedCallFlutterPlatform.instance.setDebugLevel(level);
   }
 
-  ///Initializes the Direct Call SDK
+  ///Initializes the Signed Call SDK
   ///
   ///[initProperties] - configuration for initialization
   ///[initHandler]        - to get the initialization update(i.e. success/failure)
   Future<void> init(
       {required Map<String, dynamic> initProperties,
-      required DirectCallInitHandler initHandler}) {
-    return ClevertapDirectcallFlutterPlatform.instance
+      required SignedCallInitHandler initHandler}) {
+    return ClevertapSignedCallFlutterPlatform.instance
         .init(initProperties, initHandler);
   }
 
@@ -36,31 +36,31 @@ class ClevertapDirectcallFlutter {
       {required String receiverCuid,
       required String callContext,
       Map<String, dynamic>? callOptions,
-      required DirectCallVoIPCallHandler voIPCallHandler}) {
-    return ClevertapDirectcallFlutterPlatform.instance
+      required SignedCallVoIPCallHandler voIPCallHandler}) {
+    return ClevertapSignedCallFlutterPlatform.instance
         .call(receiverCuid, callContext, callOptions, voIPCallHandler);
   }
 
   ///Returns the listener to listen the call-events stream
   Stream<CallEvent> get callEventListener =>
-      ClevertapDirectcallFlutterPlatform.instance.callEventsListener;
+      ClevertapSignedCallFlutterPlatform.instance.callEventsListener;
 
   ///Returns the listener to listen the call-events stream
   Stream<MissedCallActionClickResult> get missedCallActionClickListener =>
-      ClevertapDirectcallFlutterPlatform.instance.missedCallActionClickListener;
+      ClevertapSignedCallFlutterPlatform.instance.missedCallActionClickListener;
 
-  ///Logs out the user from the Direct Call SDK session
+  ///Logs out the user from the Signed Call SDK session
   Future<void> logout() {
-    return ClevertapDirectcallFlutterPlatform.instance.logout();
+    return ClevertapSignedCallFlutterPlatform.instance.logout();
   }
 
-  ///Logs out the user from the Direct Call SDK session
+  ///Logs out the user from the Signed Call SDK session
   Future<bool?> isEnabled() {
-    return ClevertapDirectcallFlutterPlatform.instance.isEnabled();
+    return ClevertapSignedCallFlutterPlatform.instance.isEnabled();
   }
 
   ///Ends the active call, if any.
   Future<void> hangUpCall() {
-    return ClevertapDirectcallFlutterPlatform.instance.hangUpCall();
+    return ClevertapSignedCallFlutterPlatform.instance.hangUpCall();
   }
 }

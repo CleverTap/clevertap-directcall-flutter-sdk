@@ -1,4 +1,4 @@
-package com.example.clevertap_directcall_flutter_example;
+package com.clevertap.signedcall_flutter_example;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
-        Log.d("DirectCallFlutter: ", "fcm notification received");
+        Log.d("SignedCallFlutter: ", "fcm notification received");
 
         //To handover the FCM push to the Core SDK for further processing
         new CTFcmMessageHandler().createNotification(getApplicationContext(), message);

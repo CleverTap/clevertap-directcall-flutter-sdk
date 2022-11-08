@@ -1,9 +1,9 @@
-import 'package:clevertap_directcall_flutter/models/log_level.dart';
+import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
 import '../models/log_level.dart';
 
-class DCLogger {
-  static const String _defaultTagPrefix = "[CT]:[DirectCall]:[Flutter]";
+class SignedCallLogger {
+  static const String _defaultTagPrefix = "[CT]:[SignedCall]:[Flutter]";
 
   ///SET APP LOG LEVEL, Default ALL
   static int _currentLogLevel = LogLevel.info.value;

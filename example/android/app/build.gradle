@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.clevertap_directcall_flutter_example"
+        applicationId "com.clevertap.signedcall_flutter_example"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21
@@ -69,9 +69,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.clevertap.android:clevertap-android-sdk:4.5.0"
-    implementation "com.clevertap.android:clevertap-directcall-sdk:0.0.1"
-    implementation('io.socket:socket.io-client:2.0.1') {
+    implementation "com.clevertap.android:clevertap-android-sdk:4.6.4"
+    implementation "com.clevertap.android:clevertap-signedcall-sdk:0.0.1"
+    implementation('io.socket:socket.io-client:2.1.0') {
         exclude group: 'org.json', module: 'json'
     }
     implementation 'com.github.bumptech.glide:glide:4.12.0'

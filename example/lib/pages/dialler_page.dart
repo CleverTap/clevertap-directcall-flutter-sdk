@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:clevertap_directcall_flutter/models/call_events.dart';
-import 'package:clevertap_directcall_flutter/models/missed_call_action_click_result.dart';
-import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
-import 'package:clevertap_directcall_flutter_example/pages/registration_page.dart';
-import 'package:clevertap_directcall_flutter_example/shared_preference_manager.dart';
+import 'package:clevertap_signedcall_flutter/models/call_events.dart';
+import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
+import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
+import 'package:clevertap_signedcall_flutter_example/pages/registration_page.dart';
+import 'package:clevertap_signedcall_flutter_example/shared_preference_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +13,13 @@ import '../constants.dart';
 
 class DiallerPage extends StatefulWidget {
   static const routeName = '/dialler';
-  final ClevertapDirectcallFlutter clevertapDirectcallFlutterPlugin;
+  final ClevertapSignedCallFlutter clevertapSignedCallFlutterPlugin;
   final String loggedInCuid;
 
   const DiallerPage(
       {Key? key,
       required this.loggedInCuid,
-      required this.clevertapDirectcallFlutterPlugin})
+      required this.clevertapSignedCallFlutterPlugin})
       : super(key: key);
 
   @override
@@ -118,15 +118,15 @@ class _DiallerPageState extends State<DiallerPage> {
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
       //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
-      var isEnabled = await widget.clevertapDirectcallFlutterPlugin.isEnabled();
+      var isEnabled = await widget.clevertapSignedCallFlutterPlugin.isEnabled();
 
-      //isEnabled is true when the Direct Call SDK is enabled to initiate or receive a call otherwise false
+      //isEnabled is true when the Signed Call SDK is enabled to initiate or receive a call otherwise false
       if (isEnabled == true) {
-        widget.clevertapDirectcallFlutterPlugin.call(
+        widget.clevertapSignedCallFlutterPlugin.call(
             receiverCuid: receiverCuid,
             callContext: callContext,
             callOptions: null,
-            voIPCallHandler: _directCallVoIPCallHandler);
+            voIPCallHandler: _signedCallVoIPCallHandler);
       }
     } else {
       Utils.showSnack(
@@ -134,19 +134,19 @@ class _DiallerPageState extends State<DiallerPage> {
     }
   }
 
-  void _directCallVoIPCallHandler(Map<String, dynamic>? directCallVoIPError) {
+  void _signedCallVoIPCallHandler(Map<String, dynamic>? signedCallVoIPError) {
     if (kDebugMode) {
       print(
-          "CleverTap:DirectCallFlutter: directCallVoIPCallHandler called = ${directCallVoIPError.toString()}");
+          "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
     }
 
-    if (directCallVoIPError == null) {
+    if (signedCallVoIPError == null) {
       //Initialization is successful here
       Utils.showSnack(context, 'VoIP call is placed successfully!');
     } else {
       //Initialization is failed here
-      final errorCode = directCallVoIPError[keyErrorCode];
-      final errorMessage = directCallVoIPError[keyErrorMessage];
+      final errorCode = signedCallVoIPError[keyErrorCode];
+      final errorMessage = signedCallVoIPError[keyErrorMessage];
 
       Utils.showSnack(
           context, 'VoIP call is failed: $errorCode = $errorMessage');
@@ -156,13 +156,13 @@ class _DiallerPageState extends State<DiallerPage> {
   //Listens to the real-time stream of call-events
   void _startObservingCallEvents() {
     _callEventSubscription = widget
-        .clevertapDirectcallFlutterPlugin.callEventListener
+        .clevertapSignedCallFlutterPlugin.callEventListener
         .listen((event) {
       print(
-          "CleverTap:DirectCallFlutter: received callEvent stream with ${event.toString()}");
+          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
       //Utils.showSnack(context, event.name);
       if (event == CallEvent.answered) {
-       //_startCallDurationMeterToEndCall();
+        //_startCallDurationMeterToEndCall();
       }
     });
   }
@@ -170,10 +170,10 @@ class _DiallerPageState extends State<DiallerPage> {
   //Listens to the missed call action click events
   void _startObservingMissedCallActionClickEvent() {
     _missedCallActionClickEventSubscription = widget
-        .clevertapDirectcallFlutterPlugin.missedCallActionClickListener
+        .clevertapSignedCallFlutterPlugin.missedCallActionClickListener
         .listen((result) {
       print(
-          "CleverTap:DirectCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
+          "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
 
       Navigator.pushNamed(context, DiallerPage.routeName);
     });
@@ -182,7 +182,7 @@ class _DiallerPageState extends State<DiallerPage> {
   //Starts a timer and hang up the active call when timer finishes
   void _startCallDurationMeterToEndCall() {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
-      widget.clevertapDirectcallFlutterPlugin.hangUpCall();
+      widget.clevertapSignedCallFlutterPlugin.hangUpCall();
     });
   }
 
@@ -194,7 +194,7 @@ class _DiallerPageState extends State<DiallerPage> {
   }
 
   void logoutSession() {
-    widget.clevertapDirectcallFlutterPlugin.logout();
+    widget.clevertapSignedCallFlutterPlugin.logout();
     SharedPreferenceManager.clearData();
     Navigator.pushNamed(context, RegistrationPage.routeName);
   }

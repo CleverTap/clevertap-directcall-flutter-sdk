@@ -1,6 +1,6 @@
-package com.example.clevertap_directcall_flutter
+package com.example.clevertap_signedcall_flutter
 
-object DCMethodCall {
+object SCMethodCall {
     //Flutter to Platform
     const val INIT = "init"
     const val CALL = "call"
@@ -10,6 +10,6 @@ object DCMethodCall {
     const val LOGGING = "logging"
 
     //Platform to Flutter
-    const val ON_DIRECT_CALL_DID_INITIALIZE = "onDirectCallDidInitialize"
-    const val ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE = "onDirectCallDidVoIPCallInitiate"
+    const val ON_SIGNED_CALL_DID_INITIALIZE = "onSignedCallDidInitialize"
+    const val ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE = "onSignedCallDidVoIPCallInitiate"
 }

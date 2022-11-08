@@ -1,53 +1,53 @@
-package com.example.clevertap_directcall_flutter.plugin
+package com.example.clevertap_signedcall_flutter.plugin
 
 import android.content.Context
 import androidx.annotation.NonNull
-import com.clevertap.android.directcall.exception.CallException
-import com.clevertap.android.directcall.exception.InitException
-import com.clevertap.android.directcall.init.DirectCallAPI
-import com.clevertap.android.directcall.init.DirectCallInitOptions
-import com.clevertap.android.directcall.interfaces.DirectCallInitResponse
-import com.clevertap.android.directcall.interfaces.OutgoingCallResponse
-import com.clevertap.android.directcall.javaclasses.VoIPCallStatus
-import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.sdk.CleverTapAPI
-import com.example.clevertap_directcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
-import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_CONTEXT
-import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_OPTIONS
-import com.example.clevertap_directcall_flutter.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_directcall_flutter.Constants.KEY_DEBUG_LEVEL
-import com.example.clevertap_directcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
-import com.example.clevertap_directcall_flutter.Constants.KEY_INIT_PROPERTIES
-import com.example.clevertap_directcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
-import com.example.clevertap_directcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
-import com.example.clevertap_directcall_flutter.Constants.KEY_RECEIVER_CUID
-import com.example.clevertap_directcall_flutter.DCMethodCall.CALL
-import com.example.clevertap_directcall_flutter.DCMethodCall.HANG_UP_CALL
-import com.example.clevertap_directcall_flutter.DCMethodCall.INIT
-import com.example.clevertap_directcall_flutter.DCMethodCall.IS_ENABLED
-import com.example.clevertap_directcall_flutter.DCMethodCall.LOGGING
-import com.example.clevertap_directcall_flutter.DCMethodCall.LOGOUT
-import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_INITIALIZE
-import com.example.clevertap_directcall_flutter.DCMethodCall.ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE
-import com.example.clevertap_directcall_flutter.extensions.toDCLogLevel
-import com.example.clevertap_directcall_flutter.extensions.toMap
-import com.example.clevertap_directcall_flutter.handlers.CallEventStreamHandler
-import com.example.clevertap_directcall_flutter.handlers.MissedCallActionClickHandler
-import com.example.clevertap_directcall_flutter.handlers.MissedCallActionEventStreamHandler
-import com.example.clevertap_directcall_flutter.util.Utils.parseBrandingFromInitOptions
-import com.example.clevertap_directcall_flutter.util.Utils.parseExceptionToMapObject
-import com.example.clevertap_directcall_flutter.util.Utils.parseInitOptionsFromInitProperties
-import com.example.clevertap_directcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
+import com.clevertap.android.signedcall.enums.VoIPCallStatus
+import com.clevertap.android.signedcall.exception.CallException
+import com.clevertap.android.signedcall.exception.InitException
+import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
+import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
+import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
+import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
+import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
+import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
+import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
+import com.example.clevertap_signedcall_flutter.Constants.KEY_DEBUG_LEVEL
+import com.example.clevertap_signedcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
+import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
+import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
+import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
+import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
+import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
+import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
+import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
+import com.example.clevertap_signedcall_flutter.SCMethodCall.IS_ENABLED
+import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
+import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
+import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
+import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
+import com.example.clevertap_signedcall_flutter.extensions.toMap
+import com.example.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
+import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
+import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
+import com.example.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
+import com.example.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
+import com.example.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
+import com.example.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
-class DirectcallFlutterMethodCallHandler(
+class SignedCallFlutterMethodCallHandler(
     private val context: Context?,
     private val methodChannel: MethodChannel?
 ) :
-    IDirectCallTask,
+    ISignedCallTask,
     MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
@@ -64,7 +64,7 @@ class DirectcallFlutterMethodCallHandler(
                 result.success(null)
             }
             INIT -> {
-                initDirectCallSdk(call)
+                initSignedCallSdk(call)
                 result.success(null)
             }
             CALL -> {
@@ -76,7 +76,7 @@ class DirectcallFlutterMethodCallHandler(
                 result.success(null)
             }
             IS_ENABLED -> {
-                result.success(isDirectCallSdkEnabled())
+                result.success(isSignedCallSdkEnabled())
             }
             HANG_UP_CALL -> {
                 hangUpCall()
@@ -88,11 +88,11 @@ class DirectcallFlutterMethodCallHandler(
 
     override fun setDebugLevel(call: MethodCall) {
         val debugLevel = call.argument<Int>(KEY_DEBUG_LEVEL)
-        debugLevel?.let { DirectCallAPI.setDebugLevel(debugLevel.toDCLogLevel()) }
+        debugLevel?.let { SignedCallAPI.setDebugLevel(debugLevel.toSignedCallLogLevel()) }
     }
 
-    //Retrieves the init-properties from call-arguments  Initializes the Direct Call Android SDK
-    override fun initDirectCallSdk(call: MethodCall) {
+    //Retrieves the init-properties from call-arguments  Initializes the Signed Call Android SDK
+    override fun initSignedCallSdk(call: MethodCall) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
 
@@ -111,28 +111,28 @@ class DirectcallFlutterMethodCallHandler(
             val missedCallActionClickHandlerPath =
                 MissedCallActionClickHandler::class.java.canonicalName
 
-            val directCallInitBuilder =
-                DirectCallInitOptions.Builder(initOptions, allowPersistSocketConnection)
-                    .enableReadPhoneState(enableReadPhoneState)
+            val initConfiguration =
+                SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
+                    .promptReceiverReadPhoneStatePermission(enableReadPhoneState)
                     .overrideDefaultBranding(callScreenBranding)
-                    .setMissedCallReceiverActions(
+                    .setMissedCallActions(
                         missedCallActionsList,
                         missedCallActionClickHandlerPath
                     )
                     .build()
 
-            DirectCallAPI.getInstance().init(
+            SignedCallAPI.getInstance().init(
                 context,
-                directCallInitBuilder,
+                initConfiguration,
                 cleverTapAPI,
-                object : DirectCallInitResponse {
+                object : SignedCallInitResponse {
                     override fun onSuccess() {
-                        methodChannel?.invokeMethod(ON_DIRECT_CALL_DID_INITIALIZE, null)
+                        methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_INITIALIZE, null)
                     }
 
                     override fun onFailure(initException: InitException) {
                         methodChannel?.invokeMethod(
-                            ON_DIRECT_CALL_DID_INITIALIZE, parseExceptionToMapObject(initException)
+                            ON_SIGNED_CALL_DID_INITIALIZE, parseExceptionToMapObject(initException)
                         )
                     }
                 })
@@ -152,7 +152,7 @@ class DirectcallFlutterMethodCallHandler(
                 if (it[KEY_CALL_OPTIONS] != null) JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) else null
             }
 
-            DirectCallAPI.getInstance().call(
+            SignedCallAPI.getInstance().call(
                 context,
                 receiverCuid,
                 callContext,
@@ -163,12 +163,12 @@ class DirectcallFlutterMethodCallHandler(
                     }
 
                     override fun onSuccess() {
-                        methodChannel?.invokeMethod(ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE, null)
+                        methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
                     }
 
                     override fun onFailure(callException: CallException) {
                         methodChannel?.invokeMethod(
-                            ON_DIRECT_CALL_DID_VOIP_CALL_INITIATE,
+                            ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE,
                             parseExceptionToMapObject(callException)
                         )
                     }
@@ -179,19 +179,19 @@ class DirectcallFlutterMethodCallHandler(
         }
     }
 
-    //Logs out the Direct Call SDK session
+    //Logs out the Signed Call SDK session
     override fun logout() {
-        DirectCallAPI.getInstance().logout(context)
+        SignedCallAPI.getInstance().logout(context)
     }
 
-    //Checks and returns the state of Direct Call SDK services(i.e. call initiation or reception) are enabled or not
-    override fun isDirectCallSdkEnabled(): Boolean {
-        return DirectCallAPI.getInstance().isEnabled
+    //Checks and returns the state of Signed Call SDK services(i.e. call initiation or reception) are enabled or not
+    override fun isSignedCallSdkEnabled(): Boolean {
+        return /*SignedCallAPI.getInstance().isEnabled*/ true
     }
 
     //Ends the active call, if any.
     override fun hangUpCall() {
-        DirectCallAPI.getInstance().callController?.endCall()
+        SignedCallAPI.getInstance().callController?.endCall()
     }
 
     //Sends the real-time changes in the call-state in an observable event-stream

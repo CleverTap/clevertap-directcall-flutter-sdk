@@ -1,4 +1,4 @@
-class DCMethodCall {
+class SCMethodCall {
   //Flutter to Platform
   static const String init = "init";
   static const String call = "call";
@@ -8,7 +8,7 @@ class DCMethodCall {
   static const String logging = "logging";
 
   //Platform to Flutter
-  static const String onDirectCallDidInitialize = "onDirectCallDidInitialize";
-  static const String onDirectCallDidVoIPCallInitiate =
-      "onDirectCallDidVoIPCallInitiate";
+  static const String onSignedCallDidInitialize = "onSignedCallDidInitialize";
+  static const String onSignedCallDidVoIPCallInitiate =
+      "onSignedCallDidVoIPCallInitiate";
 }
