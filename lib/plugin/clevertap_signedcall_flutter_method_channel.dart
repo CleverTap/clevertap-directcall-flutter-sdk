@@ -123,14 +123,6 @@ class MethodChannelClevertapSignedCallFlutter
     return _methodChannel.invokeMethod(SCMethodCall.logout);
   }
 
-  ///Checks whether Signed Call SDK is enabled or not and returns true/false based on state
-  @override
-  Future<bool> isEnabled() {
-    return _methodChannel
-        .invokeMethod<bool>(SCMethodCall.isEnabled)
-        .then<bool>((bool? value) => value ?? false);
-  }
-
   ///Ends the active call, if any.
   @override
   Future<void> hangUpCall() {

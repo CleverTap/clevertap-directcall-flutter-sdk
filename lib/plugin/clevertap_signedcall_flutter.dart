@@ -54,11 +54,6 @@ class ClevertapSignedCallFlutter {
     return ClevertapSignedCallFlutterPlatform.instance.logout();
   }
 
-  ///Logs out the user from the Signed Call SDK session
-  Future<bool?> isEnabled() {
-    return ClevertapSignedCallFlutterPlatform.instance.isEnabled();
-  }
-
   ///Ends the active call, if any.
   Future<void> hangUpCall() {
     return ClevertapSignedCallFlutterPlatform.instance.hangUpCall();

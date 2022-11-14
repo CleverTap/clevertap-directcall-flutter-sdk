@@ -39,12 +39,6 @@ class MockClevertapDirectcallFlutterPlatform
   }
 
   @override
-  Future<bool> isEnabled() {
-    // TODO: implement isEnabled
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> logout() {
     // TODO: implement logout
     throw UnimplementedError();

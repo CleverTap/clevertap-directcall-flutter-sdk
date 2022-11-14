@@ -5,7 +5,6 @@ object SCMethodCall {
     const val INIT = "init"
     const val CALL = "call"
     const val LOGOUT = "logout"
-    const val IS_ENABLED = "isEnabled"
     const val HANG_UP_CALL = "hangUpCall"
     const val LOGGING = "logging"
 

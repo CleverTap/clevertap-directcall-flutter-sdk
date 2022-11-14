@@ -40,12 +40,6 @@ interface ISignedCallTask {
     fun logout()
 
     /**
-     * Defines implementation to check whether the Signed Call SDK services(i.e. call initiation or reception)
-     * are enabled or not.
-     */
-    fun isSignedCallSdkEnabled(): Boolean
-
-    /**
      * Ends the active call, if any.
      */
     fun hangUpCall()

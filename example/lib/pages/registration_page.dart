@@ -138,7 +138,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       final errorMessage = signedCallInitError[keyErrorMessage];
 
       hideLoading();
-      Utils.showSnack(context, 'DC Init failed: $errorCode = $errorMessage');
+      Utils.showSnack(context, 'SC Init failed: $errorCode = $errorMessage');
     }
   }
 

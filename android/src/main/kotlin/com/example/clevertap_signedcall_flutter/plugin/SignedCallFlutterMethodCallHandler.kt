@@ -15,16 +15,15 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCK
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
+import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
-import com.example.clevertap_signedcall_flutter.SCMethodCall.IS_ENABLED
 import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
 import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
@@ -74,9 +73,6 @@ class SignedCallFlutterMethodCallHandler(
             LOGOUT -> {
                 logout()
                 result.success(null)
-            }
-            IS_ENABLED -> {
-                result.success(isSignedCallSdkEnabled())
             }
             HANG_UP_CALL -> {
                 hangUpCall()
@@ -182,11 +178,6 @@ class SignedCallFlutterMethodCallHandler(
     //Logs out the Signed Call SDK session
     override fun logout() {
         SignedCallAPI.getInstance().logout(context)
-    }
-
-    //Checks and returns the state of Signed Call SDK services(i.e. call initiation or reception) are enabled or not
-    override fun isSignedCallSdkEnabled(): Boolean {
-        return /*SignedCallAPI.getInstance().isEnabled*/ true
     }
 
     //Ends the active call, if any.

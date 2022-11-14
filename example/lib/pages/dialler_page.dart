@@ -118,16 +118,11 @@ class _DiallerPageState extends State<DiallerPage> {
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
       //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
-      var isEnabled = await widget.clevertapSignedCallFlutterPlugin.isEnabled();
-
-      //isEnabled is true when the Signed Call SDK is enabled to initiate or receive a call otherwise false
-      if (isEnabled == true) {
-        widget.clevertapSignedCallFlutterPlugin.call(
-            receiverCuid: receiverCuid,
-            callContext: callContext,
-            callOptions: null,
-            voIPCallHandler: _signedCallVoIPCallHandler);
-      }
+      widget.clevertapSignedCallFlutterPlugin.call(
+          receiverCuid: receiverCuid,
+          callContext: callContext,
+          callOptions: null,
+          voIPCallHandler: _signedCallVoIPCallHandler);
     } else {
       Utils.showSnack(
           context, 'Both Receiver cuid and context of the call are required!');

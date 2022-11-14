@@ -68,9 +68,6 @@ abstract class ClevertapSignedCallFlutterPlatform extends PlatformInterface {
   ///Logs out the user from the Signed Call SDK session
   Future<void> logout();
 
-  ///Checks whether Signed Call SDK is enabled or not and returns true/false based on state
-  Future<bool> isEnabled();
-
   ///Ends the active call, if any.
   Future<void> hangUpCall();
 }
