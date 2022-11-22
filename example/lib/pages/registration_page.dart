@@ -10,14 +10,9 @@ import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
   static const routeName = '/registration';
-  final ClevertapSignedCallFlutter clevertapSignedCallFlutterPlugin;
   final String title;
 
-  const RegistrationPage(
-      {Key? key,
-      required this.title,
-      required this.clevertapSignedCallFlutterPlugin})
-      : super(key: key);
+  const RegistrationPage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -114,7 +109,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyMissedCallActions: missedCallActionsMap //Android Platform
       };
 
-      widget.clevertapSignedCallFlutterPlugin.init(
+      ClevertapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
       Utils.showSnack(context, 'PlatformException occurs!');

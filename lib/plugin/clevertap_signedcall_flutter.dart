@@ -7,11 +7,22 @@ import 'clevertap_signedcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Signed Call Native SDKs(Android/iOS)
 class ClevertapSignedCallFlutter {
+  static final ClevertapSignedCallFlutter _shared = ClevertapSignedCallFlutter._internal();
+
+  static ClevertapSignedCallFlutter get shared => _shared;
+
+  // This is a private named constructor.
+  // It'll be called exactly once only in this class,
+  // by the static property assignment above
+  ClevertapSignedCallFlutter._internal() {
+    // initialization logic
+  }
+
   /// Enables or disables debugging. If enabled, see debug messages logcat utility.
   /// Debug messages are tagged as CleverTap.
   ///
   /// [level] - an enum value from [LogLevel] class
-  static Future<void> setDebugLevel(LogLevel level) {
+  Future<void> setDebugLevel(LogLevel level) {
     return ClevertapSignedCallFlutterPlatform.instance.setDebugLevel(level);
   }
 
