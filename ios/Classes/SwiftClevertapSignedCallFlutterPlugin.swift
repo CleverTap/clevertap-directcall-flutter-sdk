@@ -1,21 +1,41 @@
 import Flutter
 import SignedCallSDK
 import UIKit
-
-//EventChannel
+import OSLog
 
 public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
-    static var eventChannel: FlutterEventChannel?
-    static var channel: FlutterMethodChannel?
+    private var callEventTrigger: EventChannelHandler?
+    private var channel: FlutterMethodChannel?
+    private var logValue: OSLog {
+        return SignedCall.isLoggingEnabled ? .default : .disabled
+    }
+    
+    public override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.callStatus(notification:)), name: NSNotification.Name(rawValue: "MessageReceived"), object: nil)
+    }
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
-        channel = FlutterMethodChannel(name: "clevertap_signedcall_flutter/methods", binaryMessenger: registrar.messenger())
         let instance = SwiftClevertapSignedCallFlutterPlugin()
-        registrar.addMethodCallDelegate(instance, channel: channel!)
+        instance.setupChannel(registrar: registrar)
+    }
+    
+    private func setupChannel(registrar: FlutterPluginRegistrar){
+        callEventTrigger = EventChannelHandler(
+            id: SCChannel.eventChannel.rawValue,
+            messenger: registrar.messenger()
+        )
+        channel = FlutterMethodChannel(name: SCChannel.methodChannel.rawValue,
+                                       binaryMessenger: registrar.messenger())
+        registrar.addMethodCallDelegate(self, channel: channel!)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         //logging to debug method
         let methodCall = SCMethodCall(rawValue: call.method)
+        
+        os_log("Handle flutter method call: %{public}@", log: logValue, type: .default, call.method)
+
         switch methodCall {
         case .LOGGING:
             let arguments = call.arguments as? [String: Int]
@@ -25,14 +45,12 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
                 return
             }
             SignedCall.isLoggingEnabled = true
-            //logging to debug method
-            print(SignedCall.isLoggingEnabled)
             result(nil)
             
         case .INIT:
             let arguments = call.arguments as? [String: Any]
             guard let initOptions = arguments?[SCMethodParams.INITPARAM.rawValue] as? [String: Any] else {
-                //logging to debug method
+                os_log("Handle flutter method INIT, key: initProperties not available", log: logValue, type: .default)
                 result(nil)
                 return
             }
@@ -41,7 +59,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         case .CALL:
             let arguments = call.arguments as? [String: Any]
             guard let callData = arguments?[SCMethodParams.CALLPARAM.rawValue] as? [String: Any] else {
-                //logging to debug method
+                os_log("Handle flutter method INIT, key: callProperties not available", log: logValue, type: .default)
                 result(nil)
                 return
             }
@@ -65,10 +83,10 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     
     func logout() {
         SignedCall.logout()
+        let _ = callEventTrigger?.onCancel(withArguments: [:])
     }
     
     func initSDK(_ initOptions:[String: Any], result: @escaping FlutterResult) {
-        //Update initOptions
         SignedCall.isEnabled = false
         guard let accountId = initOptions[SCMethodParams.ACCOUNTID.rawValue],
               let apiKey = initOptions[SCMethodParams.APIKEY.rawValue],
@@ -94,20 +112,21 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
             SignedCall.overrideDefaultBranding = SCCallScreenBranding(bgColor: bgColor, fontColor: fontColor, logo: logoUrl, buttonTheme: theme ? .light : .dark)
         }
         
-        SignedCall.initSDK(withInitOptions: initParams) { result in
+        SignedCall.initSDK(withInitOptions: initParams) { [weak self] res in
             DispatchQueue.main.async {
-                switch result {
+                switch res {
                 case .success(_):
-                    SwiftClevertapSignedCallFlutterPlugin.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: nil)
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: nil)
+                    result(nil)
                 case .failure(let error):
-                    SwiftClevertapSignedCallFlutterPlugin.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: ["error": error.errorMessage])
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: ["error": error.errorMessage])
+                    result(nil)
                 }
             }
         }
     }
     
     func makeCall(_ callData:[String: Any], result: @escaping FlutterResult) {
-        //Update initOptions
         guard let context = callData[SCMethodParams.CONTEXT.rawValue] as? String,
               let receiverCuid = callData[SCMethodParams.RECEIVERCUID.rawValue] as? String else {
             return
@@ -121,15 +140,45 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         
         let callOptionsModel = SCCallOptionsModel(context: context, receiverCuid: receiverCuid, customMetaData: customMetaData)
         
-        SignedCall.call(callOptions: callOptionsModel) { result in
+        SignedCall.call(callOptions: callOptionsModel) { [weak self] res in
             DispatchQueue.main.async {
-                switch result {
+                switch res {
                 case .success(_):
-                    SwiftClevertapSignedCallFlutterPlugin.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: nil)
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: nil)
+                    result(nil)
                 case .failure(let error):
-                    SwiftClevertapSignedCallFlutterPlugin.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: ["error": error.errorMessage])
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: ["error": error.errorMessage])
+                    result(nil)
                 }
             }
         }
-    }   
+    }
+    
+    @objc func callStatus(notification: Notification) {
+        let message = notification.object as? SCCallStatus
+        
+        guard let callValue = message?.rawValue else {
+            os_log("Unknown call event raised: %{public}@", log: logValue, type: .default, notification.object.debugDescription)
+            return
+        }
+        
+        let callEvent = SCCallEvent(rawValue: callValue)
+        switch message {
+            
+        case .CALL_CANCEL, .CALL_DECLINED, .CALL_MISSED, .CALL_ANSWERED, .CALL_CONNECTED, .CALL_END, .RECEIVER_BUSY_ON_ANOTHER_CALL, .CALL_OVER : handleCallEvent(callEvent)
+        default: break
+        }
+    }
+    
+    func handleCallEvent(_ callEvent: SCCallEvent) {
+        do {
+            try callEventTrigger?.success(event: callEvent.value)
+        } catch {
+            os_log("Handle call event error: %{public}@", log: logValue, type: .default, error.localizedDescription)
+            callEventTrigger?.error(
+                code: "Call event handling error",
+                message: error.localizedDescription
+            )
+        }
+    }
 }
