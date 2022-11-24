@@ -87,7 +87,6 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     }
     
     func initSDK(_ initOptions:[String: Any], result: @escaping FlutterResult) {
-        SignedCall.isEnabled = false
         guard let accountId = initOptions[SCMethodParams.ACCOUNTID.rawValue],
               let apiKey = initOptions[SCMethodParams.APIKEY.rawValue],
               let cuid = initOptions[SCMethodParams.CUID.rawValue] else {
@@ -119,7 +118,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
                     self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: nil)
                     result(nil)
                 case .failure(let error):
-                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: ["error": error.errorMessage])
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: ["errorCode":error.errorCode, "error": error.errorMessage])
                     result(nil)
                 }
             }
@@ -165,7 +164,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         let callEvent = SCCallEvent(rawValue: callValue)
         switch message {
             
-        case .CALL_CANCEL, .CALL_DECLINED, .CALL_MISSED, .CALL_ANSWERED, .CALL_CONNECTED, .CALL_END, .RECEIVER_BUSY_ON_ANOTHER_CALL, .CALL_OVER : handleCallEvent(callEvent)
+        case .CALL_CANCEL, .CALL_DECLINED, .CALL_MISSED, .CALL_ANSWERED, .CALL_CONNECTED, .RECEIVER_BUSY_ON_ANOTHER_CALL, .CALL_OVER : handleCallEvent(callEvent)
         default: break
         }
     }
