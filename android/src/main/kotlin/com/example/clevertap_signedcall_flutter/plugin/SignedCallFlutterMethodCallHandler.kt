@@ -1,6 +1,7 @@
 package com.example.clevertap_signedcall_flutter.plugin
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.NonNull
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
@@ -10,6 +11,7 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.example.clevertap_signedcall_flutter.Constants
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -20,6 +22,7 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
+import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
@@ -131,7 +134,7 @@ class SignedCallFlutterMethodCallHandler(
                 })
         } catch (e: Exception) {
             e.printStackTrace()
-            //TODO : add here error reporting
+            Log.d(LOG_TAG, "Exception while initializing the Signed Call Flutter Plugin:" + e.localizedMessage);
         }
     }
 
@@ -168,7 +171,7 @@ class SignedCallFlutterMethodCallHandler(
                 })
         } catch (e: Exception) {
             e.printStackTrace()
-            //TODO : add here error reporting
+            Log.d(LOG_TAG, "Exception while initiating the VoIP call:" + e.localizedMessage);
         }
     }
 
