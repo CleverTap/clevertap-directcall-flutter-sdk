@@ -4,6 +4,7 @@ const String scApiKey =
 const String keyAccountId = "accountId";
 const String keyApiKey = "apiKey";
 const String keyCuid = "cuid";
+const String keyProduction = "production";
 const String keyAllowPersistSocketConnection = "allowPersistSocketConnection";
 const String keyEnableReadPhoneState = "enableReadPhoneState";
 const String keyOverrideDefaultBranding = "overrideDefaultBranding";

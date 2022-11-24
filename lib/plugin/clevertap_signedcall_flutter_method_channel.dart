@@ -69,7 +69,7 @@ class MethodChannelClevertapSignedCallFlutter
   ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
     SignedCallLogger.d(
-        "Inside platformCallHandler: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
+        "Inside platformCallHandler: \n invoked method - '${call.method}' \n method-arguments -  ${call.arguments}");
 
     switch (call.method) {
       case SCMethodCall.onSignedCallDidInitialize:

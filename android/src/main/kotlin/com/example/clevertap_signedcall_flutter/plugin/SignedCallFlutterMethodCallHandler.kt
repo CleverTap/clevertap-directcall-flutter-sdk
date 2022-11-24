@@ -1,5 +1,6 @@
 package com.example.clevertap_signedcall_flutter.plugin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
@@ -33,6 +34,7 @@ import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_
 import com.example.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.example.clevertap_signedcall_flutter.util.Utils
 import com.example.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.example.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
 import com.example.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
@@ -57,6 +59,7 @@ class SignedCallFlutterMethodCallHandler(
 
     //Called when a method-call is invoked from flutterPlugin
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+        Utils.log(message = "Inside onMethodCall: \n invoked method - \'${call.method}\' \n method-arguments - ${call.arguments} ")
         when (call.method) {
             LOGGING -> {
                 setDebugLevel(call)
@@ -88,6 +91,7 @@ class SignedCallFlutterMethodCallHandler(
     }
 
     //Retrieves the init-properties from call-arguments  Initializes the Signed Call Android SDK
+    @SuppressLint("RestrictedApi")
     override fun initSignedCallSdk(call: MethodCall) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
@@ -134,7 +138,7 @@ class SignedCallFlutterMethodCallHandler(
                 })
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d(LOG_TAG, "Exception while initializing the Signed Call Flutter Plugin:" + e.localizedMessage);
+            Utils.log(message = "Exception while initializing the Signed Call Flutter Plugin: " + e.localizedMessage)
         }
     }
 
@@ -171,7 +175,7 @@ class SignedCallFlutterMethodCallHandler(
                 })
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d(LOG_TAG, "Exception while initiating the VoIP call:" + e.localizedMessage);
+            Utils.log(message = "Exception while initiating the VoIP call: " + e.localizedMessage)
         }
     }
 
@@ -187,6 +191,7 @@ class SignedCallFlutterMethodCallHandler(
 
     //Sends the real-time changes in the call-state in an observable event-stream
     override fun streamCallEvent(event: VoIPCallStatus) {
+        Utils.log(message = "Streaming $event to event-channel")
         CallEventStreamHandler.eventSink?.let { sink ->
             val eventDescription = when (event) {
                 VoIPCallStatus.CALL_CANCELLED -> "Cancelled"

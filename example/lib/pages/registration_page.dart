@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
@@ -99,15 +101,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "3": "Not Interested"
       };
 
-      var initProperties = {
+      final Map<String, dynamic> initProperties = {
         keyAccountId: scAccountId,
         keyApiKey: scApiKey,
         keyCuid: _userCuid,
-        keyAllowPersistSocketConnection: true, //Android Platform
-        keyEnableReadPhoneState: true, //Android Platform
-        keyOverrideDefaultBranding: callScreenBranding, //Android Platform
-        keyMissedCallActions: missedCallActionsMap //Android Platform
+        keyOverrideDefaultBranding: callScreenBranding
       };
+
+      ///Android Platform fields
+      if (Platform.isAndroid) {
+        initProperties[keyAllowPersistSocketConnection] = true;
+        initProperties[keyEnableReadPhoneState] = true;
+        initProperties[keyMissedCallActions] = missedCallActionsMap;
+      }
+
+      ///iOS Platform fields
+      if (Platform.isIOS) {
+        initProperties[keyProduction] = false;
+      }
 
       ClevertapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);

@@ -6,6 +6,7 @@ import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedH
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.example.clevertap_signedcall_flutter.extensions.toMap
+import com.example.clevertap_signedcall_flutter.util.Utils
 
 /**
  * Missed Call CTA handler for SignedCall Missed Call Notifications
@@ -22,8 +23,9 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
         result: MissedCallNotificationOpenResult
     ) {
         try {
-            Log.d(
-                LOG_TAG, "actionID: " + result.action.actionID
+            Utils.log(
+                message =  "Missed call action button clicked!"+
+                        " Streaming to event-channel with payload: \n actionID: " + result.action.actionID
                         + ", actionLabel: " + result.action.actionLabel
                         + ", context of call: " + result.callDetails.callContext
                         + ", cuid of caller: " + result.callDetails.callerCuid
