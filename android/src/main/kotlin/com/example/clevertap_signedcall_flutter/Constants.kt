@@ -1,7 +1,7 @@
 package com.example.clevertap_signedcall_flutter
 
 object Constants {
-    const val LOG_TAG = "SCFlutter:Android"
+    const val LOG_TAG = "[CT]:[SignedCall]:[Flutter]"
     const val CHANNEL_NAME = "clevertap_signedcall_flutter"
     const val KEY_LOG_LEVEL = "logLevel"
     const val KEY_INIT_PROPERTIES = "initProperties"
@@ -33,6 +33,4 @@ object Constants {
     const val KEY_CALL_DETAILS = "callDetails"
     const val KEY_CALLER_CUID = "callerCuid"
     const val KEY_CALLEE_CUID = "calleeCuid"
-    const val KEY_CALL_EVENT_CHANNEL = "callEventChannel"
-    const val KEY_MISSED_CALL_ACTION_CLICK_EVENT_CHANNEL = "missedCallActionClickEventChannel"
 }

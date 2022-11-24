@@ -112,7 +112,7 @@ class _DiallerPageState extends State<DiallerPage> {
 
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
-      //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
+      const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
       ClevertapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,

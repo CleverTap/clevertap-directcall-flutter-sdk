@@ -10,7 +10,6 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
-import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -28,11 +27,9 @@ import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
 import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
 import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
-import com.example.clevertap_signedcall_flutter.extensions.toMap
 import com.example.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
-import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import com.example.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.example.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
 import com.example.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
@@ -46,7 +43,7 @@ class SignedCallFlutterMethodCallHandler(
     private val context: Context?,
     private val methodChannel: MethodChannel?
 ) :
-    ISignedCallTask,
+    ISignedCallMethodCallHandler,
     MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
@@ -199,10 +196,5 @@ class SignedCallFlutterMethodCallHandler(
             }
             sink.success(eventDescription)
         }
-    }
-
-    //Sends the real-time changes in the call-state in an observable event-stream
-    override fun streamMissedCallActionClickResult(result: MissedCallNotificationOpenResult) {
-        MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
     }
 }

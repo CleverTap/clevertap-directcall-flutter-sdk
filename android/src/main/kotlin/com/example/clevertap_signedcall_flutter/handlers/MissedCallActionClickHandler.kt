@@ -30,8 +30,8 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
                         + ", cuid of callee: " + result.callDetails.calleeCuid
             )
 
+            //Sends the real-time changes in the call-state in an observable event-stream
             MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
-
         } catch (e: Exception) {
             Log.d(LOG_TAG, "Exception while handling missed call CTA action, " + e.localizedMessage)
         }
