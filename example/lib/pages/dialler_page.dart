@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
+import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/pages/registration_page.dart';
 import 'package:clevertap_signedcall_flutter_example/shared_preference_manager.dart';
@@ -124,7 +125,7 @@ class _DiallerPageState extends State<DiallerPage> {
     }
   }
 
-  void _signedCallVoIPCallHandler(Map<String, dynamic>? signedCallVoIPError) {
+  void _signedCallVoIPCallHandler(SignedCallError? signedCallVoIPError) {
     if (kDebugMode) {
       print(
           "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
@@ -135,8 +136,9 @@ class _DiallerPageState extends State<DiallerPage> {
       Utils.showSnack(context, 'VoIP call is placed successfully!');
     } else {
       //Initialization is failed here
-      final errorCode = signedCallVoIPError[keyErrorCode];
-      final errorMessage = signedCallVoIPError[keyErrorMessage];
+      final errorCode = signedCallVoIPError.errorCode;
+      final errorMessage = signedCallVoIPError.errorMessage;
+      final errorDescription = signedCallVoIPError.errorDescription;
 
       Utils.showSnack(
           context, 'VoIP call is failed: $errorCode = $errorMessage');

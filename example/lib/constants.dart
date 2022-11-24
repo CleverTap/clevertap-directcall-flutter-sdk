@@ -20,4 +20,5 @@ const String keyInitiatorImage = "initiatorImage";
 const String keyReceiverImage = "receiverImage";
 const String keyErrorCode = "errorCode";
 const String keyErrorMessage = "errorMessage";
+const String keyErrorDescription = "errorDescription";
 const String keyLoggedInCuid = "loggedInCuid";
