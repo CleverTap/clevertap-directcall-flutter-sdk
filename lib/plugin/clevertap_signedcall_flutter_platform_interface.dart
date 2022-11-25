@@ -1,5 +1,4 @@
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
@@ -7,27 +6,9 @@ import '../models/missed_call_action_click_result.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_method_channel.dart';
 
-abstract class ClevertapSignedCallFlutterPlatform extends PlatformInterface {
-  /// Constructs a [ClevertapSignedCallFlutterPlatform].
-  ClevertapSignedCallFlutterPlatform() : super(token: _token);
-
-  static final Object _token = Object();
-
-  static ClevertapSignedCallFlutterPlatform _instance =
+abstract class ClevertapSignedCallFlutterPlatform {
+  static ClevertapSignedCallFlutterPlatform instance =
       MethodChannelClevertapSignedCallFlutter();
-
-  /// The default instance of [ClevertapSignedCallFlutterPlatform] to use.
-  ///
-  /// Defaults to [MethodChannelClevertapSignedCallFlutter].
-  static ClevertapSignedCallFlutterPlatform get instance => _instance;
-
-  /// Platform-specific implementations should set this with their own
-  /// platform-specific class that extends [ClevertapSignedCallFlutterPlatform] when
-  /// they register themselves.
-  static set instance(ClevertapSignedCallFlutterPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
-    _instance = instance;
-  }
 
   /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
   /// Debug messages are tagged as CleverTap.

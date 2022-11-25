@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     //Enables the verbose debugging in Signed Call Plugin
-    ClevertapSignedCallFlutter.setDebugLevel(LogLevel.verbose);
+    ClevertapSignedCallFlutter.shared.setDebugLevel(LogLevel.verbose);
   }
 
   @override

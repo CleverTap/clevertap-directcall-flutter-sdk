@@ -29,7 +29,6 @@ struct SCCallEvent: RawRepresentable {
     }
 }
 
-
 enum SCMethodCall: String {
     
     //Flutter to Platform
@@ -75,8 +74,14 @@ enum SCMethodParams: String {
     case INITIATORIMG = "initiator_image"
     case RECEIVERIMG = "receiver_image"
     
+    //error keys
+    case errorCode = "errorCode"
+    case errorMessage = "errorMessage"
+    case errorDescription = "errorDescription"
+    
     //Platform to Flutter
     case ON_SIGNED_CALL_DID_INITIALIZE = "onSignedCallDidInitialize"
     case ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE = "onSignedCallDidVoIPCallInitiate"
 }
+
 

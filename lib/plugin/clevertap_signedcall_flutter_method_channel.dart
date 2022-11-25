@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
+import '../models/signed_call_error.dart';
 import '../src/signed_call_logger.dart';
 import '../src/signedcall_handlers.dart';
 import '../src/signedcall_method_calls.dart';
@@ -69,16 +70,23 @@ class MethodChannelClevertapSignedCallFlutter
   ///Handles the Platform-specific method-calls
   Future _platformCallHandler(MethodCall call) async {
     SignedCallLogger.d(
-        "Inside platformCallHandler: \n invoked method - ${call.method} \n method-arguments -  ${call.arguments}");
+        "Inside platformCallHandler: \n invoked method - '${call.method}' \n method-arguments -  ${call.arguments}");
+    Map<dynamic, dynamic>? args = call.arguments;
 
     switch (call.method) {
       case SCMethodCall.onSignedCallDidInitialize:
-        Map<dynamic, dynamic>? args = call.arguments;
-        _initHandler(args?.cast<String, dynamic>());
+        SignedCallError? initError;
+        if (args != null) {
+          initError = SignedCallError.fromMap(args);
+        }
+        _initHandler(initError);
         break;
       case SCMethodCall.onSignedCallDidVoIPCallInitiate:
-        Map<dynamic, dynamic>? args = call.arguments;
-        _voIPCallHandler(args?.cast<String, dynamic>());
+        SignedCallError? voipCallError;
+        if (args != null) {
+          voipCallError = SignedCallError.fromMap(args);
+        }
+        _voIPCallHandler(voipCallError);
         break;
     }
   }

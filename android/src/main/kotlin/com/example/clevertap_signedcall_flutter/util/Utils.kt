@@ -1,7 +1,10 @@
 package com.example.clevertap_signedcall_flutter.util
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
+import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.models.MissedCallAction
 import com.clevertap.android.signedcall.models.SignedCallScreenBranding
 import com.example.clevertap_signedcall_flutter.Constants
@@ -10,9 +13,26 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
 import com.example.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
 import com.example.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
 import com.example.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
+import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import org.json.JSONObject
 
 object Utils {
+
+    @SuppressLint("RestrictedApi")
+    @JvmStatic
+    fun log(tag:String = LOG_TAG, message: String) {
+        when(SignedCallAPI.getDebugLevel()) {
+            SignedCallAPI.LogLevel.VERBOSE -> {
+                Log.v(tag, message)
+            }
+            SignedCallAPI.LogLevel.DEBUG -> {
+                Log.d(tag, message)
+            }
+            SignedCallAPI.LogLevel.INFO -> {
+                Log.i(tag, message)
+            }
+        }
+    }
 
     /**
      * Parses the initialization or call exception to a map by populating errorCode,

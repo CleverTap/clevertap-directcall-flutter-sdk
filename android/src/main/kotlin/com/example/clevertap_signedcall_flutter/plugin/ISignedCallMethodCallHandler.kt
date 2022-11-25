@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodCall
 /**
  * Defines all the operations that needs to be performed via Signed Call Android SDK
  */
-interface ISignedCallTask {
+interface ISignedCallMethodCallHandler {
     /**
      * Defines implementation to initialize the Signed Call Android SDK
      */
@@ -28,11 +28,6 @@ interface ISignedCallTask {
      * Sends the real-time changes in the call-state in an observable event stream
      */
     fun streamCallEvent(event: VoIPCallStatus)
-
-    /**
-     * Sends the payload result of a missed call action click in an observable event stream
-     */
-    fun streamMissedCallActionClickResult(result: MissedCallNotificationOpenResult)
 
     /**
      * Defines implementation to logout the Signed Call SDK session

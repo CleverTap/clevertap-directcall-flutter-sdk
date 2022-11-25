@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
@@ -10,14 +13,9 @@ import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
   static const routeName = '/registration';
-  final ClevertapSignedCallFlutter clevertapSignedCallFlutterPlugin;
   final String title;
 
-  const RegistrationPage(
-      {Key? key,
-      required this.title,
-      required this.clevertapSignedCallFlutterPlugin})
-      : super(key: key);
+  const RegistrationPage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -104,17 +102,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "3": "Not Interested"
       };
 
-      var initProperties = {
+      final Map<String, dynamic> initProperties = {
         keyAccountId: scAccountId,
         keyApiKey: scApiKey,
         keyCuid: _userCuid,
-        keyAllowPersistSocketConnection: true, //Android Platform
-        keyEnableReadPhoneState: true, //Android Platform
-        keyOverrideDefaultBranding: callScreenBranding, //Android Platform
-        keyMissedCallActions: missedCallActionsMap //Android Platform
+        keyOverrideDefaultBranding: callScreenBranding
       };
 
-      widget.clevertapSignedCallFlutterPlugin.init(
+      ///Android Platform fields
+      if (Platform.isAndroid) {
+        initProperties[keyAllowPersistSocketConnection] = true;
+        initProperties[keyEnableReadPhoneState] = true;
+        initProperties[keyMissedCallActions] = missedCallActionsMap;
+      }
+
+      ///iOS Platform fields
+      if (Platform.isIOS) {
+        initProperties[keyProduction] = false;
+      }
+
+      ClevertapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
       Utils.showSnack(context, 'PlatformException occurs!');
@@ -122,7 +129,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> _signedCallInitHandler(
-      Map<String, dynamic>? signedCallInitError) async {
+      SignedCallError? signedCallInitError) async {
     if (kDebugMode) {
       print(
           "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
@@ -134,8 +141,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
       processNext();
     } else {
       //Initialization is failed here
-      final errorCode = signedCallInitError[keyErrorCode];
-      final errorMessage = signedCallInitError[keyErrorMessage];
+      final errorCode = signedCallInitError.errorCode;
+      final errorMessage = signedCallInitError.errorMessage;
+      final errorDescription = signedCallInitError.errorDescription;
 
       hideLoading();
       Utils.showSnack(context, 'SC Init failed: $errorCode = $errorMessage');

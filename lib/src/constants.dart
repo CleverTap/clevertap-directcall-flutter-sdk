@@ -11,3 +11,6 @@ const String keyActionLabel = "actionLabel";
 const String keyCallDetails = "callDetails";
 const String keyCallerCuid = "callerCuid";
 const String keyCalleeCuid = "calleeCuid";
+const String keyErrorCode = "errorCode";
+const String keyErrorMessage = "errorMessage";
+const String keyErrorDescription = "errorDescription";

@@ -118,7 +118,10 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
                     self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: nil)
                     result(nil)
                 case .failure(let error):
-                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: ["errorCode":error.errorCode, "error": error.errorMessage])
+                    let errorObj = ["errorCode":error.errorCode,
+                                    "errorMessage": error.errorMessage,
+                                    "errorDescription": error.errorDescription]
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: errorObj)
                     result(nil)
                 }
             }
@@ -146,7 +149,10 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
                     self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: nil)
                     result(nil)
                 case .failure(let error):
-                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: ["error": error.errorMessage])
+                    let errorObj = [SCMethodParams.errorCode: error.errorCode,
+                                    SCMethodParams.errorMessage: error.errorMessage,
+                                    SCMethodParams.errorDescription: error.errorDescription]
+                    self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE.rawValue, arguments: errorObj)
                     result(nil)
                 }
             }

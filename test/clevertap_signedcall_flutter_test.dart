@@ -1,4 +1,3 @@
-
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
@@ -6,10 +5,8 @@ import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter_platform_interface.dart';
 import 'package:clevertap_signedcall_flutter/src/signedcall_handlers.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockClevertapDirectcallFlutterPlatform
-    with MockPlatformInterfaceMixin
     implements ClevertapSignedCallFlutterPlatform {
   @override
   Future<void> call(
