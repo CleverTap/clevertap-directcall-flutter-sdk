@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils.dart';
-import '../constants.dart';
 
 class DiallerPage extends StatefulWidget {
   static const routeName = '/dialler';
@@ -113,7 +112,7 @@ class _DiallerPageState extends State<DiallerPage> {
 
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
-      const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
+      //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
       ClevertapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,
@@ -152,7 +151,7 @@ class _DiallerPageState extends State<DiallerPage> {
       print(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
       //Utils.showSnack(context, event.name);
-      if (event == CallEvent.answered) {
+      if (event == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }
     });
