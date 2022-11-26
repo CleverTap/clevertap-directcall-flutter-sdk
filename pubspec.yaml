@@ -1,7 +1,7 @@
 name: clevertap_signedcall_flutter
 description: A new Flutter plugin project.
 version: 0.0.1
-homepage:
+homepage: https://github.com/CleverTap/clevertap-signedcall-flutter-sdk
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
