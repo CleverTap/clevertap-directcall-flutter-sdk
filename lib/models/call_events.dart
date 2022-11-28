@@ -1,4 +1,4 @@
-import '../src/direct_call_logger.dart';
+import '../src/signed_call_logger.dart';
 
 ///Holds all the possible statuses of a VoIP call
 enum CallEvent {
@@ -42,7 +42,7 @@ enum CallEvent {
       case "ReceiverBusyOnAnotherCall":
         return CallEvent.receiverBusyOnAnotherCall;
       default:
-        DCLogger.d('$state is not a valid CallState.');
+        SignedCallLogger.d('$state is not a valid CallState.');
         throw ArgumentError('$state is not a valid CallState.');
     }
   }

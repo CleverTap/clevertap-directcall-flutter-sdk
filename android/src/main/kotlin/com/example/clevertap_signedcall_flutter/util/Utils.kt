@@ -1,19 +1,38 @@
-package com.example.clevertap_directcall_flutter.util
+package com.example.clevertap_signedcall_flutter.util
 
-import com.clevertap.android.directcall.exception.CallException
-import com.clevertap.android.directcall.exception.InitException
-import com.clevertap.android.directcall.models.DCCallScreenBranding
-import com.clevertap.android.directcall.models.MissedCallActions
-import com.clevertap.android.directcall.models.MissedCallNotificationOpenResult
-import com.example.clevertap_directcall_flutter.Constants
-import com.example.clevertap_directcall_flutter.Constants.DARK_THEME
-import com.example.clevertap_directcall_flutter.Constants.KEY_BG_COLOR
-import com.example.clevertap_directcall_flutter.Constants.KEY_BUTTON_THEME
-import com.example.clevertap_directcall_flutter.Constants.KEY_FONT_COLOR
-import com.example.clevertap_directcall_flutter.Constants.KEY_LOGO_URL
+import android.annotation.SuppressLint
+import android.util.Log
+import com.clevertap.android.signedcall.exception.CallException
+import com.clevertap.android.signedcall.exception.InitException
+import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.clevertap.android.signedcall.models.MissedCallAction
+import com.clevertap.android.signedcall.models.SignedCallScreenBranding
+import com.example.clevertap_signedcall_flutter.Constants
+import com.example.clevertap_signedcall_flutter.Constants.DARK_THEME
+import com.example.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
+import com.example.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
+import com.example.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
+import com.example.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
+import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import org.json.JSONObject
 
 object Utils {
+
+    @SuppressLint("RestrictedApi")
+    @JvmStatic
+    fun log(tag:String = LOG_TAG, message: String) {
+        when(SignedCallAPI.getDebugLevel()) {
+            SignedCallAPI.LogLevel.VERBOSE -> {
+                Log.v(tag, message)
+            }
+            SignedCallAPI.LogLevel.DEBUG -> {
+                Log.d(tag, message)
+            }
+            SignedCallAPI.LogLevel.INFO -> {
+                Log.i(tag, message)
+            }
+        }
+    }
 
     /**
      * Parses the initialization or call exception to a map by populating errorCode,
@@ -50,34 +69,34 @@ object Utils {
 
     /**
      * Retrieves the branding details from the input initProperties object and
-     * parses into the [DCCallScreenBranding] object
+     * parses into the [SignedCallScreenBranding] object
      */
     @JvmStatic
     @Throws(Exception::class)
-    fun parseBrandingFromInitOptions(brandingMap: Map<*, *>): DCCallScreenBranding {
+    fun parseBrandingFromInitOptions(brandingMap: Map<*, *>): SignedCallScreenBranding {
         val bgColor = brandingMap[KEY_BG_COLOR] as String
         val fontColor = brandingMap[KEY_FONT_COLOR] as String
         val logoUrl = brandingMap[KEY_LOGO_URL] as String
         val buttonTheme = brandingMap[KEY_BUTTON_THEME] as String
 
-        return DCCallScreenBranding(
+        return SignedCallScreenBranding(
             bgColor, fontColor, logoUrl,
             if (buttonTheme == DARK_THEME)
-                DCCallScreenBranding.ButtonTheme.DARK
+                SignedCallScreenBranding.ButtonTheme.DARK
             else
-                DCCallScreenBranding.ButtonTheme.LIGHT
+                SignedCallScreenBranding.ButtonTheme.LIGHT
         )
     }
 
     /**
      * Retrieves the missed call actions from the input initProperties object and
-     * parses into the list of [MissedCallActions]
+     * parses into the list of [MissedCallAction]
      */
     @JvmStatic
     @Throws(Exception::class)
-    fun parseMissedCallActionsFromInitOptions(missedCallActionsMap: Map<*, *>): List<MissedCallActions> {
+    fun parseMissedCallActionsFromInitOptions(missedCallActionsMap: Map<*, *>): List<MissedCallAction> {
         return missedCallActionsMap.toList().map {
-            MissedCallActions(
+            MissedCallAction(
                 it.first as String?,
                 it.second as String?
             )

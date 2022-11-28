@@ -1,18 +1,18 @@
-package com.example.clevertap_directcall_flutter
+package com.example.clevertap_signedcall_flutter
 
 object Constants {
-    const val LOG_TAG = "DCFlutter:Android"
-    const val CHANNEL_NAME = "clevertap_directcall_flutter"
-    const val KEY_DEBUG_LEVEL = "debugLevel"
+    const val LOG_TAG = "[CT]:[SignedCall]:[Flutter]"
+    const val CHANNEL_NAME = "clevertap_signedcall_flutter"
+    const val KEY_LOG_LEVEL = "logLevel"
     const val KEY_INIT_PROPERTIES = "initProperties"
     const val KEY_ACCOUNT_ID = "accountId"
-    const val KEY_API_KEY = "apikey"
+    const val KEY_API_KEY = "apiKey"
     const val KEY_CUID = "cuid"
     const val KEY_APP_ID = "appId"
     const val KEY_NAME = "name"
     const val KEY_RINGTONE = "ringtone"
     const val KEY_ALLOW_PERSIST_SOCKET_CONNECTION = "allowPersistSocketConnection"
-    const val KEY_ENABLE_READ_PHONE_STATE = "enableReadPhoneState"
+    const val KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION = "promptReceiverReadPhoneStatePermission"
     const val KEY_OVERRIDE_DEFAULT_BRANDING = "overrideDefaultBranding"
     const val KEY_MISSED_CALL_ACTIONS = "missedCallActions"
     const val KEY_BG_COLOR = "bgColor"
@@ -33,6 +33,4 @@ object Constants {
     const val KEY_CALL_DETAILS = "callDetails"
     const val KEY_CALLER_CUID = "callerCuid"
     const val KEY_CALLEE_CUID = "calleeCuid"
-    const val KEY_CALL_EVENT_CHANNEL = "callEventChannel"
-    const val KEY_MISSED_CALL_ACTION_CLICK_EVENT_CHANNEL = "missedCallActionClickEventChannel"
 }

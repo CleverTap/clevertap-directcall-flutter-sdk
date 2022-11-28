@@ -18,8 +18,7 @@ class Utils {
       print('Microphone permission granted!');
       return true;
     } else if (status == PermissionStatus.denied) {
-      print(
-          'Microphone permission denied!');
+      print('Microphone permission denied!');
       askMicroPhonePermission();
     } else if (status == PermissionStatus.permanentlyDenied) {
       print('Takes the user to the settings page');

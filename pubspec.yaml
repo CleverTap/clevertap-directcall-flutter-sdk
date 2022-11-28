@@ -1,7 +1,7 @@
-name: clevertap_directcall_flutter
+name: clevertap_signedcall_flutter
 description: A new Flutter plugin project.
 version: 0.0.1
-homepage:
+homepage: https://github.com/CleverTap/clevertap-signedcall-flutter-sdk
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
@@ -10,9 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  permission_handler: ^10.0.0
-  plugin_platform_interface: ^2.0.2
-  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -37,8 +34,8 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.clevertap_directcall_flutter.plugin
-        pluginClass: DirectCallFlutterPluginRegistrant
+        package: com.example.clevertap_signedcall_flutter.plugin
+        pluginClass: SignedCallFlutterPluginRegistrant
       ios:
         pluginClass: ClevertapDirectcallFlutterPlugin
 

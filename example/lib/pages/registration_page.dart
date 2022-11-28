@@ -1,7 +1,10 @@
-import 'package:clevertap_directcall_flutter/plugin/clevertap_directcall_flutter.dart';
-import 'package:clevertap_directcall_flutter_example/Utils.dart';
-import 'package:clevertap_directcall_flutter_example/constants.dart';
-import 'package:clevertap_directcall_flutter_example/pages/dialler_page.dart';
+import 'dart:io';
+
+import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
+import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
+import 'package:clevertap_signedcall_flutter_example/Utils.dart';
+import 'package:clevertap_signedcall_flutter_example/constants.dart';
+import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,14 +13,9 @@ import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
   static const routeName = '/registration';
-  final ClevertapDirectcallFlutter clevertapDirectcallFlutterPlugin;
   final String title;
 
-  const RegistrationPage(
-      {Key? key,
-      required this.title,
-      required this.clevertapDirectcallFlutterPlugin})
-      : super(key: key);
+  const RegistrationPage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -31,7 +29,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
-    initDCSDKIfCuIDSignedIn();
+    initSCSDKIfCuIDSignedIn();
   }
 
   @override
@@ -39,7 +37,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Direct Call'),
+        title: const Text('Signed Call'),
         automaticallyImplyLeading: false,
       ),
       body: Container(
@@ -69,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                initDirectCallSdk(cuidController.text);
+                initSignedCallSdk(cuidController.text);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -82,8 +80,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  // Initializes the Direct Call SDK
-  void initDirectCallSdk(String inputCuid) {
+  // Initializes the Signed Call SDK
+  void initSignedCallSdk(String inputCuid) {
     showLoading();
 
     _userCuid = inputCuid;
@@ -104,41 +102,53 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "3": "Not Interested"
       };
 
-      var initProperties = {
-        keyAccountId: dcAccountId,
-        keyApiKey: dcApiKey,
-        keyCuid: _userCuid,
-        keyAllowPersistSocketConnection: true, //Android Platform
-        keyEnableReadPhoneState: true, //Android Platform
-        keyOverrideDefaultBranding: callScreenBranding, //Android Platform
-        keyMissedCallActions: missedCallActionsMap //Android Platform
+      ///Common fields of Android & iOS
+      final Map<String, dynamic> initProperties = {
+        keyAccountId: scAccountId, //required
+        keyApiKey: scApiKey, //required
+        keyCuid: _userCuid, //required
+        keyOverrideDefaultBranding: callScreenBranding //optional
       };
 
-      widget.clevertapDirectcallFlutterPlugin.init(
-          initProperties: initProperties, initHandler: _directCallInitHandler);
+      ///Android only fields
+      if (Platform.isAndroid) {
+        initProperties[keyAllowPersistSocketConnection] = true; //required
+        initProperties[keyPromptReceiverReadPhoneStatePermission] =
+            true; //optional
+        initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
+      }
+
+      ///iOS only fields
+      if (Platform.isIOS) {
+        initProperties[keyProduction] = false; //required
+      }
+
+      ClevertapSignedCallFlutter.shared.init(
+          initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
       Utils.showSnack(context, 'PlatformException occurs!');
     }
   }
 
-  Future<void> _directCallInitHandler(
-      Map<String, dynamic>? directCallInitError) async {
+  Future<void> _signedCallInitHandler(
+      SignedCallError? signedCallInitError) async {
     if (kDebugMode) {
       print(
-          "CleverTap:DirectCallFlutter: directCallInitHandler called = ${directCallInitError.toString()}");
+          "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
     }
-    if (directCallInitError == null) {
+    if (signedCallInitError == null) {
       //Initialization is successful here
-      const snackBar = SnackBar(content: Text('Direct Call SDK Initialized!'));
+      const snackBar = SnackBar(content: Text('Signed Call SDK Initialized!'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       processNext();
     } else {
       //Initialization is failed here
-      final errorCode = directCallInitError[keyErrorCode];
-      final errorMessage = directCallInitError[keyErrorMessage];
+      final errorCode = signedCallInitError.errorCode;
+      final errorMessage = signedCallInitError.errorMessage;
+      final errorDescription = signedCallInitError.errorDescription;
 
       hideLoading();
-      Utils.showSnack(context, 'DC Init failed: $errorCode = $errorMessage');
+      Utils.showSnack(context, 'SC Init failed: $errorCode = $errorMessage');
     }
   }
 
@@ -151,12 +161,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
         arguments: {keyLoggedInCuid: _userCuid});
   }
 
-  void initDCSDKIfCuIDSignedIn() {
+  void initSCSDKIfCuIDSignedIn() {
     SharedPreferenceManager.getLoggedInCuid().then((loggedInCuid) {
       setState(() {
         if (loggedInCuid != null) {
           _userCuid = loggedInCuid;
-          initDirectCallSdk(loggedInCuid);
+          initSignedCallSdk(loggedInCuid);
         }
       });
     });
