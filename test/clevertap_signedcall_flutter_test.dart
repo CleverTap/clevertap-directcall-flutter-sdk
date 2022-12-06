@@ -6,8 +6,8 @@ import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter
 import 'package:clevertap_signedcall_flutter/src/signedcall_handlers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class MockClevertapDirectcallFlutterPlatform
-    implements ClevertapSignedCallFlutterPlatform {
+class MockCleverTapDirectcallFlutterPlatform
+    implements CleverTapSignedCallFlutterPlatform {
   @override
   Future<void> call(
       String receiverCuid,
@@ -54,11 +54,11 @@ class MockClevertapDirectcallFlutterPlatform
 }
 
 void main() {
-  final ClevertapSignedCallFlutterPlatform initialPlatform =
-      ClevertapSignedCallFlutterPlatform.instance;
+  final CleverTapSignedCallFlutterPlatform initialPlatform =
+      CleverTapSignedCallFlutterPlatform.instance;
 
-  test('$MethodChannelClevertapSignedCallFlutter is the default instance', () {
+  test('$MethodChannelCleverTapSignedCallFlutter is the default instance', () {
     expect(initialPlatform,
-        isInstanceOf<MethodChannelClevertapSignedCallFlutter>());
+        isInstanceOf<MethodChannelCleverTapSignedCallFlutter>());
   });
 }

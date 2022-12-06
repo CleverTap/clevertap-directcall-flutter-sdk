@@ -113,7 +113,7 @@ class _DiallerPageState extends State<DiallerPage> {
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
       //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
-      ClevertapSignedCallFlutter.shared.call(
+      CleverTapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,
           callOptions: null,
@@ -147,7 +147,7 @@ class _DiallerPageState extends State<DiallerPage> {
   //Listens to the real-time stream of call-events
   void _startObservingCallEvents() {
     _callEventSubscription =
-        ClevertapSignedCallFlutter.shared.callEventListener.listen((event) {
+        CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
       print(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
       //Utils.showSnack(context, event.name);
@@ -159,7 +159,7 @@ class _DiallerPageState extends State<DiallerPage> {
 
   //Listens to the missed call action click events
   void _startObservingMissedCallActionClickEvent() {
-    _missedCallActionClickEventSubscription = ClevertapSignedCallFlutter
+    _missedCallActionClickEventSubscription = CleverTapSignedCallFlutter
         .shared.missedCallActionClickListener
         .listen((result) {
       print(
@@ -172,7 +172,7 @@ class _DiallerPageState extends State<DiallerPage> {
   //Starts a timer and hang up the active call when timer finishes
   void _startCallDurationMeterToEndCall() {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
-      ClevertapSignedCallFlutter.shared.hangUpCall();
+      CleverTapSignedCallFlutter.shared.hangUpCall();
     });
   }
 
@@ -184,7 +184,7 @@ class _DiallerPageState extends State<DiallerPage> {
   }
 
   void logoutSession() {
-    ClevertapSignedCallFlutter.shared.logout();
+    CleverTapSignedCallFlutter.shared.logout();
     SharedPreferenceManager.clearData();
     Navigator.pushNamed(context, RegistrationPage.routeName);
   }

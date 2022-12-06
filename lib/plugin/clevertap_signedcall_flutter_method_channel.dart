@@ -10,9 +10,9 @@ import '../src/signedcall_handlers.dart';
 import '../src/signedcall_method_calls.dart';
 import 'clevertap_signedcall_flutter_platform_interface.dart';
 
-/// An implementation of [ClevertapSignedCallFlutterPlatform] that provides communication b/w flutter and platform.
-class MethodChannelClevertapSignedCallFlutter
-    extends ClevertapSignedCallFlutterPlatform {
+/// An implementation of [CleverTapSignedCallFlutterPlatform] that provides communication b/w flutter and platform.
+class MethodChannelCleverTapSignedCallFlutter
+    extends CleverTapSignedCallFlutterPlatform {
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
@@ -22,7 +22,7 @@ class MethodChannelClevertapSignedCallFlutter
   late SignedCallInitHandler _initHandler;
   late SignedCallVoIPCallHandler _voIPCallHandler;
 
-  MethodChannelClevertapSignedCallFlutter() {
+  MethodChannelCleverTapSignedCallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
     _methodChannel.setMethodCallHandler(_platformCallHandler);
   }
