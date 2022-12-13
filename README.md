@@ -9,9 +9,7 @@
 </a>
 
 ## 👋 Introduction
-The CleverTap Signed Call Flutter SDK for Mobile Customer Engagement and Analytics solutions.
-
-The CleverTap Signed CallFlutter SDK provides in-app calls, which means you can make and receive calls in any Android app if the device has an internet connection and Signed Call Flutter SDK.
+The CleverTap's Signed Call Flutter SDK provides an in-app calls service to make and receive calls in the mobile apps if the device has an internet connection and Signed Call Flutter SDK.
 
 To know more about the Signed Call feature, refer to [Signed Call](https://docs.clevertap.com/docs/signed-call).
 
