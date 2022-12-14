@@ -153,7 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void processNext() {
-    //save cuid in a local session
+    //save the cuid in a local session
     SharedPreferenceManager.saveLoggedInCuid(_userCuid);
 
     //Navigate the user to the Dialler Page

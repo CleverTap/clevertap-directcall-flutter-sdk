@@ -26,21 +26,6 @@ class _DiallerPageState extends State<DiallerPage> {
   final callContextController = TextEditingController();
 
   static const int _callMeterDurationInSeconds = 15;
-  late StreamSubscription<CallEvent>? _callEventSubscription;
-  late StreamSubscription<MissedCallActionClickResult>?
-      _missedCallActionClickEventSubscription;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setup();
-  }
-
-  void setup() {
-    _startObservingCallEvents();
-    _startObservingMissedCallActionClickEvent();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,43 +129,11 @@ class _DiallerPageState extends State<DiallerPage> {
     }
   }
 
-  //Listens to the real-time stream of call-events
-  void _startObservingCallEvents() {
-    _callEventSubscription =
-        CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
-      print(
-          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
-      //Utils.showSnack(context, event.name);
-      if (event == CallEvent.callInProgress) {
-        //_startCallDurationMeterToEndCall();
-      }
-    });
-  }
-
-  //Listens to the missed call action click events
-  void _startObservingMissedCallActionClickEvent() {
-    _missedCallActionClickEventSubscription = CleverTapSignedCallFlutter
-        .shared.missedCallActionClickListener
-        .listen((result) {
-      print(
-          "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
-
-      //Navigator.pushNamed(context, DiallerPage.routeName);
-    });
-  }
-
-  //Starts a timer and hang up the active call when timer finishes
+  //Starts a timer and hang up the ongoing call when the timer finishes
   void _startCallDurationMeterToEndCall() {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
       CleverTapSignedCallFlutter.shared.hangUpCall();
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _callEventSubscription?.cancel();
-    _missedCallActionClickEventSubscription?.cancel();
   }
 
   void logoutSession() {
