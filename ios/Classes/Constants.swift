@@ -71,8 +71,8 @@ enum SCMethodParams: String {
     case CALLOPTIONS = "callOptions"
     
     //calloptions
-    case INITIATORIMG = "initiator_image"
-    case RECEIVERIMG = "receiver_image"
+    case INITIATORIMG = "initiatorImage"
+    case RECEIVERIMG = "receiverImage"
     
     //error keys
     case errorCode = "errorCode"
