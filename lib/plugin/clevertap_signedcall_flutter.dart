@@ -6,15 +6,15 @@ import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Signed Call Native SDKs(Android/iOS)
-class ClevertapSignedCallFlutter {
-  static final ClevertapSignedCallFlutter _shared = ClevertapSignedCallFlutter._internal();
+class CleverTapSignedCallFlutter {
+  static final CleverTapSignedCallFlutter _shared = CleverTapSignedCallFlutter._internal();
 
-  static ClevertapSignedCallFlutter get shared => _shared;
+  static CleverTapSignedCallFlutter get shared => _shared;
 
   // This is a private named constructor.
   // It'll be called exactly once only in this class,
   // by the static property assignment above
-  ClevertapSignedCallFlutter._internal() {
+  CleverTapSignedCallFlutter._internal() {
     // initialization logic
   }
 
@@ -23,7 +23,7 @@ class ClevertapSignedCallFlutter {
   ///
   /// [level] - an enum value from [LogLevel] class
   Future<void> setDebugLevel(LogLevel level) {
-    return ClevertapSignedCallFlutterPlatform.instance.setDebugLevel(level);
+    return CleverTapSignedCallFlutterPlatform.instance.setDebugLevel(level);
   }
 
   ///Initializes the Signed Call SDK
@@ -33,7 +33,7 @@ class ClevertapSignedCallFlutter {
   Future<void> init(
       {required Map<String, dynamic> initProperties,
       required SignedCallInitHandler initHandler}) {
-    return ClevertapSignedCallFlutterPlatform.instance
+    return CleverTapSignedCallFlutterPlatform.instance
         .init(initProperties, initHandler);
   }
 
@@ -48,25 +48,25 @@ class ClevertapSignedCallFlutter {
       required String callContext,
       Map<String, dynamic>? callOptions,
       required SignedCallVoIPCallHandler voIPCallHandler}) {
-    return ClevertapSignedCallFlutterPlatform.instance
+    return CleverTapSignedCallFlutterPlatform.instance
         .call(receiverCuid, callContext, callOptions, voIPCallHandler);
   }
 
   ///Returns the listener to listen the call-events stream
   Stream<CallEvent> get callEventListener =>
-      ClevertapSignedCallFlutterPlatform.instance.callEventsListener;
+      CleverTapSignedCallFlutterPlatform.instance.callEventsListener;
 
   ///Returns the listener to listen the call-events stream
   Stream<MissedCallActionClickResult> get missedCallActionClickListener =>
-      ClevertapSignedCallFlutterPlatform.instance.missedCallActionClickListener;
+      CleverTapSignedCallFlutterPlatform.instance.missedCallActionClickListener;
 
   ///Logs out the user from the Signed Call SDK session
   Future<void> logout() {
-    return ClevertapSignedCallFlutterPlatform.instance.logout();
+    return CleverTapSignedCallFlutterPlatform.instance.logout();
   }
 
   ///Ends the active call, if any.
   Future<void> hangUpCall() {
-    return ClevertapSignedCallFlutterPlatform.instance.hangUpCall();
+    return CleverTapSignedCallFlutterPlatform.instance.hangUpCall();
   }
 }

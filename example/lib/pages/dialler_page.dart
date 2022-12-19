@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils.dart';
-import '../constants.dart';
 
 class DiallerPage extends StatefulWidget {
   static const routeName = '/dialler';
@@ -28,23 +27,6 @@ class _DiallerPageState extends State<DiallerPage> {
   final callContextController = TextEditingController();
 
   static const int _callMeterDurationInSeconds = 15;
-  late StreamSubscription<CallEvent>? _callEventSubscription;
-  late StreamSubscription<MissedCallActionClickResult>?
-      _missedCallActionClickEventSubscription;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setup();
-  }
-
-  void setup() {
-    _startObservingCallEvents();
-    if (Platform.isAndroid) {
-      _startObservingMissedCallActionClickEvent();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +98,8 @@ class _DiallerPageState extends State<DiallerPage> {
 
   void initiateVoIPCall(String? receiverCuid, String? callContext) async {
     if (receiverCuid != null && callContext != null) {
-      const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
-      ClevertapSignedCallFlutter.shared.call(
+      //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
+      CleverTapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,
           callOptions: null,
@@ -147,47 +129,15 @@ class _DiallerPageState extends State<DiallerPage> {
     }
   }
 
-  //Listens to the real-time stream of call-events
-  void _startObservingCallEvents() {
-    _callEventSubscription =
-        ClevertapSignedCallFlutter.shared.callEventListener.listen((event) {
-      print(
-          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
-      //Utils.showSnack(context, event.name);
-      if (event == CallEvent.answered) {
-        //_startCallDurationMeterToEndCall();
-      }
-    });
-  }
-
-  //Listens to the missed call action click events
-  void _startObservingMissedCallActionClickEvent() {
-    _missedCallActionClickEventSubscription = ClevertapSignedCallFlutter
-        .shared.missedCallActionClickListener
-        .listen((result) {
-      print(
-          "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
-
-      //Navigator.pushNamed(context, DiallerPage.routeName);
-    });
-  }
-
-  //Starts a timer and hang up the active call when timer finishes
+  //Starts a timer and hang up the ongoing call when the timer finishes
   void _startCallDurationMeterToEndCall() {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
-      ClevertapSignedCallFlutter.shared.hangUpCall();
+      CleverTapSignedCallFlutter.shared.hangUpCall();
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _callEventSubscription?.cancel();
-    _missedCallActionClickEventSubscription?.cancel();
   }
 
   void logoutSession() {
-    ClevertapSignedCallFlutter.shared.logout();
+    CleverTapSignedCallFlutter.shared.logout();
     SharedPreferenceManager.clearData();
     Navigator.pushNamed(context, RegistrationPage.routeName);
   }

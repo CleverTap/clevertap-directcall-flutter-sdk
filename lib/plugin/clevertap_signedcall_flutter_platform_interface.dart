@@ -6,9 +6,9 @@ import '../models/missed_call_action_click_result.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_method_channel.dart';
 
-abstract class ClevertapSignedCallFlutterPlatform {
-  static ClevertapSignedCallFlutterPlatform instance =
-      MethodChannelClevertapSignedCallFlutter();
+abstract class CleverTapSignedCallFlutterPlatform {
+  static CleverTapSignedCallFlutterPlatform instance =
+      MethodChannelCleverTapSignedCallFlutter();
 
   /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
   /// Debug messages are tagged as CleverTap.

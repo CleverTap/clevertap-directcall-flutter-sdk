@@ -1,8 +1,6 @@
 package com.example.clevertap_signedcall_flutter.plugin
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.annotation.NonNull
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
@@ -12,18 +10,16 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
-import com.example.clevertap_signedcall_flutter.Constants
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_signedcall_flutter.Constants.KEY_ENABLE_READ_PHONE_STATE
 import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
+import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
-import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
@@ -91,19 +87,21 @@ class SignedCallFlutterMethodCallHandler(
     }
 
     //Retrieves the init-properties from call-arguments  Initializes the Signed Call Android SDK
-    @SuppressLint("RestrictedApi")
     override fun initSignedCallSdk(call: MethodCall) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
 
             val initOptions = initProperties?.let { parseInitOptionsFromInitProperties(it) }
+
             val allowPersistSocketConnection =
                 initProperties?.getOrElse(KEY_ALLOW_PERSIST_SOCKET_CONNECTION) { false } as Boolean
-            val enableReadPhoneState =
-                initProperties.getOrElse(KEY_ENABLE_READ_PHONE_STATE) { false } as Boolean
-            val callScreenBranding = parseBrandingFromInitOptions(
-                initProperties[KEY_OVERRIDE_DEFAULT_BRANDING] as Map<*, *>
-            )
+
+            val promptReceiverReadPhoneStatePermission =
+                initProperties.getOrElse(KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION) { false } as Boolean
+
+            val callScreenBranding = initProperties[KEY_OVERRIDE_DEFAULT_BRANDING]?.let {
+                parseBrandingFromInitOptions(it as Map<*, *>)
+            }
             val missedCallActionsList = initProperties[KEY_MISSED_CALL_ACTIONS]?.let {
                 parseMissedCallActionsFromInitOptions(it as Map<*, *>)
             }
@@ -113,7 +111,7 @@ class SignedCallFlutterMethodCallHandler(
 
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
-                    .promptReceiverReadPhoneStatePermission(enableReadPhoneState)
+                    .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
                     .overrideDefaultBranding(callScreenBranding)
                     .setMissedCallActions(
                         missedCallActionsList,

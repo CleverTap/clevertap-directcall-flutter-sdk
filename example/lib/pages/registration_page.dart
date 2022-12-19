@@ -29,7 +29,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
-    initDCSDKIfCuIDSignedIn();
+    initSCSDKIfCuIDSignedIn();
   }
 
   @override
@@ -102,33 +102,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
         "3": "Not Interested"
       };
 
+      ///Common fields of Android & iOS
       final Map<String, dynamic> initProperties = {
-        keyAccountId: scAccountId,
-        keyApiKey: scApiKey,
-        keyCuid: _userCuid,
-        keyOverrideDefaultBranding: callScreenBranding
+        keyAccountId: scAccountId, //required
+        keyApiKey: scApiKey, //required
+        keyCuid: _userCuid, //required
+        keyOverrideDefaultBranding: callScreenBranding //optional
       };
 
-      ///Android Platform fields
+      ///Android only fields
       if (Platform.isAndroid) {
-        initProperties[keyAllowPersistSocketConnection] = true;
-        initProperties[keyEnableReadPhoneState] = true;
-        initProperties[keyMissedCallActions] = missedCallActionsMap;
+        initProperties[keyAllowPersistSocketConnection] = true; //required
+        initProperties[keyPromptReceiverReadPhoneStatePermission] =
+            true; //optional
+        initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
       }
 
-      ///iOS Platform fields
+      ///iOS only fields
       if (Platform.isIOS) {
-        initProperties[keyProduction] = false;
+        initProperties[keyProduction] = false; //required
       }
 
-      ClevertapSignedCallFlutter.shared.init(
+      CleverTapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
       Utils.showSnack(context, 'PlatformException occurs!');
     }
   }
 
-  Future<void> _signedCallInitHandler(
+  void _signedCallInitHandler(
       SignedCallError? signedCallInitError) async {
     if (kDebugMode) {
       print(
@@ -151,7 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void processNext() {
-    //save cuid in a local session
+    //save the cuid in a local session
     SharedPreferenceManager.saveLoggedInCuid(_userCuid);
 
     //Navigate the user to the Dialler Page
@@ -159,7 +161,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         arguments: {keyLoggedInCuid: _userCuid});
   }
 
-  void initDCSDKIfCuIDSignedIn() {
+  void initSCSDKIfCuIDSignedIn() {
     SharedPreferenceManager.getLoggedInCuid().then((loggedInCuid) {
       setState(() {
         if (loggedInCuid != null) {
