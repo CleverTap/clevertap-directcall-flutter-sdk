@@ -110,7 +110,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
             let theme = buttonTheme == "light"
             SignedCall.overrideDefaultBranding = SCCallScreenBranding(bgColor: bgColor, fontColor: fontColor, logo: logoUrl, buttonTheme: theme ? .light : .dark)
         }
-        
+        SignedCall.isEnabled = false
         SignedCall.initSDK(withInitOptions: initParams) { [weak self] res in
             DispatchQueue.main.async {
                 switch res {
