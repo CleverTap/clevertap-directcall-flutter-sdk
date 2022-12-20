@@ -1,21 +1,23 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint clevertap_directcall_flutter.podspec` to validate before publishing.
+# Run `pod lib lint clevertap_signedcall_flutter.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'clevertap_directcall_flutter'
+  s.name             = 'clevertap_signedcall_flutter'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'CleverTap SignedCall Flutter plugin.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+  CleverTap SignedCall supports 1-1 voice calls.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/CleverTap/clevertap-signedcall-flutter-sdk'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'CleverTap' => 'http://www.clevertap.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '9.0'
+  s.dependency 'CleverTap-SignedCall-SDK'
+
+  s.platform = :ios, '10.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

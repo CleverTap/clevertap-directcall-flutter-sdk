@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
@@ -124,8 +125,7 @@ class _DiallerPageState extends State<DiallerPage> {
       final errorMessage = signedCallVoIPError.errorMessage;
       final errorDescription = signedCallVoIPError.errorDescription;
 
-      Utils.showSnack(
-          context, 'VoIP call is failed: $errorCode = $errorMessage');
+      Utils.showSnack(context, 'VoIP call failed: $errorCode = $errorMessage');
     }
   }
 
