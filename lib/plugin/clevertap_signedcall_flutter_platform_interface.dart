@@ -1,7 +1,6 @@
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
 import '../models/call_events.dart';
-import '../models/log_level.dart';
 import '../models/missed_call_action_click_result.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_method_channel.dart';

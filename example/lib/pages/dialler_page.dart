@@ -1,8 +1,5 @@
-import 'dart:io';
 import 'dart:async';
 
-import 'package:clevertap_signedcall_flutter/models/call_events.dart';
-import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/pages/registration_page.dart';
