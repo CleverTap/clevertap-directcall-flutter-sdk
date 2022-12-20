@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://github.com/CleverTap/clevertap-ios-sdk/blob/master/docs/images/clevertap-logo.png" width = "50%"/>
-</p>
-
 # CleverTap Signed Call Flutter SDK
 [![pub package](https://img.shields.io/pub/v/clevertap_signedcall_flutter.svg)](https://pub.dartlang.org/packages/clevertap_signedcall_flutter)
 <a href="https://github.com/CleverTap/clevertap-flutter/releases">
