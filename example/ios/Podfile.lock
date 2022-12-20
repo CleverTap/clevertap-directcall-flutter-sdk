@@ -1,0 +1,68 @@
+PODS:
+  - CleverTap-iOS-SDK (4.1.4):
+    - SDWebImage (~> 5.1)
+  - CleverTap-SignedCall-SDK (0.0.1):
+    - CleverTap-iOS-SDK (= 4.1.4)
+    - CTSimplePing (= 1.0.1)
+    - CTSoftPhone (= 0.0.5-alpha)
+    - Socket.IO-Client-Swift (= 16.0.1)
+  - clevertap_signedcall_flutter (0.0.1):
+    - CleverTap-SignedCall-SDK
+    - Flutter
+  - CTSimplePing (1.0.1)
+  - CTSoftPhone (0.0.5-alpha)
+  - Flutter (1.0.0)
+  - permission_handler_apple (9.0.4):
+    - Flutter
+  - SDWebImage (5.14.2):
+    - SDWebImage/Core (= 5.14.2)
+  - SDWebImage/Core (5.14.2)
+  - shared_preferences_ios (0.0.1):
+    - Flutter
+  - Socket.IO-Client-Swift (16.0.1):
+    - Starscream (~> 4.0)
+  - Starscream (4.0.4)
+
+DEPENDENCIES:
+  - clevertap_signedcall_flutter (from `.symlinks/plugins/clevertap_signedcall_flutter/ios`)
+  - Flutter (from `Flutter`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+
+SPEC REPOS:
+  https://github.com/CleverTap/podspecs:
+    - CleverTap-SignedCall-SDK
+    - CTSimplePing
+    - CTSoftPhone
+  https://github.com/CocoaPods/Specs.git:
+    - CleverTap-iOS-SDK
+    - SDWebImage
+    - Socket.IO-Client-Swift
+    - Starscream
+
+EXTERNAL SOURCES:
+  clevertap_signedcall_flutter:
+    :path: ".symlinks/plugins/clevertap_signedcall_flutter/ios"
+  Flutter:
+    :path: Flutter
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+
+SPEC CHECKSUMS:
+  CleverTap-iOS-SDK: ec4a641fcec7255759252eb91ff3ee603bd5e5e3
+  CleverTap-SignedCall-SDK: 6d2fa1fc84b7adcd3728de3595ac01af1d0f731a
+  clevertap_signedcall_flutter: 719adf4422dbc71a56f5f3da46820dc904a54773
+  CTSimplePing: b982a6095f50e8a6fffa1049c0f548e545d6f1a5
+  CTSoftPhone: 5d790e4535b7d132190afea5e5842e6c0ef37c5b
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  Socket.IO-Client-Swift: c116d6dc9fd6be9c259bacfe143f8725bce7d79e
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+
+PODFILE CHECKSUM: 6ed3c86ca9260d9144b3903fcda7b139c437553f
+
+COCOAPODS: 1.11.0

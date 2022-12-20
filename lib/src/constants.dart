@@ -1,0 +1,16 @@
+const String channelName = "clevertap_signedcall_flutter";
+const String argLogLevel = "logLevel";
+const String argInitProperties = "initProperties";
+const String argCallProperties = "callProperties";
+const String keyReceiverCuid = "receiverCuid";
+const String keyCallContext = "callContext";
+const String keyCallOptions = "callOptions";
+const String keyAction = "action";
+const String keyActionId = "actionId";
+const String keyActionLabel = "actionLabel";
+const String keyCallDetails = "callDetails";
+const String keyCallerCuid = "callerCuid";
+const String keyCalleeCuid = "calleeCuid";
+const String keyErrorCode = "errorCode";
+const String keyErrorMessage = "errorMessage";
+const String keyErrorDescription = "errorDescription";
