@@ -96,6 +96,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyButtonTheme: "light"
       };
 
+      const pushPrimerJSON = {
+        'inAppType': 'alert',
+        'titleText': 'Get Notified',
+        'messageText': 'Enable Notification permission',
+        'followDeviceOrientation': true,
+        'positiveBtnText': 'Allow',
+        'negativeBtnText': 'Cancel',
+        'fallbackToSettings': true
+      };
+
       const missedCallActionsMap = {
         "1": "Call me back",
         "2": "Start Chat",
@@ -107,7 +117,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyAccountId: scAccountId, //required
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
-        keyOverrideDefaultBranding: callScreenBranding //optional
+        keyOverrideDefaultBranding: callScreenBranding, //optional
+        keyPromptPushPrimer: pushPrimerJSON
       };
 
       ///Android only fields

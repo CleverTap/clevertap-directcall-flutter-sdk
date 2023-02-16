@@ -18,6 +18,7 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
 import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
+import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
@@ -35,6 +36,7 @@ import com.example.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInit
 import com.example.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
 import com.example.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.example.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
+import com.example.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -102,6 +104,11 @@ class SignedCallFlutterMethodCallHandler(
             val callScreenBranding = initProperties[KEY_OVERRIDE_DEFAULT_BRANDING]?.let {
                 parseBrandingFromInitOptions(it as Map<*, *>)
             }
+
+            val pushPrimerConfig: JSONObject? = initProperties[KEY_PROMPT_PUSH_PRIMER]?.let {
+                parsePushPrimerConfigFromInitOptions(it as Map<*, *>)
+            }
+
             val missedCallActionsList = initProperties[KEY_MISSED_CALL_ACTIONS]?.let {
                 parseMissedCallActionsFromInitOptions(it as Map<*, *>)
             }
@@ -111,6 +118,7 @@ class SignedCallFlutterMethodCallHandler(
 
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
+                    .promptPushPrimer(pushPrimerConfig)
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
                     .overrideDefaultBranding(callScreenBranding)
                     .setMissedCallActions(
