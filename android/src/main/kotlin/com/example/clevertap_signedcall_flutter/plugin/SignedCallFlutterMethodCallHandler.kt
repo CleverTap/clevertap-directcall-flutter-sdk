@@ -22,6 +22,7 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
+import com.example.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
 import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
 import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
@@ -70,6 +71,9 @@ class SignedCallFlutterMethodCallHandler(
             CALL -> {
                 initiateVoipCall(call)
                 result.success(null)
+            }
+            DISCONNECT_SIGNALLING_SOCKET -> {
+                disconnectSignallingSocket()
             }
             LOGOUT -> {
                 logout()
@@ -183,6 +187,11 @@ class SignedCallFlutterMethodCallHandler(
             e.printStackTrace()
             Utils.log(message = "Exception while initiating the VoIP call: " + e.localizedMessage)
         }
+    }
+
+    //Disconnects the signalling socket
+    override fun disconnectSignallingSocket() {
+        SignedCallAPI.getInstance().disconnectSignallingSocket(context)
     }
 
     //Logs out the Signed Call SDK session

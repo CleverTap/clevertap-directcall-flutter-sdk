@@ -125,6 +125,12 @@ class MethodChannelCleverTapSignedCallFlutter
         .invokeMethod(SCMethodCall.call, {argCallProperties: callProperties});
   }
 
+  ///Disconnects the signalling socket
+  @override
+  Future<void> disconnectSignallingSocket() {
+    return _methodChannel.invokeMethod(SCMethodCall.disconnectSignallingSocket);
+  }
+
   ///Logs out the user from the Signed Call SDK session
   @override
   Future<void> logout() {
