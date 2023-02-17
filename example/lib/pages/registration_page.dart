@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
@@ -22,6 +23,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  late CleverTapPlugin _clevertapPlugin;
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
@@ -29,7 +31,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
+    activateHandlers();
     initSCSDKIfCuIDSignedIn();
+  }
+
+  void pushPermissionResponseReceived(bool accepted) {
+    debugPrint(
+        "Push Permission response called ---> accepted = ${accepted ? "true" : "false"}");
+    if (accepted) {
+      showLoading();
+    } else {
+      CleverTapPlugin.promptPushPrimer(getPushPrimerJson());
+    }
   }
 
   @override
@@ -81,12 +94,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   // Initializes the Signed Call SDK
-  void initSignedCallSdk(String inputCuid) {
-    showLoading();
+  Future<void> initSignedCallSdk(String inputCuid) async {
+    bool isDeviceVersionTargetsBelow33 =
+        await Utils.isDeviceVersionTargetsBelow(13);
+    if (isDeviceVersionTargetsBelow33) {
+      showLoading();
+    } else {
+      //showLoading() only after the notification permission result is received
+      //in pushPermissionResponseReceived handler
+    }
 
     _userCuid = inputCuid;
     // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
     try {
       const callScreenBranding = {
         keyBgColor: "#000000",
@@ -94,16 +113,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light"
-      };
-
-      const pushPrimerJSON = {
-        'inAppType': 'alert',
-        'titleText': 'Get Notified',
-        'messageText': 'Enable Notification permission',
-        'followDeviceOrientation': true,
-        'positiveBtnText': 'Allow',
-        'negativeBtnText': 'Cancel',
-        'fallbackToSettings': true
       };
 
       const missedCallActionsMap = {
@@ -118,7 +127,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
         keyOverrideDefaultBranding: callScreenBranding, //optional
-        keyPromptPushPrimer: pushPrimerJSON
+        keyPromptPushPrimer: getPushPrimerJson()
       };
 
       ///Android only fields
@@ -141,8 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  void _signedCallInitHandler(
-      SignedCallError? signedCallInitError) async {
+  void _signedCallInitHandler(SignedCallError? signedCallInitError) async {
     if (kDebugMode) {
       print(
           "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
@@ -170,6 +178,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
         arguments: {keyLoggedInCuid: _userCuid});
+  }
+
+  void activateHandlers() {
+    _clevertapPlugin = CleverTapPlugin();
+    _clevertapPlugin.setCleverTapPushPermissionResponseReceivedHandler(
+        pushPermissionResponseReceived);
   }
 
   void initSCSDKIfCuIDSignedIn() {
@@ -200,5 +214,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.pop(context);
       isLoadingVisible = false;
     }
+  }
+
+  Map<String, dynamic> getPushPrimerJson() {
+    return {
+      'inAppType': 'alert',
+      'titleText': 'Get Notified',
+      'messageText': 'Enable Notification permission',
+      'followDeviceOrientation': true,
+      'positiveBtnText': 'Allow',
+      'negativeBtnText': 'Cancel',
+      'fallbackToSettings': true
+    };
   }
 }
