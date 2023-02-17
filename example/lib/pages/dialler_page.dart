@@ -77,6 +77,16 @@ class _DiallerPageState extends State<DiallerPage> {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
+                    CleverTapSignedCallFlutter.shared.disconnectSignallingSocket();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  child: const Text('Disconnect Signalling Socket'),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
                     logoutSession();
                   },
                   style: ButtonStyle(
