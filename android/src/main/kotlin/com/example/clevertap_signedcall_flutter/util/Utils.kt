@@ -19,7 +19,7 @@ import org.json.JSONObject
 
 object Utils {
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "LongLogTag")
     @JvmStatic
     fun log(tag:String = LOG_TAG, message: String) {
         when(SignedCallAPI.getDebugLevel()) {
@@ -104,8 +104,11 @@ object Utils {
         }
     }
 
-
-    fun parsePushPrimerConfigFromInitOptions(objectMap: Map<*, *>): JSONObject? {
+    /**
+     * Retrieves the Push Primer configuration from the input initProperties object and
+     * converts to the localInAppJsonConfig.
+     */
+    fun parsePushPrimerConfigFromInitOptions(objectMap: Map<*, *>): JSONObject {
         var inAppType: CTLocalInApp.InAppType? = null
         var titleText: String? = null
         var messageText: String? = null
@@ -169,11 +172,7 @@ object Utils {
                     btnBorderRadius = value as String
                 }
             } catch (t: Throwable) {
-                Log.e(
-                    "CleverTapError", "Invalid parameters in LocalInApp config"
-                            + t.getLocalizedMessage()
-                )
-                return null
+                throw IllegalArgumentException("Invalid parameters in LocalInApp config:" + t.localizedMessage)
             }
         }
 
@@ -211,10 +210,7 @@ object Utils {
         }
         builderWithRequiredParams.setFallbackToSettings(fallbackToSettings)
         val localInAppConfig: JSONObject = builderWithRequiredParams.build()
-        Log.i(
-            "CTLocalInAppConfig", "LocalInAppConfig for push primer prompt: "
-                    + localInAppConfig
-        )
+        log(message = "LocalInAppConfig for push primer prompt: $localInAppConfig")
         return localInAppConfig
     }
 
