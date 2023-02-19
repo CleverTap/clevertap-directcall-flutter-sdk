@@ -59,7 +59,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         case .CALL:
             let arguments = call.arguments as? [String: Any]
             guard let callData = arguments?[SCMethodParams.CALLPARAM.rawValue] as? [String: Any] else {
-                os_log("Handle flutter method INIT, key: callProperties not available", log: logValue, type: .default)
+                os_log("Handle flutter method CALL, key: callProperties not available", log: logValue, type: .default)
                 result(nil)
                 return
             }
@@ -129,10 +129,12 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     }
     
     func makeCall(_ callData:[String: Any], result: @escaping FlutterResult) {
-        guard let context = callData[SCMethodParams.CONTEXT.rawValue] as? String,
-              let receiverCuid = callData[SCMethodParams.RECEIVERCUID.rawValue] as? String else {
+        guard let context = callData[SCMethodParams.CONTEXT.rawValue] as? String, !context.isEmpty, let receiverCuid = callData[SCMethodParams.RECEIVERCUID.rawValue] as? String, !receiverCuid.isEmpty else {
+            os_log("Handle flutter method CALL, key: callContext and receiverCuid not available", log: logValue, type: .default)
+            result(nil)
             return
         }
+        
         var customMetaData: SCCustomMetadata?
         if let callOptions = callData[SCMethodParams.CALLOPTIONS.rawValue] as? [String: String] {
             let initiatorImage = callOptions[SCMethodParams.INITIATORIMG.rawValue]
