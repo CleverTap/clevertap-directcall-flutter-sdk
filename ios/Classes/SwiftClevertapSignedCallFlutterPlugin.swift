@@ -70,15 +70,15 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
             result(nil)
             
         case .HANG_UP_CALL:
-            hangUpCall()
+            SignedCall.hangup()
+            result(nil)
+            
+        case .DISCONNECTSOCKET:
+            SignedCall.disconnectSignallingSocket()
             result(nil)
             
         default: result(FlutterMethodNotImplemented)
         }
-    }
-    
-    func hangUpCall() {
-        SignedCall.hangup()
     }
     
     func logout() {

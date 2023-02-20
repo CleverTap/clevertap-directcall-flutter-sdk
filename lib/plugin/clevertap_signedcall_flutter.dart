@@ -7,7 +7,8 @@ import 'clevertap_signedcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Signed Call Native SDKs(Android/iOS)
 class CleverTapSignedCallFlutter {
-  static final CleverTapSignedCallFlutter _shared = CleverTapSignedCallFlutter._internal();
+  static final CleverTapSignedCallFlutter _shared =
+      CleverTapSignedCallFlutter._internal();
 
   static CleverTapSignedCallFlutter get shared => _shared;
 
@@ -59,6 +60,23 @@ class CleverTapSignedCallFlutter {
   ///Returns the listener to listen the call-events stream
   Stream<MissedCallActionClickResult> get missedCallActionClickListener =>
       CleverTapSignedCallFlutterPlatform.instance.missedCallActionClickListener;
+
+  ///Disconnects the signalling socket.
+  ///
+  ///Call this method when all the expected/pending transactions are over
+  ///and there is no use case of initiating or receiving the VoIP call.
+  ///
+  ///Following is the expected behaviour:
+  ///- Calls can not be initiated without the signalling socket connection and
+  ///  Signed Call returns an exception when call-request is attempted.
+  ///- Call still be received as Signed Call uses FCM for android platform
+  ///  and APNs for iOS platform as a Fallback channel.
+  ///
+  /// Once this method is called, SDK re-initialization is required to undo its behaviour.
+  Future<void> disconnectSignallingSocket() {
+    return CleverTapSignedCallFlutterPlatform.instance
+        .disconnectSignallingSocket();
+  }
 
   ///Logs out the user from the Signed Call SDK session
   Future<void> logout() {

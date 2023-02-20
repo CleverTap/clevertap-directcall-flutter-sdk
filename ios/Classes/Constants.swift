@@ -37,6 +37,7 @@ enum SCMethodCall: String {
     case LOGOUT = "logout"
     case HANG_UP_CALL = "hangUpCall"
     case LOGGING = "logging"
+    case DISCONNECTSOCKET = "disconnectSignallingSocket"
     
     //Platform to Flutter
     case ON_SIGNED_CALL_DID_INITIALIZE = "onSignedCallDidInitialize"

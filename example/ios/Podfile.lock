@@ -6,11 +6,16 @@ PODS:
     - CTSimplePing (= 1.0.1)
     - CTSoftPhone (= 0.0.5-alpha)
     - Socket.IO-Client-Swift (= 16.0.1)
+  - clevertap_plugin (1.6.0):
+    - CleverTap-iOS-SDK (= 4.2.0)
+    - Flutter
   - clevertap_signedcall_flutter (0.0.1):
     - CleverTap-SignedCall-SDK
     - Flutter
   - CTSimplePing (1.0.1)
   - CTSoftPhone (0.0.5-alpha)
+  - device_info_plus (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - permission_handler_apple (9.0.4):
     - Flutter
@@ -25,7 +30,9 @@ PODS:
 
 DEPENDENCIES:
   - CleverTap-SignedCall-SDK
+  - clevertap_plugin (from `.symlinks/plugins/clevertap_plugin/ios`)
   - clevertap_signedcall_flutter (from `.symlinks/plugins/clevertap_signedcall_flutter/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -42,8 +49,12 @@ SPEC REPOS:
     - Starscream
 
 EXTERNAL SOURCES:
+  clevertap_plugin:
+    :path: ".symlinks/plugins/clevertap_plugin/ios"
   clevertap_signedcall_flutter:
     :path: ".symlinks/plugins/clevertap_signedcall_flutter/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
   permission_handler_apple:
@@ -54,9 +65,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CleverTap-iOS-SDK: 124ee0f4bd90c5ffa213b2da05f81496d7339015
   CleverTap-SignedCall-SDK: cedbb6403d2ef57cabec9f2243647d32ad675088
+  clevertap_plugin: bdd8ed2df3af7bc0039b266656eb188e42426099
   clevertap_signedcall_flutter: 50e25c678e2b5f328652fd1e2fcc196ba5031298
   CTSimplePing: b982a6095f50e8a6fffa1049c0f548e545d6f1a5
   CTSoftPhone: 5d790e4535b7d132190afea5e5842e6c0ef37c5b
+  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   SDWebImage: 9c36e66c8ce4620b41a7407698dda44211a96764
@@ -64,6 +77,6 @@ SPEC CHECKSUMS:
   Socket.IO-Client-Swift: c116d6dc9fd6be9c259bacfe143f8725bce7d79e
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
 
-PODFILE CHECKSUM: eaa75f6132543fa3bbe8e03947db1ae2c1fd455b
+PODFILE CHECKSUM: 678f9326937756590bc0b41f4caa1b2b0065f3ea
 
 COCOAPODS: 1.11.0

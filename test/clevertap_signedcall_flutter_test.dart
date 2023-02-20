@@ -51,6 +51,12 @@ class MockCleverTapDirectcallFlutterPlatform
     // TODO: implement setDebugLevel
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> disconnectSignallingSocket() {
+    // TODO: implement disconnectSignallingSocket
+    throw UnimplementedError();
+  }
 }
 
 void main() {
