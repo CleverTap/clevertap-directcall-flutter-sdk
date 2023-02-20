@@ -118,11 +118,8 @@ class _DiallerPageState extends State<DiallerPage> {
   }
 
   void _signedCallVoIPCallHandler(SignedCallError? signedCallVoIPError) {
-    if (kDebugMode) {
-      print(
-          "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
-    }
-
+    debugPrint(
+        "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
     if (signedCallVoIPError == null) {
       //Initialization is successful here
       Utils.showSnack(context, 'VoIP call is placed successfully!');

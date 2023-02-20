@@ -146,15 +146,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       CleverTapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
-      Utils.showSnack(context, 'PlatformException occurs!');
+      debugPrint('PlatformException occurs!');
     }
   }
 
   void _signedCallInitHandler(SignedCallError? signedCallInitError) async {
-    if (kDebugMode) {
-      print(
-          "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
-    }
+    debugPrint(
+        "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
     if (signedCallInitError == null) {
       //Initialization is successful here
       const snackBar = SnackBar(content: Text('Signed Call SDK Initialized!'));
