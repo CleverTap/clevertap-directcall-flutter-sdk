@@ -6,7 +6,6 @@ import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
 import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -80,6 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Utils.dismissKeyboard(context);
                 initSignedCallSdk(cuidController.text);
               },
               style: ButtonStyle(
@@ -95,6 +95,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   // Initializes the Signed Call SDK
   Future<void> initSignedCallSdk(String inputCuid) async {
+    if(!Utils.didSCAccountCredentialsConfigured()) {
+      Utils.showSnack(context, 'Replace the AccountId and ApiKey of your Signed Call Account in the example/lib/constants.dart');
+      return;
+    }
+
     bool isDeviceVersionTargetsBelow33 =
         await Utils.isDeviceVersionTargetsBelow(13);
     if (isDeviceVersionTargetsBelow33) {
