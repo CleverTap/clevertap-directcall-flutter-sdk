@@ -15,7 +15,7 @@ import SignedCallSDK
         SignedCall.cleverTapInstance = CleverTap.sharedInstance()
         
         guard let flutterVC = UIApplication.shared.windows.first?.rootViewController as? FlutterViewController else {
-            return true
+            return super.application(application, didFinishLaunchingWithOptions: launchOptions)
         }
         
         let navigationController = UINavigationController(rootViewController: flutterVC)
@@ -23,7 +23,7 @@ import SignedCallSDK
         window?.rootViewController = navigationController
         
         guard let rootView = window?.rootViewController else {
-            return true
+            return super.application(application, didFinishLaunchingWithOptions: launchOptions)
         }
 
         SignedCall.registerVoIP(withRootView: rootView)

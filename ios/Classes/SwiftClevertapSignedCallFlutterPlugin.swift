@@ -129,7 +129,10 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     }
     
     func makeCall(_ callData:[String: Any], result: @escaping FlutterResult) {
-        guard let context = callData[SCMethodParams.CONTEXT.rawValue] as? String, !context.isEmpty, let receiverCuid = callData[SCMethodParams.RECEIVERCUID.rawValue] as? String, !receiverCuid.isEmpty else {
+        guard let context = callData[SCMethodParams.CONTEXT.rawValue] as? String,
+                !context.isEmpty,
+                let receiverCuid = callData[SCMethodParams.RECEIVERCUID.rawValue] as? String,
+                !receiverCuid.isEmpty else {
             os_log("Handle flutter method CALL, key: callContext and receiverCuid not available", log: logValue, type: .default)
             result(nil)
             return
