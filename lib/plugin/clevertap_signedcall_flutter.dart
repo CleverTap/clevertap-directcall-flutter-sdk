@@ -7,7 +7,8 @@ import 'clevertap_signedcall_flutter_platform_interface.dart';
 
 /// Plugin class to handle the communication b/w the flutter app and Signed Call Native SDKs(Android/iOS)
 class CleverTapSignedCallFlutter {
-  static final CleverTapSignedCallFlutter _shared = CleverTapSignedCallFlutter._internal();
+  static final CleverTapSignedCallFlutter _shared =
+      CleverTapSignedCallFlutter._internal();
 
   static CleverTapSignedCallFlutter get shared => _shared;
 
