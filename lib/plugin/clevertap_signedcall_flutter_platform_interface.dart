@@ -45,6 +45,9 @@ abstract class CleverTapSignedCallFlutterPlatform {
   ///missed call action click events.
   Stream<MissedCallActionClickResult> get missedCallActionClickListener;
 
+  ///Disconnects the signalling socket.
+  Future<void> disconnectSignallingSocket();
+
   ///Logs out the user from the Signed Call SDK session
   Future<void> logout();
 

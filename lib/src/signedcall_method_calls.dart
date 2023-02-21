@@ -2,6 +2,7 @@ class SCMethodCall {
   //Flutter to Platform
   static const String init = "init";
   static const String call = "call";
+  static const String disconnectSignallingSocket = "disconnectSignallingSocket";
   static const String logout = "logout";
   static const String hangUpCall = "hangUpCall";
   static const String logging = "logging";

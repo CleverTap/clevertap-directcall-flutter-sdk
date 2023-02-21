@@ -77,6 +77,16 @@ class _DiallerPageState extends State<DiallerPage> {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
+                    CleverTapSignedCallFlutter.shared.disconnectSignallingSocket();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                  ),
+                  child: const Text('Disconnect Signalling Socket'),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
                     logoutSession();
                   },
                   style: ButtonStyle(
@@ -108,11 +118,8 @@ class _DiallerPageState extends State<DiallerPage> {
   }
 
   void _signedCallVoIPCallHandler(SignedCallError? signedCallVoIPError) {
-    if (kDebugMode) {
-      print(
-          "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
-    }
-
+    debugPrint(
+        "CleverTap:SignedCallFlutter: signedCallVoIPCallHandler called = ${signedCallVoIPError.toString()}");
     if (signedCallVoIPError == null) {
       //Initialization is successful here
       Utils.showSnack(context, 'VoIP call is placed successfully!');

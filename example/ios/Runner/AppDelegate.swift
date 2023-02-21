@@ -13,9 +13,19 @@ import SignedCallSDK
         CleverTap.setDebugLevel(CleverTapLogLevel.off.rawValue)
         CleverTap.autoIntegrate()
         SignedCall.cleverTapInstance = CleverTap.sharedInstance()
-        guard let rootView = self.window?.rootViewController else {
-            return true
+        
+        guard let flutterVC = UIApplication.shared.windows.first?.rootViewController as? FlutterViewController else {
+            return super.application(application, didFinishLaunchingWithOptions: launchOptions)
         }
+        
+        let navigationController = UINavigationController(rootViewController: flutterVC)
+        navigationController.isNavigationBarHidden = true
+        window?.rootViewController = navigationController
+        
+        guard let rootView = window?.rootViewController else {
+            return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        }
+
         SignedCall.registerVoIP(withRootView: rootView)
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)

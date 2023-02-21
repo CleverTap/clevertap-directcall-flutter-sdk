@@ -8,6 +8,7 @@ const String keyAllowPersistSocketConnection = "allowPersistSocketConnection";
 const String keyPromptReceiverReadPhoneStatePermission =
     "promptReceiverReadPhoneStatePermission";
 const String keyOverrideDefaultBranding = "overrideDefaultBranding";
+const String keyPromptPushPrimer = "promptPushPrimer";
 const String keyMissedCallActions = "missedCallActions";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
