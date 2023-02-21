@@ -118,9 +118,9 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
                     self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: nil)
                     result(nil)
                 case .failure(let error):
-                    let errorObj = ["errorCode":error.errorCode,
-                                    "errorMessage": error.errorMessage,
-                                    "errorDescription": error.errorDescription]
+                    let errorObj = [SCMethodParams.errorCode.rawValue:error.errorCode,
+                                    SCMethodParams.errorMessage.rawValue: error.errorMessage,
+                                    SCMethodParams.errorDescription.rawValue: error.errorDescription]
                     self?.channel?.invokeMethod(SCMethodParams.ON_SIGNED_CALL_DID_INITIALIZE.rawValue, arguments: errorObj)
                     result(nil)
                 }
