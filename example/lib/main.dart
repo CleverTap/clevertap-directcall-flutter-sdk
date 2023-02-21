@@ -21,7 +21,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<CallEvent>? _callEventSubscription;
   late StreamSubscription<MissedCallActionClickResult>?
-  _missedCallActionClickEventSubscription;
+      _missedCallActionClickEventSubscription;
 
   @override
   void initState() {
@@ -48,13 +48,13 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
-          print(
-              "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
-          //Utils.showSnack(context, event.name);
-          if (event == CallEvent.callInProgress) {
-            //_startCallDurationMeterToEndCall();
-          }
-        });
+      debugPrint(
+          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
+      //Utils.showSnack(context, event.name);
+      if (event == CallEvent.callInProgress) {
+        //_startCallDurationMeterToEndCall();
+      }
+    });
   }
 
   //Listens to the missed call action click events
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
     _missedCallActionClickEventSubscription = CleverTapSignedCallFlutter
         .shared.missedCallActionClickListener
         .listen((result) {
-      print(
+      debugPrint(
           "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
       //Navigator.pushNamed(context, <SomePage.routeName>);
     });

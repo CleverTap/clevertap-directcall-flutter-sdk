@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
 import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,6 +22,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  late CleverTapPlugin _clevertapPlugin;
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
@@ -29,7 +30,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
+    activateHandlers();
     initSCSDKIfCuIDSignedIn();
+  }
+
+  void pushPermissionResponseReceived(bool accepted) {
+    debugPrint(
+        "Push Permission response called ---> accepted = ${accepted ? "true" : "false"}");
+    if (accepted) {
+      showLoading();
+    } else {
+      CleverTapPlugin.promptPushPrimer(getPushPrimerJson());
+    }
   }
 
   @override
@@ -67,6 +79,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Utils.dismissKeyboard(context);
                 initSignedCallSdk(cuidController.text);
               },
               style: ButtonStyle(
@@ -81,12 +94,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   // Initializes the Signed Call SDK
-  void initSignedCallSdk(String inputCuid) {
-    showLoading();
+  Future<void> initSignedCallSdk(String inputCuid) async {
+    if(!Utils.didSCAccountCredentialsConfigured()) {
+      Utils.showSnack(context, 'Replace the AccountId and ApiKey of your Signed Call Account in the example/lib/constants.dart');
+      return;
+    }
+
+    bool isDeviceVersionTargetsBelow33 =
+        await Utils.isDeviceVersionTargetsBelow(13);
+    if (isDeviceVersionTargetsBelow33) {
+      showLoading();
+    } else {
+      //showLoading() only after the notification permission result is received
+      //in pushPermissionResponseReceived handler
+    }
 
     _userCuid = inputCuid;
     // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
     try {
       const callScreenBranding = {
         keyBgColor: "#000000",
@@ -107,7 +131,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyAccountId: scAccountId, //required
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
-        keyOverrideDefaultBranding: callScreenBranding //optional
+        keyOverrideDefaultBranding: callScreenBranding, //optional
+        keyPromptPushPrimer: getPushPrimerJson()
       };
 
       ///Android only fields
@@ -126,16 +151,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       CleverTapSignedCallFlutter.shared.init(
           initProperties: initProperties, initHandler: _signedCallInitHandler);
     } on PlatformException {
-      Utils.showSnack(context, 'PlatformException occurs!');
+      debugPrint('PlatformException occurs!');
     }
   }
 
-  void _signedCallInitHandler(
-      SignedCallError? signedCallInitError) async {
-    if (kDebugMode) {
-      print(
-          "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
-    }
+  void _signedCallInitHandler(SignedCallError? signedCallInitError) async {
+    debugPrint(
+        "CleverTap:SignedCallFlutter: signedCallInitHandler called = ${signedCallInitError.toString()}");
     if (signedCallInitError == null) {
       //Initialization is successful here
       const snackBar = SnackBar(content: Text('Signed Call SDK Initialized!'));
@@ -159,6 +181,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
         arguments: {keyLoggedInCuid: _userCuid});
+  }
+
+  void activateHandlers() {
+    _clevertapPlugin = CleverTapPlugin();
+    _clevertapPlugin.setCleverTapPushPermissionResponseReceivedHandler(
+        pushPermissionResponseReceived);
   }
 
   void initSCSDKIfCuIDSignedIn() {
@@ -189,5 +217,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
       Navigator.pop(context);
       isLoadingVisible = false;
     }
+  }
+
+  Map<String, dynamic> getPushPrimerJson() {
+    return {
+      'inAppType': 'alert',
+      'titleText': 'Get Notified',
+      'messageText': 'Enable Notification permission',
+      'followDeviceOrientation': true,
+      'positiveBtnText': 'Allow',
+      'negativeBtnText': 'Cancel',
+      'fallbackToSettings': true
+    };
   }
 }

@@ -12,22 +12,27 @@ interface ISignedCallMethodCallHandler {
     /**
      * Defines implementation to initialize the Signed Call Android SDK
      */
-    fun setDebugLevel(@NonNull call: MethodCall)
+    fun setDebugLevel(call: MethodCall)
 
     /**
      * Defines implementation to initialize the Signed Call Android SDK
      */
-    fun initSignedCallSdk(@NonNull call: MethodCall)
+    fun initSignedCallSdk(call: MethodCall)
 
     /**
      * Defines implementation to initiate a VoIP call
      */
-    fun initiateVoipCall(@NonNull call: MethodCall)
+    fun initiateVoipCall(call: MethodCall)
 
     /**
      * Sends the real-time changes in the call-state in an observable event stream
      */
     fun streamCallEvent(event: VoIPCallStatus)
+
+    /**
+     * Disconnects the signalling socket
+     */
+    fun disconnectSignallingSocket()
 
     /**
      * Defines implementation to logout the Signed Call SDK session
