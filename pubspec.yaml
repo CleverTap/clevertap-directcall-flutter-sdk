@@ -1,6 +1,6 @@
 name: clevertap_signedcall_flutter
 description: The CleverTap's Signed Call Flutter provides an in-app calls service to make and receive calls in the mobile apps.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/CleverTap/clevertap-signedcall-flutter-sdk
 
 environment:
