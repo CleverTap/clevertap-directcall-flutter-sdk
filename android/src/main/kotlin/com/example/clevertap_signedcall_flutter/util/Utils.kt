@@ -14,6 +14,7 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
 import com.example.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
 import com.example.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
 import com.example.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
+import com.example.clevertap_signedcall_flutter.Constants.KEY_SHOW_POWERED_BY_SIGNED_CALL
 import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import org.json.JSONObject
 
@@ -75,18 +76,23 @@ object Utils {
     @JvmStatic
     @Throws(Exception::class)
     fun parseBrandingFromInitOptions(brandingMap: Map<*, *>): SignedCallScreenBranding {
-        val bgColor = brandingMap[KEY_BG_COLOR] as String
-        val fontColor = brandingMap[KEY_FONT_COLOR] as String
-        val logoUrl = brandingMap[KEY_LOGO_URL] as String
-        val buttonTheme = brandingMap[KEY_BUTTON_THEME] as String
+        val bgColor = brandingMap[KEY_BG_COLOR] as? String
+        val fontColor = brandingMap[KEY_FONT_COLOR] as? String
+        val logoUrl = brandingMap[KEY_LOGO_URL] as? String
+        val buttonTheme = brandingMap[KEY_BUTTON_THEME] as? String
+        val showPoweredBySignedCall = brandingMap[KEY_SHOW_POWERED_BY_SIGNED_CALL] as? Boolean
 
-        return SignedCallScreenBranding(
+        val callScreenBranding = SignedCallScreenBranding(
             bgColor, fontColor, logoUrl,
             if (buttonTheme == DARK_THEME)
                 SignedCallScreenBranding.ButtonTheme.DARK
             else
                 SignedCallScreenBranding.ButtonTheme.LIGHT
         )
+        if (showPoweredBySignedCall != null) {
+            callScreenBranding.showPoweredBySignedCall = showPoweredBySignedCall
+        }
+        return callScreenBranding
     }
 
     /**
