@@ -1,5 +1,6 @@
-package com.example.clevertap_signedcall_flutter.plugin
+package com.clevertap.clevertap_signedcall_flutter.plugin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
@@ -9,36 +10,36 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
-import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
-import com.example.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
-import com.example.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
-import com.example.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
-import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
-import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
-import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
-import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
-import com.example.clevertap_signedcall_flutter.Constants.TAG
-import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
-import com.example.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
-import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
-import com.example.clevertap_signedcall_flutter.SCMethodCall.INIT
-import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
-import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
-import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
-import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
-import com.example.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
-import com.example.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
-import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
-import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
-import com.example.clevertap_signedcall_flutter.util.Utils
-import com.example.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
-import com.example.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
-import com.example.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
-import com.example.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
-import com.example.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
+import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.INIT
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGGING
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
+import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
+import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.clevertap.clevertap_signedcall_flutter.util.Utils
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -94,6 +95,7 @@ class SignedCallFlutterMethodCallHandler(
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun trackSdkVersion(call: MethodCall, result: Result) {
         val sdkName = call.argument<String>("sdkName")
         val sdkVersion = call.argument<Int>("sdkVersion")!!

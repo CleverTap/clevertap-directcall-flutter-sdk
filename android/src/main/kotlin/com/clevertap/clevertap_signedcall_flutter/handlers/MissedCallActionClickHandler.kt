@@ -1,12 +1,12 @@
-package com.example.clevertap_signedcall_flutter.handlers
+package com.clevertap.clevertap_signedcall_flutter.handlers
 
 import android.content.Context
 import android.util.Log
 import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
-import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
-import com.example.clevertap_signedcall_flutter.extensions.toMap
-import com.example.clevertap_signedcall_flutter.util.Utils
+import com.clevertap.clevertap_signedcall_flutter.Constants.LOG_TAG
+import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
+import com.clevertap.clevertap_signedcall_flutter.util.Utils
 
 /**
  * Missed Call CTA handler for SignedCall Missed Call Notifications

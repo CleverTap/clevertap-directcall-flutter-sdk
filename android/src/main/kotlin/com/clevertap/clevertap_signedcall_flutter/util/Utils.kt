@@ -1,4 +1,4 @@
-package com.example.clevertap_signedcall_flutter.util
+package com.clevertap.clevertap_signedcall_flutter.util
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -8,14 +8,14 @@ import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.models.MissedCallAction
 import com.clevertap.android.signedcall.models.SignedCallScreenBranding
-import com.example.clevertap_signedcall_flutter.Constants
-import com.example.clevertap_signedcall_flutter.Constants.DARK_THEME
-import com.example.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
-import com.example.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
-import com.example.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
-import com.example.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
-import com.example.clevertap_signedcall_flutter.Constants.KEY_SHOW_POWERED_BY_SIGNED_CALL
-import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
+import com.clevertap.clevertap_signedcall_flutter.Constants
+import com.clevertap.clevertap_signedcall_flutter.Constants.DARK_THEME
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SHOW_POWERED_BY_SIGNED_CALL
+import com.clevertap.clevertap_signedcall_flutter.Constants.LOG_TAG
 import org.json.JSONObject
 
 object Utils {

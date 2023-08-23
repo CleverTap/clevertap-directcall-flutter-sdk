@@ -1,4 +1,4 @@
-group 'com.example.clevertap_signedcall_flutter'
+group 'com.clevertap.clevertap_signedcall_flutter'
 version '0.0.3'
 
 buildscript {

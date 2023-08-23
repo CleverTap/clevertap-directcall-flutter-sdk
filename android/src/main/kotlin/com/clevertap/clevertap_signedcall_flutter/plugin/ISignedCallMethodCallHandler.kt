@@ -1,4 +1,4 @@
-package com.example.clevertap_signedcall_flutter.plugin
+package com.clevertap.clevertap_signedcall_flutter.plugin
 
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import io.flutter.plugin.common.MethodCall

@@ -34,7 +34,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.clevertap_signedcall_flutter.plugin
+        package: com.clevertap.clevertap_signedcall_flutter.plugin
         pluginClass: SignedCallFlutterPluginRegistrant
       ios:
         pluginClass: ClevertapSignedCallFlutterPlugin
