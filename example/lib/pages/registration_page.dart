@@ -118,7 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: false
+        keyShowPoweredBySignedCall: true
       };
 
       const missedCallActionsMap = {
@@ -132,7 +132,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyAccountId: scAccountId, //required
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
-        keyOverrideDefaultBranding: callScreenBranding, //optional
+        //keyOverrideDefaultBranding: callScreenBranding, //optional
         keyPromptPushPrimer: getPushPrimerJson()
       };
 
