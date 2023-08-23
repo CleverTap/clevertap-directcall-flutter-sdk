@@ -9,7 +9,6 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
-import com.example.clevertap_signedcall_flutter.Constants
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -21,7 +20,6 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_B
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
-import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.example.clevertap_signedcall_flutter.Constants.TAG
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
