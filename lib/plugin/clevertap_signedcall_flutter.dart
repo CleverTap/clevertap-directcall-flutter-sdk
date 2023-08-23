@@ -12,11 +12,15 @@ class CleverTapSignedCallFlutter {
 
   static CleverTapSignedCallFlutter get shared => _shared;
 
+  static const libName = 'ctscsdkversion-flutter';
+  static const libVersion = 10900; // If the current version is X.X.X then pass as X0X0X
+
   // This is a private named constructor.
   // It'll be called exactly once only in this class,
   // by the static property assignment above
   CleverTapSignedCallFlutter._internal() {
-    // initialization logic
+        /// Set the CleverTap Flutter library name and the current version for version tracking
+    CleverTapSignedCallFlutterPlatform.instance.trackSdkVersion({'sdkName': libName, 'sdkVersion': libVersion});
   }
 
   /// Enables or disables debugging. If enabled, see debug messages logcat utility.

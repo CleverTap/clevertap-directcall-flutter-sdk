@@ -9,6 +9,9 @@ abstract class CleverTapSignedCallFlutterPlatform {
   static CleverTapSignedCallFlutterPlatform instance =
       MethodChannelCleverTapSignedCallFlutter();
 
+  /// Passes the current SDK version for version tracking
+  Future<void> trackSdkVersion(Map<String, dynamic> versionTrackingMap);
+
   /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
   /// Debug messages are tagged as CleverTap.
   ///

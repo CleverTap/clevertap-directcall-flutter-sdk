@@ -1,7 +1,6 @@
 package com.example.clevertap_signedcall_flutter.plugin
 
 import android.content.Context
-import androidx.annotation.NonNull
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import com.clevertap.android.signedcall.exception.CallException
@@ -10,6 +9,7 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.example.clevertap_signedcall_flutter.Constants
 import com.example.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -21,6 +21,8 @@ import com.example.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_B
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.example.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.example.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
+import com.example.clevertap_signedcall_flutter.Constants.LOG_TAG
+import com.example.clevertap_signedcall_flutter.Constants.TAG
 import com.example.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.example.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
 import com.example.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
@@ -29,6 +31,7 @@ import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGGING
 import com.example.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
 import com.example.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
+import com.example.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
 import com.example.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
@@ -44,11 +47,8 @@ import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
 class SignedCallFlutterMethodCallHandler(
-    private val context: Context?,
-    private val methodChannel: MethodChannel?
-) :
-    ISignedCallMethodCallHandler,
-    MethodChannel.MethodCallHandler {
+    private val context: Context?, private val methodChannel: MethodChannel?
+) : ISignedCallMethodCallHandler, MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
 
@@ -56,44 +56,65 @@ class SignedCallFlutterMethodCallHandler(
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
     }
 
+    companion object {
+        const val ERROR_CLEVERTAP_INSTANCE_NOT_INITIALIZED = "CleverTap Instance is not initialized"
+    }
+
     //Called when a method-call is invoked from flutterPlugin
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: Result) {
         Utils.log(message = "Inside onMethodCall: \n invoked method - \'${call.method}\' \n method-arguments - ${call.arguments} ")
         when (call.method) {
+            TRACK_SDK_VERSION -> {
+                trackSdkVersion(call, result)
+            }
+
             LOGGING -> {
-                setDebugLevel(call)
-                result.success(null)
+                setDebugLevel(call, result)
             }
+
             INIT -> {
-                initSignedCallSdk(call)
-                result.success(null)
+                initSignedCallSdk(call, result)
             }
+
             CALL -> {
-                initiateVoipCall(call)
-                result.success(null)
+                initiateVoipCall(call, result)
             }
+
             DISCONNECT_SIGNALLING_SOCKET -> {
-                disconnectSignallingSocket()
+                disconnectSignallingSocket(result)
             }
+
             LOGOUT -> {
-                logout()
-                result.success(null)
+                logout(result)
             }
+
             HANG_UP_CALL -> {
-                hangUpCall()
-                result.success(null)
+                hangUpCall(result)
             }
+
             else -> result.notImplemented()
         }
     }
 
-    override fun setDebugLevel(call: MethodCall) {
+    override fun trackSdkVersion(call: MethodCall, result: Result) {
+        val sdkName = call.argument<String>("sdkName")
+        val sdkVersion = call.argument<Int>("sdkVersion")!!
+        cleverTapAPI?.let {
+            cleverTapAPI!!.setCustomSdkVersion(sdkName, sdkVersion)
+            result.success(null)
+        } ?: run {
+            result.error(TAG, ERROR_CLEVERTAP_INSTANCE_NOT_INITIALIZED, null)
+        }
+    }
+
+    override fun setDebugLevel(call: MethodCall, result: Result) {
         val debugLevel = call.argument<Int>(KEY_LOG_LEVEL)
         debugLevel?.let { SignedCallAPI.setDebugLevel(debugLevel.toSignedCallLogLevel()) }
+        result.success(null)
     }
 
     //Retrieves the init-properties from call-arguments  Initializes the Signed Call Android SDK
-    override fun initSignedCallSdk(call: MethodCall) {
+    override fun initSignedCallSdk(call: MethodCall, result: Result) {
         try {
             val initProperties = call.argument<Map<String, Any>>(KEY_INIT_PROPERTIES)
 
@@ -124,18 +145,12 @@ class SignedCallFlutterMethodCallHandler(
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
-                    .overrideDefaultBranding(callScreenBranding)
-                    .setMissedCallActions(
-                        missedCallActionsList,
-                        missedCallActionClickHandlerPath
-                    )
-                    .build()
+                    .overrideDefaultBranding(callScreenBranding).setMissedCallActions(
+                        missedCallActionsList, missedCallActionClickHandlerPath
+                    ).build()
 
-            SignedCallAPI.getInstance().init(
-                context,
-                initConfiguration,
-                cleverTapAPI,
-                object : SignedCallInitResponse {
+            SignedCallAPI.getInstance()
+                .init(context, initConfiguration, cleverTapAPI, object : SignedCallInitResponse {
                     override fun onSuccess() {
                         methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_INITIALIZE, null)
                     }
@@ -146,14 +161,18 @@ class SignedCallFlutterMethodCallHandler(
                         )
                     }
                 })
+            result.success(null)
         } catch (e: Exception) {
             e.printStackTrace()
-            Utils.log(message = "Exception while initializing the Signed Call Flutter Plugin: " + e.localizedMessage)
+            val errorMsg =
+                "Unable to initialize the Signed Call Flutter Plugin: " + e.localizedMessage
+            Utils.log(message = errorMsg)
+            result.error(TAG, errorMsg, null)
         }
     }
 
     //Retrieves the call-properties from call-arguments and initiates a VoIP call
-    override fun initiateVoipCall(call: MethodCall) {
+    override fun initiateVoipCall(call: MethodCall, result: Result) {
         try {
             val callProperties = call.argument<Map<String, Any>>(KEY_CALL_PROPERTIES)
             val receiverCuid = callProperties?.let { it[KEY_RECEIVER_CUID] as String }
@@ -162,8 +181,7 @@ class SignedCallFlutterMethodCallHandler(
                 if (it[KEY_CALL_OPTIONS] != null) JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) else null
             }
 
-            SignedCallAPI.getInstance().call(
-                context,
+            SignedCallAPI.getInstance().call(context,
                 receiverCuid,
                 callContext,
                 callOptions,
@@ -183,25 +201,31 @@ class SignedCallFlutterMethodCallHandler(
                         )
                     }
                 })
+            result.success(null)
         } catch (e: Exception) {
             e.printStackTrace()
-            Utils.log(message = "Exception while initiating the VoIP call: " + e.localizedMessage)
+            val errorMsg = "Unable to initiate the VoIP call: " + e.localizedMessage
+            Utils.log(message = errorMsg)
+            result.error(TAG, errorMsg, null)
         }
     }
 
     //Disconnects the signalling socket
-    override fun disconnectSignallingSocket() {
+    override fun disconnectSignallingSocket(result: Result) {
         SignedCallAPI.getInstance().disconnectSignallingSocket(context)
+        result.success(null)
     }
 
     //Logs out the Signed Call SDK session
-    override fun logout() {
+    override fun logout(result: Result) {
         SignedCallAPI.getInstance().logout(context)
+        result.success(null)
     }
 
     //Ends the active call, if any.
-    override fun hangUpCall() {
+    override fun hangUpCall(result: Result) {
         SignedCallAPI.getInstance().callController?.endCall()
+        result.success(null)
     }
 
     //Sends the real-time changes in the call-state in an observable event-stream

@@ -1,6 +1,7 @@
 package com.example.clevertap_signedcall_flutter
 
 object Constants {
+    const val TAG = "SignedCallFlutterPlugin"
     const val LOG_TAG = "[CT]:[SignedCall]:[Flutter]"
     const val CHANNEL_NAME = "clevertap_signedcall_flutter"
     const val KEY_LOG_LEVEL = "logLevel"

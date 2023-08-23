@@ -118,7 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: true
+        keyShowPoweredBySignedCall: false
       };
 
       const missedCallActionsMap = {

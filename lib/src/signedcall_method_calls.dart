@@ -1,5 +1,6 @@
 class SCMethodCall {
   //Flutter to Platform
+  static const String trackSdkVersion = "trackSdkVersion";
   static const String init = "init";
   static const String call = "call";
   static const String disconnectSignallingSocket = "disconnectSignallingSocket";

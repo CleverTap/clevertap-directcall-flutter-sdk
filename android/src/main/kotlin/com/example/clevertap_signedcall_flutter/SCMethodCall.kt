@@ -2,6 +2,7 @@ package com.example.clevertap_signedcall_flutter
 
 object SCMethodCall {
     //Flutter to Platform
+    const val TRACK_SDK_VERSION = "trackSdkVersion"
     const val INIT = "init"
     const val CALL = "call"
     const val DISCONNECT_SIGNALLING_SOCKET = "disconnectSignallingSocket"
