@@ -9,6 +9,11 @@ import 'package:flutter_test/flutter_test.dart';
 class MockCleverTapDirectcallFlutterPlatform
     implements CleverTapSignedCallFlutterPlatform {
   @override
+  Future<void> trackSdkVersion(Map<String, dynamic> versionTrackingMap) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> call(
       String receiverCuid,
       String callContext,
