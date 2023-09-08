@@ -101,14 +101,16 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         if let production = initOptions[SCMethodParams.PRODUCTION.rawValue] {
             initParams["production"] = production
         }
-        
-        if let branding = initOptions[SCMethodParams.BRANDING.rawValue] as? [String: String],
-           let bgColor = branding[SCMethodParams.BGCOLOR.rawValue],
-           let fontColor = branding[SCMethodParams.FONTCOLOR.rawValue],
-           let logoUrl = branding[SCMethodParams.LOGOURL.rawValue],
-           let buttonTheme = branding[SCMethodParams.BUTTONTHEME.rawValue] {
+        let branding = initOptions[SCMethodParams.BRANDING.rawValue] as? [String: Any]
+        if let bgColor = branding?[SCMethodParams.BGCOLOR.rawValue] as? String,
+           let fontColor = branding?[SCMethodParams.FONTCOLOR.rawValue] as? String,
+           let logoUrl = branding?[SCMethodParams.LOGOURL.rawValue] as? String,
+           let buttonTheme = branding?[SCMethodParams.BUTTONTHEME.rawValue] as? String {
             let theme = buttonTheme == "light"
             SignedCall.overrideDefaultBranding = SCCallScreenBranding(bgColor: bgColor, fontColor: fontColor, logo: logoUrl, buttonTheme: theme ? .light : .dark)
+        }
+        if let poweredBy = branding?[SCMethodParams.POWEREDBY.rawValue] as? Bool {
+            SignedCall.overrideDefaultBranding?.setDisplayPoweredBySignedCall(poweredBy)
         }
         SignedCall.isEnabled = false
         SignedCall.initSDK(withInitOptions: initParams) { [weak self] res in

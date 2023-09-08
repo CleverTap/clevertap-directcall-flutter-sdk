@@ -26,7 +26,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-
+  bool isPoweredByChecked = false;
   @override
   void initState() {
     super.initState();
@@ -76,6 +76,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 hintText: 'Enter CUID',
               ),
             ),
+            CheckboxListTile(
+              title: Text("Hide Powered by SignedCall"),
+              value: isPoweredByChecked,
+              onChanged: (newValue) {
+                setState(() {
+                  isPoweredByChecked = newValue ?? false;
+                });
+              },
+              controlAffinity:
+                  ListTileControlAffinity.leading, //  <-- leading Checkbox
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -86,7 +97,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 backgroundColor: MaterialStateProperty.all(Colors.red),
               ),
               child: const Text('Register and Continue'),
-            ),
+            )
           ],
         ),
       ),
@@ -112,13 +123,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
     _userCuid = inputCuid;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      const callScreenBranding = {
+      Map<String, dynamic> callScreenBranding = {
         keyBgColor: "#000000",
         keyFontColor: "#ffffff",
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: true
+        keyShowPoweredBySignedCall: !isPoweredByChecked
       };
 
       const missedCallActionsMap = {
@@ -132,8 +143,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyAccountId: scAccountId, //required
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
-        //keyOverrideDefaultBranding: callScreenBranding, //optional
-        keyPromptPushPrimer: getPushPrimerJson()
+        keyOverrideDefaultBranding: callScreenBranding //optional
+        // keyPromptPushPrimer: getPushPrimerJson()
       };
 
       ///Android only fields

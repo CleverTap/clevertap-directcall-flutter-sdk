@@ -59,6 +59,7 @@ enum SCMethodParams: String {
     case CUID = "cuid"
     case PRODUCTION = "production"
     case BRANDING = "overrideDefaultBranding"
+    case POWEREDBY = "showPoweredBySignedCall"
     
     //branding
     case BGCOLOR = "bgColor"
