@@ -77,6 +77,12 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
             SignedCall.disconnectSignallingSocket()
             result(nil)
             
+        case .TRACKSDKVERSION:
+            if let arguments = call.arguments as? [String: Any],
+               let sdkName = arguments["sdkName"] as? String,
+               let sdkVersion = arguments["sdkVersion"] as? Int32 {
+                SignedCall.cleverTapInstance?.setCustomSdkVersion(sdkName, version: sdkVersion)
+            }
         default: result(FlutterMethodNotImplemented)
         }
     }
