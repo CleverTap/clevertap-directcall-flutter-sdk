@@ -1,15 +1,15 @@
 PODS:
-  - CleverTap-iOS-SDK (4.2.0):
+  - CleverTap-iOS-SDK (5.2.0):
     - SDWebImage (~> 5.11)
-  - CleverTap-SignedCall-SDK (0.0.2):
+  - CleverTap-SignedCall-SDK (0.0.5):
     - CleverTap-iOS-SDK
-    - CTSimplePing
+    - CTSimplePing (= 1.0.1)
     - CTSoftPhone (= 0.0.6-alpha)
     - Socket.IO-Client-Swift (= 16.0.1)
-  - clevertap_plugin (1.6.0):
-    - CleverTap-iOS-SDK (= 4.2.0)
+  - clevertap_plugin (1.7.0):
+    - CleverTap-iOS-SDK (= 5.2.0)
     - Flutter
-  - clevertap_signedcall_flutter (0.0.1):
+  - clevertap_signedcall_flutter (0.0.5):
     - CleverTap-SignedCall-SDK
     - Flutter
   - CTSimplePing (1.0.1)
@@ -17,16 +17,17 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.1.1):
     - Flutter
-  - SDWebImage (5.14.3):
-    - SDWebImage/Core (= 5.14.3)
-  - SDWebImage/Core (5.14.3)
-  - shared_preferences_ios (0.0.1):
+  - SDWebImage (5.17.0):
+    - SDWebImage/Core (= 5.17.0)
+  - SDWebImage/Core (5.17.0)
+  - shared_preferences_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - Socket.IO-Client-Swift (16.0.1):
     - Starscream (~> 4.0)
-  - Starscream (4.0.4)
+  - Starscream (4.0.6)
 
 DEPENDENCIES:
   - clevertap_plugin (from `.symlinks/plugins/clevertap_plugin/ios`)
@@ -34,7 +35,7 @@ DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
   https://github.com/CleverTap/podspecs:
@@ -58,24 +59,24 @@ EXTERNAL SOURCES:
     :path: Flutter
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  CleverTap-iOS-SDK: 124ee0f4bd90c5ffa213b2da05f81496d7339015
-  CleverTap-SignedCall-SDK: f5c56d7a686cc253ef8ffe74225091bafe8db3c2
-  clevertap_plugin: bdd8ed2df3af7bc0039b266656eb188e42426099
-  clevertap_signedcall_flutter: 50e25c678e2b5f328652fd1e2fcc196ba5031298
+  CleverTap-iOS-SDK: 6a38eea6d2f0c336fb142baadcca2cd8aafd2290
+  CleverTap-SignedCall-SDK: 419fa35be344d1e65ab035dbbc4c2f827c8509d3
+  clevertap_plugin: 3bdba39d5b71cf5d9c40eb8a077efd5e2423eb43
+  clevertap_signedcall_flutter: af3402a7c8a9af82dfdf6b11cc55d9befd8b7763
   CTSimplePing: b982a6095f50e8a6fffa1049c0f548e545d6f1a5
   CTSoftPhone: dd535d72050641b55cafea4adca2ce3bd1b26415
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  SDWebImage: 9c36e66c8ce4620b41a7407698dda44211a96764
-  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+  SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   Socket.IO-Client-Swift: c116d6dc9fd6be9c259bacfe143f8725bce7d79e
-  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
 
-PODFILE CHECKSUM: b2c358edc31e95299f0f8acc0cba3c96a0ff5d0e
+PODFILE CHECKSUM: e032a40aa1d75b61d8170c8397a84598cec6ba45
 
-COCOAPODS: 1.11.0
+COCOAPODS: 1.12.0

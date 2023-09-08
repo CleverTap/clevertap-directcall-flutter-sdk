@@ -26,7 +26,8 @@ import SignedCallSDK
             return super.application(application, didFinishLaunchingWithOptions: launchOptions)
         }
 
-        SignedCall.registerVoIP(withRootView: rootView)
+        SignedCall.registerVoIP()
+        SignedCall.rootViewController = rootView
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
