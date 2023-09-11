@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   late StreamSubscription<CallEvent>? _callEventSubscription;
   late StreamSubscription<MissedCallActionClickResult>?
       _missedCallActionClickEventSubscription;
+  static const int _callMeterDurationInSeconds = 15;
 
   @override
   void initState() {
@@ -65,6 +66,13 @@ class _MyAppState extends State<MyApp> {
       debugPrint(
           "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
       //Navigator.pushNamed(context, <SomePage.routeName>);
+    });
+  }
+
+  //Starts a timer and hang up the ongoing call when the timer finishes
+  void _startCallDurationMeterToEndCall() {
+    Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
+      CleverTapSignedCallFlutter.shared.hangUpCall();
     });
   }
 

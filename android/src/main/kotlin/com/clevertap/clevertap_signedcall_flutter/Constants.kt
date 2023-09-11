@@ -1,6 +1,7 @@
-package com.example.clevertap_signedcall_flutter
+package com.clevertap.clevertap_signedcall_flutter
 
 object Constants {
+    const val TAG = "SignedCallFlutterPlugin"
     const val LOG_TAG = "[CT]:[SignedCall]:[Flutter]"
     const val CHANNEL_NAME = "clevertap_signedcall_flutter"
     const val KEY_LOG_LEVEL = "logLevel"
@@ -20,6 +21,7 @@ object Constants {
     const val KEY_FONT_COLOR = "fontColor"
     const val KEY_LOGO_URL = "logoUrl"
     const val KEY_BUTTON_THEME = "buttonTheme"
+    const val KEY_SHOW_POWERED_BY_SIGNED_CALL = "showPoweredBySignedCall"
     const val KEY_CALL_PROPERTIES = "callProperties"
     const val KEY_RECEIVER_CUID = "receiverCuid"
     const val KEY_CALL_CONTEXT = "callContext"

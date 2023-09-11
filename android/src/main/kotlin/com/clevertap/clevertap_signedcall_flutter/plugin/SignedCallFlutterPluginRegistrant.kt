@@ -1,9 +1,9 @@
-package com.example.clevertap_signedcall_flutter.plugin
+package com.clevertap.clevertap_signedcall_flutter.plugin
 
 import android.content.Context
-import com.example.clevertap_signedcall_flutter.Constants
-import com.example.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
-import com.example.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
+import com.clevertap.clevertap_signedcall_flutter.Constants
+import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel

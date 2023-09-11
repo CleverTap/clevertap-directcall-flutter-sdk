@@ -23,8 +23,6 @@ class _DiallerPageState extends State<DiallerPage> {
   final receiverCuidController = TextEditingController();
   final callContextController = TextEditingController();
 
-  static const int _callMeterDurationInSeconds = 15;
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -131,13 +129,6 @@ class _DiallerPageState extends State<DiallerPage> {
 
       Utils.showSnack(context, 'VoIP call failed: $errorCode = $errorMessage');
     }
-  }
-
-  //Starts a timer and hang up the ongoing call when the timer finishes
-  void _startCallDurationMeterToEndCall() {
-    Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
-      CleverTapSignedCallFlutter.shared.hangUpCall();
-    });
   }
 
   void logoutSession() {

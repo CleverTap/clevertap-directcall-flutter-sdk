@@ -1,14 +1,14 @@
-package com.example.clevertap_signedcall_flutter.extensions
+package com.clevertap.clevertap_signedcall_flutter.extensions
 
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
-import com.example.clevertap_signedcall_flutter.Constants.KEY_ACTION
-import com.example.clevertap_signedcall_flutter.Constants.KEY_ACTION_ID
-import com.example.clevertap_signedcall_flutter.Constants.KEY_ACTION_LABEL
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALLEE_CUID
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALLER_CUID
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
-import com.example.clevertap_signedcall_flutter.Constants.KEY_CALL_DETAILS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION_ID
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION_LABEL
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLEE_CUID
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLER_CUID
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_DETAILS
 
 /**
  * Parses the [MissedCallNotificationOpenResult] instance to a map object
