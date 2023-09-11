@@ -1,4 +1,4 @@
-package com.example.clevertap_signedcall_flutter.handlers
+package com.clevertap.clevertap_signedcall_flutter.handlers
 
 import io.flutter.plugin.common.EventChannel
 

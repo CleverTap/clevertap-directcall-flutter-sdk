@@ -27,6 +27,13 @@ class MethodChannelCleverTapSignedCallFlutter
     _methodChannel.setMethodCallHandler(_platformCallHandler);
   }
 
+  /// Passes the current SDK version for version tracking
+  @override
+  Future<void> trackSdkVersion(Map<String, dynamic> versionTrackingMap) {
+    return _methodChannel
+        .invokeMethod(SCMethodCall.trackSdkVersion, versionTrackingMap);
+  }
+  
   /// Enables or disables debugging. If enabled, see debug messages in Android's logcat utility.
   /// Debug messages are tagged as CleverTap.
   ///

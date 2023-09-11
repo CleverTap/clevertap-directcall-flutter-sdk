@@ -14,6 +14,7 @@ const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";
 const String keyButtonTheme = "buttonTheme";
+const String keyShowPoweredBySignedCall = "showPoweredBySignedCall";
 const String keyReceiverCuid = "receiverCuid";
 const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
