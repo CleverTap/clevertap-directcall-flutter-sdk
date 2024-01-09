@@ -6,3 +6,5 @@ typedef SignedCallInitHandler = void Function(
 
 typedef SignedCallVoIPCallHandler = void Function(
     SignedCallError? signedCallVoIPCallError);
+
+typedef OnCallEventInKilledStateHandler = void Function(Map<String, dynamic> map);

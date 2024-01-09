@@ -1,10 +1,14 @@
+import 'dart:ui';
+
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
+import '../src/callback_dispatcher.dart';
 import '../src/signed_call_logger.dart';
 import '../src/signedcall_handlers.dart';
 import '../src/signedcall_method_calls.dart';
@@ -21,6 +25,8 @@ class MethodChannelCleverTapSignedCallFlutter
 
   late SignedCallInitHandler _initHandler;
   late SignedCallVoIPCallHandler _voIPCallHandler;
+
+  bool _callEventInKilledStateHandlerInitialized = false;
 
   MethodChannelCleverTapSignedCallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
@@ -48,6 +54,11 @@ class MethodChannelCleverTapSignedCallFlutter
     SignedCallLogger.setLogLevel(logLevelValue);
     return _methodChannel
         .invokeMethod(SCMethodCall.logging, {argLogLevel: logLevelValue});
+  }
+
+  @override
+  void onCallEventInKilledState(OnCallEventInKilledStateHandler handler) {
+    _registerOnCallEventInKilledStateHandler(handler);
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
@@ -148,5 +159,23 @@ class MethodChannelCleverTapSignedCallFlutter
   @override
   Future<void> hangUpCall() {
     return _methodChannel.invokeMethod(SCMethodCall.hangUpCall);
+  }
+
+  void _registerOnCallEventInKilledStateHandler(OnCallEventInKilledStateHandler handler) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+
+    if (!_callEventInKilledStateHandlerInitialized) {
+      _callEventInKilledStateHandlerInitialized = true;
+      final CallbackHandle pluginCallbackHandle =
+      PluginUtilities.getCallbackHandle(callbackDispatcher)!;
+      final CallbackHandle userCallbackHandle =
+      PluginUtilities.getCallbackHandle(handler)!;
+      await _methodChannel.invokeMapMethod('_registerOnCallEventInKilledStateHandler', {
+        'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
+        'userCallbackHandle': userCallbackHandle.toRawHandle(),
+      });
+    }
   }
 }

@@ -91,4 +91,8 @@ class CleverTapSignedCallFlutter {
   Future<void> hangUpCall() {
     return CleverTapSignedCallFlutterPlatform.instance.hangUpCall();
   }
+
+  void onCallEventInKilledState(OnCallEventInKilledStateHandler handler) {
+     CleverTapSignedCallFlutterPlatform.instance.onCallEventInKilledState(handler);
+  }
 }
