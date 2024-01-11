@@ -5,6 +5,7 @@
 // invoking the provided callback.
 import 'dart:ui';
 
+import 'package:clevertap_signedcall_flutter/src/signed_call_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -25,7 +26,7 @@ void callbackDispatcher() {
   // This is where we handle background events from the native portion of the plugin.
   _channel.setMethodCallHandler((MethodCall call,) async {
     print("callbackDispatcher called!");
-    if (call.method == 'onKilledStateNotificationClicked') {
+    if (call.method == 'onCallEventInKilledState') {
       final CallbackHandle handle =
       CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
 
@@ -37,9 +38,7 @@ void callbackDispatcher() {
         Map<dynamic, dynamic> notificationClickedPayload = Map<String, dynamic>.from(call.arguments['payload']);
         await callback!(notificationClickedPayload);
       } catch (e) {
-        debugPrint(
-            'CleverTapPlugin: An error occurred in your background messaging handler:');
-        debugPrint(e.toString());
+        SignedCallLogger.d('An error occurred in your callbackDispatcher: $e');
       }
     } else {
       throw UnimplementedError('${call.method} has not been implemented');
