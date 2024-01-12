@@ -93,6 +93,6 @@ class CleverTapSignedCallFlutter {
   }
 
   void onCallEventInKilledState(OnCallEventInKilledStateHandler handler) {
-     CleverTapSignedCallFlutterPlatform.instance.onCallEventInKilledState(handler);
+    CleverTapSignedCallFlutterPlatform.instance.onCallEventInKilledState(handler);
   }
 }

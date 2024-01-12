@@ -90,7 +90,13 @@ class SignedCallFlutterMethodCallHandler(
             HANG_UP_CALL -> {
                 hangUpCall(result)
             }
-
+            "_registerOnCallEventInKilledStateHandler" -> {
+                val dispatcherHandle = Utils.parseLong(call.argument(DISPATCHER_HANDLE))
+                val callbackHandle = Utils.parseLong(call.argument(CALLBACK_HANDLE))
+                if (dispatcherHandle != null && callbackHandle != null) {
+                    IsolateHandlePreferences.saveCallbackKeys(context, dispatcherHandle, callbackHandle)
+                }
+            }
             else -> result.notImplemented()
         }
     }
@@ -231,17 +237,17 @@ class SignedCallFlutterMethodCallHandler(
     //Sends the real-time changes in the call-state in an observable event-stream
     override fun streamCallEvent(event: VoIPCallStatus) {
         Utils.log(message = "Streaming $event to event-channel")
-        CallEventStreamHandler.eventSink?.let { sink ->
-            val eventDescription = when (event) {
-                VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
-                VoIPCallStatus.CALL_DECLINED -> "Declined"
-                VoIPCallStatus.CALL_MISSED -> "Missed"
-                VoIPCallStatus.CALL_ANSWERED -> "Answered"
-                VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
-                VoIPCallStatus.CALL_OVER -> "Ended"
-                VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
-            }
-            sink.success(eventDescription)
-        }
+//        CallEventStreamHandler.eventSink?.let { sink ->
+//            val eventDescription = when (event) {
+//                VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
+//                VoIPCallStatus.CALL_DECLINED -> "Declined"
+//                VoIPCallStatus.CALL_MISSED -> "Missed"
+//                VoIPCallStatus.CALL_ANSWERED -> "Answered"
+//                VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
+//                VoIPCallStatus.CALL_OVER -> "Ended"
+//                VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
+//            }
+//            sink.success(eventDescription)
+//        }
     }
 }

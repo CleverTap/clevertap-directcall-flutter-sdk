@@ -7,7 +7,7 @@ import 'clevertap_signedcall_flutter_method_channel.dart';
 
 abstract class CleverTapSignedCallFlutterPlatform {
   static CleverTapSignedCallFlutterPlatform instance =
-      MethodChannelCleverTapSignedCallFlutter();
+  MethodChannelCleverTapSignedCallFlutter();
 
   /// Passes the current SDK version for version tracking
   Future<void> trackSdkVersion(Map<String, dynamic> versionTrackingMap);

@@ -35,8 +35,7 @@ void callbackDispatcher() {
       Function? callback = PluginUtilities.getCallbackFromHandle(handle);
 
       try {
-        Map<dynamic, dynamic> notificationClickedPayload = Map<String, dynamic>.from(call.arguments['payload']);
-        await callback!(notificationClickedPayload);
+        await callback!(call.arguments['payload']);
       } catch (e) {
         SignedCallLogger.d('An error occurred in your callbackDispatcher: $e');
       }

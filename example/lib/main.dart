@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
-import 'package:clevertap_signedcall_flutter/models/call_status_details.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -9,12 +8,13 @@ import 'package:clevertap_signedcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
 @pragma('vm:entry-point')
-void onKilledStateNotificationClickedHandler(SCCallStatusDetails callStatusDetails) async {
+void onKilledStateNotificationClickedHandler(dynamic callStatusDetails) async {
   debugPrint("onKilledStateNotificationClickedHandler called from headless task!");
   debugPrint("Notification Payload received: $callStatusDetails");
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   CleverTapSignedCallFlutter.shared.onCallEventInKilledState(
       onKilledStateNotificationClickedHandler);
   runApp(const MyApp());

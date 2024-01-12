@@ -254,5 +254,13 @@ object Utils {
             else -> null
         }
     }
+
+    fun parseLong(value: Any?): Long? {
+        return when (value) {
+            is Int -> value.toLong()
+            is Long -> value
+            else -> null
+        }
+    }
 }
 
