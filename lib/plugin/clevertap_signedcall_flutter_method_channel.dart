@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/call_events.dart';
+import '../models/call_status_details.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
 import '../src/callback_dispatcher.dart';
@@ -20,7 +21,7 @@ class MethodChannelCleverTapSignedCallFlutter
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
-  Stream<CallEvent>? _callEventsListener;
+  Stream<SCCallStatusDetails>? _callEventsListener;
   Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
 
   late SignedCallInitHandler _initHandler;
@@ -63,12 +64,12 @@ class MethodChannelCleverTapSignedCallFlutter
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   @override
-  Stream<CallEvent> get callEventsListener {
+  Stream<SCCallStatusDetails> get callEventsListener {
     /// The event channel used to listen the data stream from the native platform.
     const callEventChannel = EventChannel('$channelName/events/call_event');
     _callEventsListener ??= callEventChannel
         .receiveBroadcastStream()
-        .map((event) => CallEvent.fromString(event.toString()));
+        .map((dynamic callStatusDetails) => SCCallStatusDetails.fromMap(callStatusDetails));
     return _callEventsListener!;
   }
 
@@ -172,7 +173,7 @@ class MethodChannelCleverTapSignedCallFlutter
       PluginUtilities.getCallbackHandle(callbackDispatcher)!;
       final CallbackHandle userCallbackHandle =
       PluginUtilities.getCallbackHandle(handler)!;
-      await _methodChannel.invokeMapMethod('_registerOnCallEventInKilledStateHandler', {
+      await _methodChannel.invokeMapMethod('registerOnCallEventInKilledStateHandler', {
         'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
         'userCallbackHandle': userCallbackHandle.toRawHandle(),
       });

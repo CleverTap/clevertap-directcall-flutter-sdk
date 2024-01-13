@@ -1,7 +1,10 @@
 package com.clevertap.clevertap_signedcall_flutter.extensions
 
+import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.clevertap.android.signedcall.models.CallDetails
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
+import com.clevertap.android.signedcall.models.SCCallStatusDetails
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION_ID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ACTION_LABEL
@@ -42,4 +45,49 @@ fun Int.toSignedCallLogLevel(): Int {
         3 -> SignedCallAPI.LogLevel.VERBOSE
         else -> throw IllegalStateException("Invalid value of debug level")
     }
+}
+
+/**
+ * Converts SCCallStatusDetails to a Map.
+ *
+ * @return A Map representation of SCCallStatusDetails.
+ */
+fun SCCallStatusDetails.toMap(): Map<String, Any> {
+    return mapOf(
+        "direction" to direction.toString(),
+        "callDetails" to callDetails.toMap(),
+        "callEvent" to callStatus.formattedCallEvent()
+    )
+}
+
+fun VoIPCallStatus.formattedCallEvent(): String {
+    return when (this) {
+        VoIPCallStatus.CALL_IS_PLACED -> "CallIsPlaced"
+        VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
+        VoIPCallStatus.CALL_DECLINED -> "Declined"
+        VoIPCallStatus.CALL_MISSED -> "Missed"
+        VoIPCallStatus.CALL_ANSWERED -> "Answered"
+        VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
+        VoIPCallStatus.CALL_OVER -> "Ended"
+        VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
+        VoIPCallStatus.CALL_DECLINED_DUE_TO_LOGGED_OUT_CUID -> "DeclinedDueToLoggedOutCuid"
+        VoIPCallStatus.CALL_DECLINED_DUE_TO_NOTIFICATIONS_DISABLED -> "DeclinedDueToNotificationsDisabled"
+        VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED -> "DeclinedDueToMicrophonePermissionsNotGranted"
+    }
+}
+
+
+/**
+ * Converts CallDetails to a Map.
+ *
+ * @return A Map representation of CallDetails.
+ */
+fun CallDetails.toMap(): Map<String, Any> {
+    return mapOf(
+        "callerCuid" to callerCuid,
+        "calleeCuid" to calleeCuid,
+        "callContext" to callContext,
+        "initiatorImage" to initiatorImage,
+        "receiverImage" to receiverImage
+    )
 }

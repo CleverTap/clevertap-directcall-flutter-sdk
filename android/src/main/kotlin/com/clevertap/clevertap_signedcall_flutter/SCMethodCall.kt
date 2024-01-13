@@ -9,6 +9,7 @@ object SCMethodCall {
     const val LOGOUT = "logout"
     const val HANG_UP_CALL = "hangUpCall"
     const val LOGGING = "logging"
+    const val REGISTER_ON_CALL_EVENT_IN_KILLED_STATE_HANDLER = "registerOnCallEventInKilledStateHandler"
 
     //Platform to Flutter
     const val ON_SIGNED_CALL_DID_INITIALIZE = "onSignedCallDidInitialize"

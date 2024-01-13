@@ -45,6 +45,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
+@SuppressLint("RestrictedApi")
 class SignedCallFlutterMethodCallHandler(
     private val context: Context?, private val methodChannel: MethodChannel?
 ) : ISignedCallMethodCallHandler, MethodChannel.MethodCallHandler {
@@ -52,7 +53,23 @@ class SignedCallFlutterMethodCallHandler(
     private var cleverTapAPI: CleverTapAPI? = null
 
     init {
+        Utils.log(message = "CallStateListener is called0")
+
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
+
+        if (!SignedCallUtils.isAppInBackground()) {
+            SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
+                Utils.log(message = "CallStateListener is called in foreground: $callStatusDetails")
+                streamCallEvent(callStatusDetails)
+                /*if (SignedCallUtils.isAppInBackground()) {
+                    Utils.log(message = "CallStateListener is called in background: $callStatusDetails")
+                    CleverTapBackgroundIsolateRunner.startBackgroundIsolate(context, callStatusDetails)
+                } else {
+                    Utils.log(message = "CallStateListener is called in foreground: $callStatusDetails")
+                    streamCallEvent(callStatusDetails)
+                }*/
+            }
+        }
     }
 
     companion object {
@@ -90,12 +107,13 @@ class SignedCallFlutterMethodCallHandler(
             HANG_UP_CALL -> {
                 hangUpCall(result)
             }
-            "_registerOnCallEventInKilledStateHandler" -> {
+            REGISTER_ON_CALL_EVENT_IN_KILLED_STATE_HANDLER -> {
                 val dispatcherHandle = Utils.parseLong(call.argument(DISPATCHER_HANDLE))
                 val callbackHandle = Utils.parseLong(call.argument(CALLBACK_HANDLE))
                 if (dispatcherHandle != null && callbackHandle != null) {
                     IsolateHandlePreferences.saveCallbackKeys(context, dispatcherHandle, callbackHandle)
                 }
+
             }
             else -> result.notImplemented()
         }
@@ -235,19 +253,8 @@ class SignedCallFlutterMethodCallHandler(
     }
 
     //Sends the real-time changes in the call-state in an observable event-stream
-    override fun streamCallEvent(event: VoIPCallStatus) {
-        Utils.log(message = "Streaming $event to event-channel")
-//        CallEventStreamHandler.eventSink?.let { sink ->
-//            val eventDescription = when (event) {
-//                VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
-//                VoIPCallStatus.CALL_DECLINED -> "Declined"
-//                VoIPCallStatus.CALL_MISSED -> "Missed"
-//                VoIPCallStatus.CALL_ANSWERED -> "Answered"
-//                VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
-//                VoIPCallStatus.CALL_OVER -> "Ended"
-//                VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
-//            }
-//            sink.success(eventDescription)
-//        }
+    override fun streamCallEvent(callStatusDetails: SCCallStatusDetails) {
+        Utils.log(message = "Streaming $callStatusDetails to event-channel")
+        CallEventStreamHandler.eventSink?.success(callStatusDetails.toMap())
     }
 }

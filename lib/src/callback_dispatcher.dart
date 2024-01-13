@@ -5,6 +5,7 @@
 // invoking the provided callback.
 import 'dart:ui';
 
+import 'package:clevertap_signedcall_flutter/models/call_status_details.dart';
 import 'package:clevertap_signedcall_flutter/src/signed_call_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -26,19 +27,30 @@ void callbackDispatcher() {
   // This is where we handle background events from the native portion of the plugin.
   _channel.setMethodCallHandler((MethodCall call,) async {
     print("callbackDispatcher called!");
+
+    print("callbackDispatcher called!" + call.arguments.toString());
+
     if (call.method == 'onCallEventInKilledState') {
+      print("callbackDispatcher called!" + "0");
+
       final CallbackHandle handle =
       CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
+      print("callbackDispatcher called!" + "1");
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
       Function? callback = PluginUtilities.getCallbackFromHandle(handle);
+      print("callbackDispatcher called!" + "2");
 
       try {
-        await callback!(call.arguments['payload']);
+        await callback!(SCCallStatusDetails.fromMap(call.arguments['payload']));
       } catch (e) {
         SignedCallLogger.d('An error occurred in your callbackDispatcher: $e');
+        print("callbackDispatcher called!" + " 3:  $e");
+
       }
+      print("callbackDispatcher called!" + "4");
+
     } else {
       throw UnimplementedError('${call.method} has not been implemented');
     }

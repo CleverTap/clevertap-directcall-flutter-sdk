@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
+import 'package:clevertap_signedcall_flutter/models/call_status_details.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -8,9 +9,9 @@ import 'package:clevertap_signedcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
 @pragma('vm:entry-point')
-void onKilledStateNotificationClickedHandler(dynamic callStatusDetails) async {
+void onKilledStateNotificationClickedHandler(SCCallStatusDetails callStatusDetails) async {
   debugPrint("onKilledStateNotificationClickedHandler called from headless task!");
-  debugPrint("Notification Payload received: $callStatusDetails");
+  debugPrint("CallStateListener is called2: $callStatusDetails");
 }
 
 void main() {
@@ -28,7 +29,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription<CallEvent>? _callEventSubscription;
+  late StreamSubscription<SCCallStatusDetails>? _callEventSubscription;
   late StreamSubscription<MissedCallActionClickResult>?
       _missedCallActionClickEventSubscription;
   static const int _callMeterDurationInSeconds = 15;
@@ -58,10 +59,11 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
-      debugPrint(
-          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
+
+          debugPrint("CallStateListener is called1: $event");
       //Utils.showSnack(context, event.name);
-      if (event == CallEvent.callInProgress) {
+      if (event == CallEvent.callIsPlaced) {
+
         //_startCallDurationMeterToEndCall();
       }
     });

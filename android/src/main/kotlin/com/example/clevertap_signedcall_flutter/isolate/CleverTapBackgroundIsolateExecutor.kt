@@ -5,6 +5,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.clevertap.android.signedcall.models.SCCallStatusDetails
+import com.example.clevertap_signedcall_flutter.SCAppContextHolder
+import com.example.clevertap_signedcall_flutter.extensions.toMap
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterShellArgs
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback
@@ -20,14 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean
  * A background executor which handles initializing a background isolate running a
  * callback dispatcher, used to invoke Dart callbacks in background/killed state.
  */
-class CleverTapBackgroundIsolateExecutor(private val context: Context,
-    private val callStatus: SCCallStatusDetails?
-) : MethodCallHandler {
+class CleverTapBackgroundIsolateExecutor(private val callStatus: SCCallStatusDetails) : MethodCallHandler {
 
     companion object {
         private const val TAG = "CTBGIsolateExecutor"
     }
 
+    private val context: Context = SCAppContextHolder.getApplicationContext()!!
     private val isCallbackDispatcherReady = AtomicBoolean(false)
     private var backgroundFlutterEngine: FlutterEngine? = null
     private lateinit var backgroundChannel: MethodChannel
@@ -42,7 +43,7 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
     /**
      * Returns true when the background isolate is not started to handle background messages.
      */
-    fun isNotRunning(): Boolean {
+    private fun isNotRunning(): Boolean {
         return !isCallbackDispatcherReady.get()
     }
 
@@ -58,7 +59,7 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
                 startBackgroundIsolate(callbackHandle, null)
             }
         } else {
-            executeDartCallbackInBackgroundIsolate(callStatus);
+            executeDartCallbackInBackgroundIsolate(callStatus)
         }
     }
 
@@ -70,7 +71,7 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
      * The given [callbackHandle] must correspond to a registered Dart callback. If the
      * handle does not resolve to a Dart callback then this method does nothing.
      */
-    fun startBackgroundIsolate(callbackHandle: Long, shellArgs: FlutterShellArgs?) {
+    private fun startBackgroundIsolate(callbackHandle: Long, shellArgs: FlutterShellArgs?) {
         if (backgroundFlutterEngine != null) {
             Log.e(TAG, "Background isolate already started.")
             return
@@ -87,7 +88,11 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
                 val assets = context.assets
                 if (isNotRunning()) {
                     if (shellArgs != null) {
-                        Log.i(TAG, "Creating background FlutterEngine instance, with args: ${shellArgs.toArray().contentToString()}")
+                        Log.i(
+                            TAG, "Creating background FlutterEngine instance, with args: ${
+                                shellArgs.toArray().contentToString()
+                            }"
+                        )
                         backgroundFlutterEngine = FlutterEngine(context, shellArgs.toArray())
                     } else {
                         Log.i(TAG, "Creating background FlutterEngine instance.")
@@ -118,9 +123,12 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
      * The given [callStatus] should contain a [Long] extra called
      * "userCallbackHandle", which corresponds to a callback registered with the Dart VM.
      */
-    private fun executeDartCallbackInBackgroundIsolate(callStatus: SCCallStatusDetails?) {
+    private fun executeDartCallbackInBackgroundIsolate(callStatus: SCCallStatusDetails) {
         if (backgroundFlutterEngine == null) {
-            Log.i(TAG, "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered.")
+            Log.i(
+                TAG,
+                "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered."
+            )
             return
         }
 
@@ -128,10 +136,14 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
             Log.i(TAG, "method call for onCallEventInKilledState")
 
             //val notificationClickedPayload = CleverTapTypeUtils.MapUtil.toJSONObject(messageMap)
-            backgroundChannel.invokeMethod("onCallEventInKilledState", mapOf(
-                "userCallbackHandle" to getUserCallbackHandle(),
-                "payload" to "test123"
-            ))
+            backgroundChannel.invokeMethod(
+                "onCallEventInKilledState", mapOf(
+                    "userCallbackHandle" to getUserCallbackHandle(),
+                    "payload" to callStatus.toMap()
+                )
+            )
+            Log.i(TAG, "method call for onCallEventInKilledState successful: " + callStatus.toMap())
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to invoke the Dart callback. ${e.localizedMessage}")
         }
@@ -145,6 +157,7 @@ class CleverTapBackgroundIsolateExecutor(private val context: Context,
                     onInitialized()
                     result.success(true)
                 }
+
                 else -> result.notImplemented()
             }
         } catch (e: Exception) {

@@ -1,6 +1,7 @@
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
 import '../models/call_events.dart';
+import '../models/call_status_details.dart';
 import '../models/missed_call_action_click_result.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_method_channel.dart';
@@ -42,7 +43,7 @@ abstract class CleverTapSignedCallFlutterPlatform {
       SignedCallVoIPCallHandler voIPCallHandler);
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
-  Stream<CallEvent> get callEventsListener;
+  Stream<SCCallStatusDetails> get callEventsListener;
 
   void onCallEventInKilledState(OnCallEventInKilledStateHandler handler);
 
