@@ -12,16 +12,18 @@ import 'package:flutter/material.dart';
 import 'Utils.dart';
 
 @pragma('vm:entry-point')
-void backgroundCallEventHandler(CallEventResult callEventResult) async {
+void backgroundCallEventHandler(CallEventResult result) async {
   debugPrint(
-      "backgroundCallEventHandler called from headless task with payload: $callEventResult");
+      "backgroundCallEventHandler called from headless task with payload: $result");
+  Utils.showToast("${result.callEvent} is called!" );
 }
 
 @pragma('vm:entry-point')
 void backgroundMissedCallActionClickedHandler(
-    MissedCallActionClickResult missedCallActionClickResult) async {
+    MissedCallActionClickResult result) async {
   debugPrint(
-      "backgroundMissedCallActionClickedHandler called from headless task with payload: $missedCallActionClickResult");
+      "backgroundMissedCallActionClickedHandler called from headless task with payload: $result");
+  Utils.showToast("${result.action.actionLabel} is clicked!" );
 }
 
 void main() {
@@ -73,7 +75,7 @@ class _MyAppState extends State<MyApp> {
         CleverTapSignedCallFlutter.shared.callEventListener.listen((result) {
       debugPrint(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${result.toString()}");
-      Utils.showSnack(context, result.callEvent.toString());
+      Utils.showToast("${result.callEvent} is called!" );
       if (result.callEvent == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }
@@ -87,6 +89,8 @@ class _MyAppState extends State<MyApp> {
         .listen((result) {
       debugPrint(
           "CleverTap:SignedCallFlutter: received missedCallActionClickResult stream with ${result.toString()}");
+      Utils.showToast("${result.action.actionLabel} is clicked!" );
+
       Navigator.pushNamed(context, DiallerPage.routeName);
     });
   }
