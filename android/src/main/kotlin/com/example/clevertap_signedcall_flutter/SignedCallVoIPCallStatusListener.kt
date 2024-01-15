@@ -3,6 +3,7 @@ package com.example.clevertap_signedcall_flutter
 import android.content.Context
 import android.util.Log
 import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.example.clevertap_signedcall_flutter.extensions.toMap
 import com.example.clevertap_signedcall_flutter.isolate.CleverTapBackgroundIsolateRunner
 
 open class SignedCallVoIPCallStatusListener {
@@ -17,7 +18,11 @@ open class SignedCallVoIPCallStatusListener {
             SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
 
                 Log.i(TAG, "callStatusReceived in SignedCallVoIPCallStatusListener!")
-                CleverTapBackgroundIsolateRunner.startBackgroundIsolate(context, callStatusDetails)
+                CleverTapBackgroundIsolateRunner.startBackgroundIsolate(
+                    context,
+                    "onBackgroundCallEvent",
+                    callStatusDetails.toMap()
+                )
             }
         }
     }

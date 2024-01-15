@@ -6,6 +6,7 @@
 import 'dart:ui';
 
 import 'package:clevertap_signedcall_flutter/models/call_status_details.dart';
+import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/signed_call_logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -25,35 +26,34 @@ void callbackDispatcher() {
   );
 
   // This is where we handle background events from the native portion of the plugin.
-  _channel.setMethodCallHandler((MethodCall call,) async {
+  _channel.setMethodCallHandler((
+    MethodCall call,
+  ) async {
     print("callbackDispatcher called!");
 
     print("callbackDispatcher called!" + call.arguments.toString());
 
-    if (call.method == 'onCallEventInKilledState') {
-      print("callbackDispatcher called!" + "0");
-
-      final CallbackHandle handle =
-      CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
-      print("callbackDispatcher called!" + "1");
+    if (call.method == 'onBackgroundCallEvent' || call.method == 'onBackgroundMissedCallActionClicked') {
+      final CallbackHandle handle = CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
       Function? callback = PluginUtilities.getCallbackFromHandle(handle);
-      print("callbackDispatcher called!" + "2");
 
       try {
-        await callback!(SCCallStatusDetails.fromMap(call.arguments['payload']));
+        if (call.method == 'onBackgroundCallEvent') {
+          await callback!(SCCallStatusDetails.fromMap(call.arguments['payload']));
+        } else {
+          await callback!(MissedCallActionClickResult.fromMap(call.arguments['payload']));
+        }
       } catch (e) {
         SignedCallLogger.d('An error occurred in your callbackDispatcher: $e');
-        print("callbackDispatcher called!" + " 3:  $e");
-
       }
       print("callbackDispatcher called!" + "4");
-
     } else {
       throw UnimplementedError('${call.method} has not been implemented');
     }
+
   });
 
   // Once we've finished initializing the callbackDispatcher, let the native portion of the plugin

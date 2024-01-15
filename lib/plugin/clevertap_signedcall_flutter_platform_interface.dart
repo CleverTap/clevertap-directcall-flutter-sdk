@@ -45,7 +45,9 @@ abstract class CleverTapSignedCallFlutterPlatform {
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   Stream<SCCallStatusDetails> get callEventsListener;
 
-  void onCallEventInKilledState(OnCallEventInKilledStateHandler handler);
+  void onBackgroundCallEvent(BackgroundCallEventHandler handler);
+
+  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler);
 
   ///Broadcasts the [MissedCallActionClickResult]  data stream to listen the
   ///missed call action click events.

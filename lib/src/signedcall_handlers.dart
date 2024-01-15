@@ -1,3 +1,4 @@
+import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 
 import '../models/call_status_details.dart';
@@ -9,4 +10,8 @@ typedef SignedCallInitHandler = void Function(
 typedef SignedCallVoIPCallHandler = void Function(
     SignedCallError? signedCallVoIPCallError);
 
-typedef OnCallEventInKilledStateHandler = void Function(SCCallStatusDetails callStatusDetails);
+typedef BackgroundCallEventHandler = void Function(
+    SCCallStatusDetails callStatusDetails);
+
+typedef BackgroundMissedCallActionClickedHandler = void Function(
+    MissedCallActionClickResult callStatusDetails);

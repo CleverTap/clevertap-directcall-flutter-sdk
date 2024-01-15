@@ -9,15 +9,23 @@ import 'package:clevertap_signedcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
 @pragma('vm:entry-point')
-void onKilledStateNotificationClickedHandler(SCCallStatusDetails callStatusDetails) async {
-  debugPrint("onKilledStateNotificationClickedHandler called from headless task!");
-  debugPrint("CallStateListener is called2: $callStatusDetails");
+void backgroundCallEventHandler(SCCallStatusDetails callStatusDetails) async {
+  debugPrint("backgroundCallEventHandler called from headless task!");
+  debugPrint("backgroundCallEventHandler is called2: $callStatusDetails");
+}
+
+@pragma('vm:entry-point')
+void backgroundMissedCallActionClickedHandler(MissedCallActionClickResult result) async {
+  debugPrint("backgroundMissedCallActionClickedHandler called from headless task!");
+  debugPrint("backgroundMissedCallActionClickedHandler is called2: $result");
 }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  CleverTapSignedCallFlutter.shared.onCallEventInKilledState(
-      onKilledStateNotificationClickedHandler);
+  CleverTapSignedCallFlutter.shared.onBackgroundCallEvent(
+      backgroundCallEventHandler);
+  CleverTapSignedCallFlutter.shared.onBackgroundMissedCallActionClicked(
+      backgroundMissedCallActionClickedHandler);
   runApp(const MyApp());
 }
 
@@ -60,7 +68,7 @@ class _MyAppState extends State<MyApp> {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
 
-          debugPrint("CallStateListener is called1: $event");
+          debugPrint("CTBGIsolateExecutor CallStateListener is called1: $event");
       //Utils.showSnack(context, event.name);
       if (event == CallEvent.callIsPlaced) {
 

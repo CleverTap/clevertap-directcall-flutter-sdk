@@ -38,4 +38,6 @@ object Constants {
     const val KEY_CALLEE_CUID = "calleeCuid"
     const val DISPATCHER_HANDLE = "pluginCallbackHandle"
     const val CALLBACK_HANDLE = "userCallbackHandle"
+    const val ISOLATE_SUFFIX_CALL_EVENT_CALLBACK = "callEvent"
+    const val ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK = "missedCallNotificationClicked"
 }

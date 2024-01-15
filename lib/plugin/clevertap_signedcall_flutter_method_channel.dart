@@ -10,6 +10,7 @@ import '../models/call_status_details.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
 import '../src/callback_dispatcher.dart';
+import '../src/handler_info.dart';
 import '../src/signed_call_logger.dart';
 import '../src/signedcall_handlers.dart';
 import '../src/signedcall_method_calls.dart';
@@ -27,7 +28,7 @@ class MethodChannelCleverTapSignedCallFlutter
   late SignedCallInitHandler _initHandler;
   late SignedCallVoIPCallHandler _voIPCallHandler;
 
-  bool _callEventInKilledStateHandlerInitialized = false;
+  final Map<Type, HandlerInfo> _registeredHandlers = {};
 
   MethodChannelCleverTapSignedCallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
@@ -58,8 +59,13 @@ class MethodChannelCleverTapSignedCallFlutter
   }
 
   @override
-  void onCallEventInKilledState(OnCallEventInKilledStateHandler handler) {
-    _registerOnCallEventInKilledStateHandler(handler);
+  void onBackgroundCallEvent(BackgroundCallEventHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundCallEventHandler");
+  }
+
+  @override
+  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundMissedCallActionClickedHandler");
   }
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
@@ -81,8 +87,12 @@ class MethodChannelCleverTapSignedCallFlutter
         EventChannel('$channelName/events/missed_call_action_click');
     _missedCallActionClickListener ??= missedCallActionClickEventChannel
         .receiveBroadcastStream()
-        .map((dynamic missedCallActionClickResult) =>
-            MissedCallActionClickResult.fromMap(missedCallActionClickResult));
+        .map((dynamic missedCallActionClickResult) {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        _methodChannel.invokeMethod("missedCallActionClickedStream#ack");
+      }
+      return MissedCallActionClickResult.fromMap(missedCallActionClickResult);
+    });
     return _missedCallActionClickListener!;
   }
 
@@ -162,18 +172,24 @@ class MethodChannelCleverTapSignedCallFlutter
     return _methodChannel.invokeMethod(SCMethodCall.hangUpCall);
   }
 
-  void _registerOnCallEventInKilledStateHandler(OnCallEventInKilledStateHandler handler) async {
+  void _registerEventHandler<T extends Function>(
+      T handler, String methodName) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
       return;
     }
 
-    if (!_callEventInKilledStateHandlerInitialized) {
-      _callEventInKilledStateHandlerInitialized = true;
+    Type handlerType = T;
+
+    if (!_registeredHandlers.containsKey(handlerType) ||
+        !_registeredHandlers[handlerType]!.initialized) {
+      _registeredHandlers[handlerType] =
+          HandlerInfo(handler: handler, initialized: true);
+
       final CallbackHandle pluginCallbackHandle =
-      PluginUtilities.getCallbackHandle(callbackDispatcher)!;
+          PluginUtilities.getCallbackHandle(callbackDispatcher)!;
       final CallbackHandle userCallbackHandle =
-      PluginUtilities.getCallbackHandle(handler)!;
-      await _methodChannel.invokeMapMethod('registerOnCallEventInKilledStateHandler', {
+          PluginUtilities.getCallbackHandle(handler)!;
+      await _methodChannel.invokeMapMethod(methodName, {
         'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
         'userCallbackHandle': userCallbackHandle.toRawHandle(),
       });

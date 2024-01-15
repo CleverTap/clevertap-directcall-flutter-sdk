@@ -2,7 +2,6 @@ package com.example.clevertap_signedcall_flutter.isolate
 
 import android.content.Context
 import android.util.Log
-import com.clevertap.android.signedcall.models.SCCallStatusDetails
 import com.example.clevertap_signedcall_flutter.SCAppContextHolder
 
 /**
@@ -13,7 +12,7 @@ object CleverTapBackgroundIsolateRunner {
 
     private var backgroundIsolateExecutor: CleverTapBackgroundIsolateExecutor? = null
 
-    fun startBackgroundIsolate(context: Context?, callStatus: SCCallStatusDetails) {
+    fun startBackgroundIsolate(context: Context?, methodName: String, payloadMap: Map<String, Any>) {
 
         if (context == null) {
             Log.d(TAG, "Can't start a background isolate with a null appContext!")
@@ -21,12 +20,10 @@ object CleverTapBackgroundIsolateRunner {
         }
 
         //persist the app context
-
-        //persist the app context
         SCAppContextHolder.setApplicationContext(context)
 
         if (backgroundIsolateExecutor == null) {
-            backgroundIsolateExecutor = CleverTapBackgroundIsolateExecutor(callStatus)
+            backgroundIsolateExecutor = CleverTapBackgroundIsolateExecutor()
         }
 
         if (!backgroundIsolateExecutor!!.isDartBackgroundHandlerRegistered()) {
@@ -34,6 +31,6 @@ object CleverTapBackgroundIsolateRunner {
             return
         }
 
-        backgroundIsolateExecutor!!.startBackgroundIsolate()
+        backgroundIsolateExecutor!!.startBackgroundIsolate(methodName, payloadMap)
     }
 }

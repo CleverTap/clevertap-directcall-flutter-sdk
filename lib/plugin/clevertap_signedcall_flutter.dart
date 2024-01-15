@@ -92,7 +92,11 @@ class CleverTapSignedCallFlutter {
     return CleverTapSignedCallFlutterPlatform.instance.hangUpCall();
   }
 
-  void onCallEventInKilledState(OnCallEventInKilledStateHandler handler) {
-    CleverTapSignedCallFlutterPlatform.instance.onCallEventInKilledState(handler);
+  void onBackgroundCallEvent(BackgroundCallEventHandler handler) {
+    CleverTapSignedCallFlutterPlatform.instance.onBackgroundCallEvent(handler);
+  }
+
+  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
+    CleverTapSignedCallFlutterPlatform.instance.onBackgroundMissedCallActionClicked(handler);
   }
 }
