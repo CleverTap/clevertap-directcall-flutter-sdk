@@ -1,7 +1,7 @@
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
+import '../models/call_event_result.dart';
 import '../models/call_events.dart';
-import '../models/call_status_details.dart';
 import '../models/missed_call_action_click_result.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_method_channel.dart';
@@ -43,11 +43,15 @@ abstract class CleverTapSignedCallFlutterPlatform {
       SignedCallVoIPCallHandler voIPCallHandler);
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
-  Stream<SCCallStatusDetails> get callEventsListener;
+  Stream<CallEventResult> get callEventsListener;
 
+  /// Registers a callback to handle the call events when the app is in the killed state.
   void onBackgroundCallEvent(BackgroundCallEventHandler handler);
 
-  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler);
+  /// Registers a callback to handle the notification action clicked over missed call notification
+  /// when the app is in the killed state.
+  void onBackgroundMissedCallActionClicked(
+      BackgroundMissedCallActionClickedHandler handler);
 
   ///Broadcasts the [MissedCallActionClickResult]  data stream to listen the
   ///missed call action click events.

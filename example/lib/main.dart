@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
-import 'package:clevertap_signedcall_flutter/models/call_status_details.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -9,21 +9,22 @@ import 'package:clevertap_signedcall_flutter_example/route_generator.dart';
 import 'package:flutter/material.dart';
 
 @pragma('vm:entry-point')
-void backgroundCallEventHandler(SCCallStatusDetails callStatusDetails) async {
-  debugPrint("backgroundCallEventHandler called from headless task!");
-  debugPrint("backgroundCallEventHandler is called2: $callStatusDetails");
+void backgroundCallEventHandler(CallEventResult callEventResult) async {
+  debugPrint(
+      "backgroundCallEventHandler called from headless task with payload: $callEventResult");
 }
 
 @pragma('vm:entry-point')
-void backgroundMissedCallActionClickedHandler(MissedCallActionClickResult result) async {
-  debugPrint("backgroundMissedCallActionClickedHandler called from headless task!");
-  debugPrint("backgroundMissedCallActionClickedHandler is called2: $result");
+void backgroundMissedCallActionClickedHandler(
+    MissedCallActionClickResult missedCallActionClickResult) async {
+  debugPrint(
+      "backgroundMissedCallActionClickedHandler called from headless task with payload: $missedCallActionClickResult");
 }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  CleverTapSignedCallFlutter.shared.onBackgroundCallEvent(
-      backgroundCallEventHandler);
+  CleverTapSignedCallFlutter.shared
+      .onBackgroundCallEvent(backgroundCallEventHandler);
   CleverTapSignedCallFlutter.shared.onBackgroundMissedCallActionClicked(
       backgroundMissedCallActionClickedHandler);
   runApp(const MyApp());
@@ -37,7 +38,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription<SCCallStatusDetails>? _callEventSubscription;
+  late StreamSubscription<CallEventResult>? _callEventSubscription;
   late StreamSubscription<MissedCallActionClickResult>?
       _missedCallActionClickEventSubscription;
   static const int _callMeterDurationInSeconds = 15;

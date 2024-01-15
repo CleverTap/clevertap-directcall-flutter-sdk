@@ -16,3 +16,6 @@ const String keyCalleeCuid = "calleeCuid";
 const String keyErrorCode = "errorCode";
 const String keyErrorMessage = "errorMessage";
 const String keyErrorDescription = "errorDescription";
+const String keyDirection = "direction";
+const String keyCallEvent = "callEvent";
+

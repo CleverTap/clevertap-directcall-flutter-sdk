@@ -5,8 +5,8 @@ import 'package:clevertap_signedcall_flutter/src/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../models/call_event_result.dart';
 import '../models/call_events.dart';
-import '../models/call_status_details.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
 import '../src/callback_dispatcher.dart';
@@ -22,7 +22,7 @@ class MethodChannelCleverTapSignedCallFlutter
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
-  Stream<SCCallStatusDetails>? _callEventsListener;
+  Stream<CallEventResult>? _callEventsListener;
   Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
 
   late SignedCallInitHandler _initHandler;
@@ -70,12 +70,12 @@ class MethodChannelCleverTapSignedCallFlutter
 
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   @override
-  Stream<SCCallStatusDetails> get callEventsListener {
+  Stream<CallEventResult> get callEventsListener {
     /// The event channel used to listen the data stream from the native platform.
     const callEventChannel = EventChannel('$channelName/events/call_event');
     _callEventsListener ??= callEventChannel
         .receiveBroadcastStream()
-        .map((dynamic callStatusDetails) => SCCallStatusDetails.fromMap(callStatusDetails));
+        .map((dynamic callStatusDetails) => CallEventResult.fromMap(callStatusDetails));
     return _callEventsListener!;
   }
 
@@ -187,8 +187,15 @@ class MethodChannelCleverTapSignedCallFlutter
 
       final CallbackHandle pluginCallbackHandle =
           PluginUtilities.getCallbackHandle(callbackDispatcher)!;
-      final CallbackHandle userCallbackHandle =
-          PluginUtilities.getCallbackHandle(handler)!;
+      final CallbackHandle? userCallbackHandle =
+          PluginUtilities.getCallbackHandle(handler);
+
+      // Callback handler should be a top-level or static function, independent of any inner scopes.
+      if (userCallbackHandle == null) {
+        throw ArgumentError(
+            'Failed to setup background handle. `$handlerType` must be a TOP LEVEL or a STATIC method');
+      }
+
       await _methodChannel.invokeMapMethod(methodName, {
         'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
         'userCallbackHandle': userCallbackHandle.toRawHandle(),

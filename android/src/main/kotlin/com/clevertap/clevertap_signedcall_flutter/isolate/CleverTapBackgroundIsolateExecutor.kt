@@ -108,7 +108,7 @@ class CleverTapBackgroundIsolateExecutor : MethodCallHandler {
     }
 
     private fun initializeMethodChannel(isolate: BinaryMessenger) {
-        backgroundChannel = MethodChannel(isolate, "clevertap_plugin/background_isolate_channel")
+        backgroundChannel = MethodChannel(isolate, "${Constants.CHANNEL_NAME}/background_isolate_channel")
         backgroundChannel.setMethodCallHandler(this)
     }
 

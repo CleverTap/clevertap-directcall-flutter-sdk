@@ -40,13 +40,13 @@ import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
-import com.example.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result

@@ -1,5 +1,6 @@
 package com.clevertap.clevertap_signedcall_flutter.handlers
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
@@ -7,8 +8,9 @@ import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.signedcall.utils.SignedCallUtils
 import com.clevertap.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
+import com.clevertap.clevertap_signedcall_flutter.isolate.CleverTapBackgroundIsolateRunner
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
-import com.example.clevertap_signedcall_flutter.isolate.CleverTapBackgroundIsolateRunner
+import java.util.Timer
 import java.util.TimerTask
 
 /**
@@ -48,6 +50,7 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
             Utils.log(message = "stream is sent!")
             MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
             ackTimeOutHandler.schedule(object : TimerTask() {
+                @SuppressLint("RestrictedApi")
                 override fun run() {
                     Utils.log(
                         message = "inside ackTimeOutHandler!"

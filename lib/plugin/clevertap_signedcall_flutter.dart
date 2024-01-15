@@ -1,6 +1,6 @@
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 
-import '../models/call_status_details.dart';
+import '../models/call_event_result.dart';
 import '../models/log_level.dart';
 import '../src/signedcall_handlers.dart';
 import 'clevertap_signedcall_flutter_platform_interface.dart';
@@ -58,7 +58,7 @@ class CleverTapSignedCallFlutter {
   }
 
   ///Returns the listener to listen the call-events stream
-  Stream<SCCallStatusDetails> get callEventListener =>
+  Stream<CallEventResult> get callEventListener =>
       CleverTapSignedCallFlutterPlatform.instance.callEventsListener;
 
   ///Returns the listener to listen the call-events stream
@@ -92,10 +92,20 @@ class CleverTapSignedCallFlutter {
     return CleverTapSignedCallFlutterPlatform.instance.hangUpCall();
   }
 
+  /// Registers a callback to handle the call events when the app is in the
+  /// killed state.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   void onBackgroundCallEvent(BackgroundCallEventHandler handler) {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundCallEvent(handler);
   }
 
+  /// Registers a callback to handle the notification action clicked over missed call notification
+  /// when the app is in the killed state.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundMissedCallActionClicked(handler);
   }
