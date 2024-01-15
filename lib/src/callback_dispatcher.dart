@@ -14,7 +14,7 @@ import 'constants.dart';
 // any necessary processing in Dart (e.g., populating a custom object) before
 // invoking the provided callback.
 @pragma('vm:entry-point')
-void callbackDispatcher() {
+void backgroundCallbackDispatcher() {
   // Initialize state which is necessary for the MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,5 +55,5 @@ void callbackDispatcher() {
 
   // Once we've finished initializing the callbackDispatcher, let the native portion of the plugin
   // know that it can start the callback invocation.
-  channel.invokeMethod<void>('CleverTapCallbackDispatcher#initialized');
+  channel.invokeMethod<void>('SCBackgroundCallbackDispatcher#initialized');
 }

@@ -20,7 +20,7 @@ class CallEventResult {
 
   @override
   String toString() {
-    return 'SCCallStatusDetails{direction: $direction, callDetails: $callDetails, callEvent: $callEvent}';
+    return 'CallEventResult{direction: $direction, callDetails: $callDetails, callEvent: $callEvent}';
   }
 }
 

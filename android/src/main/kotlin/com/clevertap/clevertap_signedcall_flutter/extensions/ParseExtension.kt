@@ -12,6 +12,8 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLEE_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_DETAILS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INITIATOR_IMAGE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_IMAGE
 
 /**
  * Parses the [MissedCallNotificationOpenResult] instance to a map object
@@ -23,13 +25,8 @@ fun MissedCallNotificationOpenResult.toMap(): HashMap<String, Any> {
         KEY_ACTION_ID to this.action.actionID,
         KEY_ACTION_LABEL to this.action.actionLabel
     )
-    val callDetailsMap = mapOf<String, String>(
-        KEY_CALLER_CUID to this.callDetails.callerCuid,
-        KEY_CALLEE_CUID to this.callDetails.calleeCuid,
-        KEY_CALL_CONTEXT to this.callDetails.callContext
-    )
     resultMap[KEY_ACTION] = actionMap
-    resultMap[KEY_CALL_DETAILS] = callDetailsMap
+    resultMap[KEY_CALL_DETAILS] = this.callDetails.toMap()
     return resultMap
 }
 
@@ -60,6 +57,11 @@ fun SCCallStatusDetails.toMap(): Map<String, Any> {
     )
 }
 
+/**
+ * Converts [VoIPCallStatus] to a formatted string.
+ *
+ * @return A formatted call event string.
+ */
 fun VoIPCallStatus.formattedCallEvent(): String {
     return when (this) {
         VoIPCallStatus.CALL_IS_PLACED -> "CallIsPlaced"
@@ -84,10 +86,10 @@ fun VoIPCallStatus.formattedCallEvent(): String {
  */
 fun CallDetails.toMap(): Map<String, Any> {
     return mapOf(
-        "callerCuid" to callerCuid,
-        "calleeCuid" to calleeCuid,
-        "callContext" to callContext,
-        "initiatorImage" to initiatorImage,
-        "receiverImage" to receiverImage
+        KEY_CALLER_CUID to callerCuid,
+        KEY_CALLEE_CUID to calleeCuid,
+        KEY_CALL_CONTEXT to callContext,
+        KEY_INITIATOR_IMAGE to initiatorImage,
+        KEY_RECEIVER_IMAGE to receiverImage
     )
 }

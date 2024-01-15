@@ -1,6 +1,8 @@
 package com.clevertap.clevertap_signedcall_flutter.util
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.clevertap.android.sdk.inapp.CTLocalInApp
 import com.clevertap.android.signedcall.exception.CallException
@@ -255,11 +257,27 @@ object Utils {
         }
     }
 
+    /**
+     * Parses the given [value] to a Long.
+     *
+     * @return The Long value, or null if parsing is not possible.
+     */
     fun parseLong(value: Any?): Long? {
         return when (value) {
             is Int -> value.toLong()
             is Long -> value
             else -> null
+        }
+    }
+
+    /**
+     * Runs the specified action on the main thread.
+     *
+     * @param action The code to be executed on the main thread.
+     */
+    fun runOnMainThread(action: () -> Unit) {
+        Handler(Looper.getMainLooper()).post {
+            action.invoke()
         }
     }
 }

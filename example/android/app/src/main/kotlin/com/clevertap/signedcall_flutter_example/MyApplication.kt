@@ -5,14 +5,14 @@ import com.clevertap.android.sdk.ActivityLifecycleCallback
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.fcm.SignedCallNotificationHandler
 import com.clevertap.android.signedcall.init.SignedCallAPI
-import com.clevertap.clevertap_signedcall_flutter.SignedCallVoIPCallStatusListener
+import com.clevertap.clevertap_signedcall_flutter.SCBackgroundCallEventHandler
 
 class MyApplication : Application() {
 
     override fun onCreate() {
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE)
         SignedCallAPI.setDebugLevel(SignedCallAPI.LogLevel.VERBOSE)
-        SignedCallVoIPCallStatusListener.initialize(this)
+        SCBackgroundCallEventHandler.initialize(this)
         CleverTapAPI.setSignedCallNotificationHandler(SignedCallNotificationHandler())
         ActivityLifecycleCallback.register(this)
         super.onCreate()

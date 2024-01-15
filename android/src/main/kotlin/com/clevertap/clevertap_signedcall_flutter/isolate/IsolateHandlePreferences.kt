@@ -9,6 +9,9 @@ object IsolateHandlePreferences {
     private const val CALLBACK_DISPATCHER_HANDLE_KEY = "com.clevertap.clevertap_plugin.CALLBACK_DISPATCHER_HANDLE_KEY"
     private const val USER_CALLBACK_HANDLE_KEY = "com.clevertap.clevertap_plugin.CALLBACK_HANDLE_KEY"
 
+    const val BACKGROUND_ISOLATE_CALL_EVENT = "onBackgroundCallEvent"
+    const val BACKGROUND_ISOLATE_MISSED_CALL_ACTION_CLICKED = "onBackgroundMissedCallActionClicked"
+
     private fun getPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFS_FILE_NAME, Context.MODE_PRIVATE)
     }

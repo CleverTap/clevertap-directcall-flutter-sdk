@@ -30,7 +30,7 @@ interface ISignedCallMethodCallHandler {
     /**
      * Sends the real-time changes in the call-state in an observable event stream
      */
-    fun streamCallEvent(callStatusDetails: Map<String, Any>)
+    fun streamCallEvent(callEventResult: Map<String, Any>)
 
     /**
      * Disconnects the signalling socket
