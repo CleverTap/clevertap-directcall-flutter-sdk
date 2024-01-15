@@ -1,13 +1,13 @@
 package com.clevertap.signedcall_flutter_example
 
+import android.app.Application
 import com.clevertap.android.sdk.ActivityLifecycleCallback
 import com.clevertap.android.sdk.CleverTapAPI
 import com.clevertap.android.signedcall.fcm.SignedCallNotificationHandler
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.example.clevertap_signedcall_flutter.SignedCallVoIPCallStatusListener
-import io.flutter.app.FlutterApplication
 
-class MyApplication : FlutterApplication() {
+class MyApplication : Application() {
 
     override fun onCreate() {
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE)

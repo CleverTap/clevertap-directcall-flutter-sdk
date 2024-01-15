@@ -1,4 +1,4 @@
-package com.example.clevertap_signedcall_flutter
+package com.clevertap.clevertap_signedcall_flutter
 
 import android.content.Context
 import android.util.Log

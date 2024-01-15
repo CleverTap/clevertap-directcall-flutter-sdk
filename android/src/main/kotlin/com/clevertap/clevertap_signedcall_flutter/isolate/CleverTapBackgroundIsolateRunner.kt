@@ -1,8 +1,8 @@
-package com.example.clevertap_signedcall_flutter.isolate
+package com.clevertap.clevertap_signedcall_flutter.isolate
 
 import android.content.Context
 import android.util.Log
-import com.example.clevertap_signedcall_flutter.SCAppContextHolder
+import com.clevertap.clevertap_signedcall_flutter.SCAppContextHolder
 
 /**
  * A runner class which abstracts the startup process for a background isolate.

@@ -67,11 +67,10 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((event) {
-
-          debugPrint("CTBGIsolateExecutor CallStateListener is called1: $event");
+      debugPrint(
+          "CleverTap:SignedCallFlutter: received callEvent stream with ${event.toString()}");
       //Utils.showSnack(context, event.name);
-      if (event == CallEvent.callIsPlaced) {
-
+      if (event == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }
     });

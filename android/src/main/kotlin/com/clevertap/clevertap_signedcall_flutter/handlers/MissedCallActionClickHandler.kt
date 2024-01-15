@@ -4,9 +4,12 @@ import android.content.Context
 import android.util.Log
 import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
+import com.clevertap.android.signedcall.utils.SignedCallUtils
 import com.clevertap.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
+import com.example.clevertap_signedcall_flutter.isolate.CleverTapBackgroundIsolateRunner
+import java.util.TimerTask
 
 /**
  * Missed Call CTA handler for SignedCall Missed Call Notifications
@@ -27,7 +30,6 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
      * @param context - the app context
      * @param result  a [MissedCallNotificationOpenResult] object having call related details
      */
-    @SuppressLint("RestrictedApi")
     override fun onMissedCallNotificationOpened(
         context: Context,
         result: MissedCallNotificationOpenResult
@@ -43,9 +45,7 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
             )
 
             //Sends the real-time changes in the call-state in an observable event-stream
-            Utils.log(
-                message = "stream is sent!"
-            )
+            Utils.log(message = "stream is sent!")
             MissedCallActionEventStreamHandler.eventSink?.success(result.toMap())
             ackTimeOutHandler.schedule(object : TimerTask() {
                 override fun run() {

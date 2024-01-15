@@ -1,11 +1,12 @@
-package com.example.clevertap_signedcall_flutter.isolate
+package com.clevertap.clevertap_signedcall_flutter.isolate
 
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.example.clevertap_signedcall_flutter.Constants
-import com.example.clevertap_signedcall_flutter.SCAppContextHolder
+import com.clevertap.clevertap_signedcall_flutter.Constants
+import com.clevertap.clevertap_signedcall_flutter.SCAppContextHolder
+import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterShellArgs
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback

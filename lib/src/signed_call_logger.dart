@@ -1,5 +1,6 @@
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
+
 class SignedCallLogger {
   static const String _defaultTagPrefix = "[CT]:[SignedCall]:[Flutter]";
 

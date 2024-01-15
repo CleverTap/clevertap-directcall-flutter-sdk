@@ -1,4 +1,4 @@
-package com.example.clevertap_signedcall_flutter.isolate
+package com.clevertap.clevertap_signedcall_flutter.isolate
 
 import android.content.Context
 import android.content.SharedPreferences

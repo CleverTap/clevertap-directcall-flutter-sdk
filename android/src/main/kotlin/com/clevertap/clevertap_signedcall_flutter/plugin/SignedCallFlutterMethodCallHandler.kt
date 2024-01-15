@@ -9,6 +9,10 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.clevertap.android.signedcall.utils.SignedCallUtils
+import com.clevertap.clevertap_signedcall_flutter.Constants
+import com.clevertap.clevertap_signedcall_flutter.Constants.CALLBACK_HANDLE
+import com.clevertap.clevertap_signedcall_flutter.Constants.DISPATCHER_HANDLE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -29,7 +33,10 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGGING
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
+import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
@@ -39,6 +46,7 @@ import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMap
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
+import com.example.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -183,11 +191,8 @@ class SignedCallFlutterMethodCallHandler(
                         missedCallActionsList, missedCallActionClickHandlerPath
                     ).build()
 
-            SignedCallAPI.getInstance().init(
-                context,
-                initConfiguration,
-                cleverTapAPI,
-                object : SignedCallInitResponse {
+            SignedCallAPI.getInstance()
+                .init(context, initConfiguration, cleverTapAPI, object : SignedCallInitResponse {
                     override fun onSuccess() {
                         methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_INITIALIZE, null)
                     }
@@ -223,10 +228,6 @@ class SignedCallFlutterMethodCallHandler(
                 callContext,
                 callOptions,
                 object : OutgoingCallResponse {
-                    override fun callStatus(callStatus: VoIPCallStatus) {
-                        streamCallEvent(callStatus)
-                    }
-
                     override fun onSuccess() {
                         methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
                     }
