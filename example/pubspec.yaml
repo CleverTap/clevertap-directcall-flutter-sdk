@@ -19,7 +19,7 @@ dependencies:
     sdk: flutter
   clevertap_signedcall_flutter:
     path: ../
-  clevertap_plugin: ^2.0.0
+  clevertap_plugin: ^1.9.1
   permission_handler: ^10.2.0
   shared_preferences: ^2.0.15
   fluttertoast: ^8.2.4
