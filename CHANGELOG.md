@@ -21,6 +21,9 @@
 
 * **[Android and iOS Platform]**
   * The `CleverTapSignedCallFlutter.shared.callEventListener` event stream will now provide an instance of the `CallEventResult` class instead of the `CallEvent` class. Please refer to the integration documentation for details on usage.
+  
+* **[iOS Platform]**
+  * iOS deployment target version is bumped to iOS 12.
 
 **Behaviour Changes**
 
