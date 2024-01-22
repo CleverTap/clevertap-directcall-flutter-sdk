@@ -116,7 +116,6 @@ class SignedCallFlutterMethodCallHandler(
     private fun registerListeners() {
         if (!SignedCallUtils.isAppInBackground()) {
             SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
-                Utils.log(message = "CallStateListener is called in foreground: $callStatusDetails")
                 streamCallEvent(callStatusDetails.toMap())
             }
         }
