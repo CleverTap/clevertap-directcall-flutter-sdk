@@ -1,6 +1,6 @@
 # CleverTap Signed Call Flutter SDK
 [![pub package](https://img.shields.io/pub/v/clevertap_signedcall_flutter.svg)](https://pub.dartlang.org/packages/clevertap_signedcall_flutter)
-<a href="https://github.com/CleverTap/clevertap-flutter/releases">
+<a href="https://github.com/CleverTap/clevertap-signedcall-flutter-sdk/releases">
 <img src="https://img.shields.io/github/v/release/CleverTap/clevertap-signedcall-flutter-sdk.svg" />
 </a>
 
