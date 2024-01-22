@@ -12,7 +12,7 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     
     public override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.callStatus(notification:)), name: NSNotification.Name(rawValue: "MessageReceived"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.callStatus(notification:)), name: SCCallStatusDidUpdate, object: nil)
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -171,24 +171,25 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
     }
     
     @objc func callStatus(notification: Notification) {
-        let message = notification.object as? SCCallStatus
+        let callDetails = notification.userInfo?["callDetails"] as? SCCallStatusDetails
         
-        guard let callValue = message?.rawValue else {
-            os_log("Unknown call event raised: %{public}@", log: logValue, type: .default, notification.object.debugDescription)
-            return
-        }
+        let status: SCCallStatus? = callDetails?.status
+        let callDirection: String = "\(callDetails?.callDirection.rawValue ?? "")"
+        let calleeCuid: String = "\(callDetails?.callDetails.calleeCuid ?? "")"
+        let callerCuid: String = "\(callDetails?.callDetails.callerCuid ?? "")"
+        let initiatorImage: String = "\(callDetails?.callDetails.initiatorImage ?? "")"
+        let receiverImage: String = "\(callDetails?.callDetails.receiverImage ?? "")"
+        let callContext: String = "\(callDetails?.callDetails.context ?? "")"
         
-        let callEvent = SCCallEvent(rawValue: callValue)
-        switch message {
-            
-        case .CALL_CANCEL, .CALL_DECLINED, .CALL_MISSED, .CALL_ANSWERED, .CALL_CONNECTED, .RECEIVER_BUSY_ON_ANOTHER_CALL, .CALL_OVER : handleCallEvent(callEvent)
-        default: break
-        }
+        let callDetailsDict: [String : Any] = ["direction": callDirection.uppercased(),
+                                               "callDetails": ["callerCuid": callerCuid, "calleeCuid": calleeCuid, "callContext": callContext, "initiatorImage": initiatorImage, "receiverImage": receiverImage],
+                                               "callEvent": SCCallEventMapping(callStatus: status).value]
+        handleCallEvent(callDetailsDict)
     }
     
-    func handleCallEvent(_ callEvent: SCCallEvent) {
+    func handleCallEvent(_ callDetails: [String: Any]) {
         do {
-            try callEventTrigger?.success(event: callEvent.value)
+            try callEventTrigger?.success(event: callDetails)
         } catch {
             os_log("Handle call event error: %{public}@", log: logValue, type: .default, error.localizedDescription)
             callEventTrigger?.error(
