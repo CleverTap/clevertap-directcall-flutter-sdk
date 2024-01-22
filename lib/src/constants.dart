@@ -4,6 +4,8 @@ const String argInitProperties = "initProperties";
 const String argCallProperties = "callProperties";
 const String keyReceiverCuid = "receiverCuid";
 const String keyCallContext = "callContext";
+const String keyInitiatorImage = "initiatorImage";
+const String keyReceiverImage = "receiverImage";
 const String keyCallOptions = "callOptions";
 const String keyAction = "action";
 const String keyActionId = "actionId";
@@ -14,3 +16,6 @@ const String keyCalleeCuid = "calleeCuid";
 const String keyErrorCode = "errorCode";
 const String keyErrorMessage = "errorMessage";
 const String keyErrorDescription = "errorDescription";
+const String keyDirection = "direction";
+const String keyCallEvent = "callEvent";
+

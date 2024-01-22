@@ -1,6 +1,5 @@
 package com.clevertap.clevertap_signedcall_flutter.plugin
 
-import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -31,7 +30,7 @@ interface ISignedCallMethodCallHandler {
     /**
      * Sends the real-time changes in the call-state in an observable event stream
      */
-    fun streamCallEvent(event: VoIPCallStatus)
+    fun streamCallEvent(callEventResult: Map<String, Any>)
 
     /**
      * Disconnects the signalling socket

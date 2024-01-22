@@ -25,6 +25,8 @@ object Constants {
     const val KEY_CALL_PROPERTIES = "callProperties"
     const val KEY_RECEIVER_CUID = "receiverCuid"
     const val KEY_CALL_CONTEXT = "callContext"
+    const val KEY_INITIATOR_IMAGE = "initiatorImage"
+    const val KEY_RECEIVER_IMAGE = "receiverImage"
     const val KEY_CALL_OPTIONS = "callOptions"
     const val KEY_ERROR_CODE = "errorCode"
     const val KEY_ERROR_MESSAGE = "errorMessage"
@@ -36,4 +38,8 @@ object Constants {
     const val KEY_CALL_DETAILS = "callDetails"
     const val KEY_CALLER_CUID = "callerCuid"
     const val KEY_CALLEE_CUID = "calleeCuid"
+    const val DISPATCHER_HANDLE = "pluginCallbackHandle"
+    const val CALLBACK_HANDLE = "userCallbackHandle"
+    const val ISOLATE_SUFFIX_CALL_EVENT_CALLBACK = "callEvent"
+    const val ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK = "missedCallNotificationClicked"
 }
