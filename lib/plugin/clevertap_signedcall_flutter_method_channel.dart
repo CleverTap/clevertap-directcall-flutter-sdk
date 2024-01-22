@@ -1,10 +1,16 @@
+import 'dart:ui';
+
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../models/call_event_result.dart';
 import '../models/call_events.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
+import '../src/callback_dispatcher.dart';
+import '../src/handler_info.dart';
 import '../src/signed_call_logger.dart';
 import '../src/signedcall_handlers.dart';
 import '../src/signedcall_method_calls.dart';
@@ -16,11 +22,13 @@ class MethodChannelCleverTapSignedCallFlutter
   /// The method channel used to interact with the native platform.
   final _methodChannel = const MethodChannel('$channelName/methods');
 
-  Stream<CallEvent>? _callEventsListener;
+  Stream<CallEventResult>? _callEventsListener;
   Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
 
   late SignedCallInitHandler _initHandler;
   late SignedCallVoIPCallHandler _voIPCallHandler;
+
+  final Map<Type, HandlerInfo> _registeredHandlers = {};
 
   MethodChannelCleverTapSignedCallFlutter() {
     //sets the methodCallHandler to receive the method calls from native platform
@@ -50,14 +58,24 @@ class MethodChannelCleverTapSignedCallFlutter
         .invokeMethod(SCMethodCall.logging, {argLogLevel: logLevelValue});
   }
 
+  @override
+  void onBackgroundCallEvent(BackgroundCallEventHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundCallEventHandler");
+  }
+
+  @override
+  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundMissedCallActionClickedHandler");
+  }
+
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   @override
-  Stream<CallEvent> get callEventsListener {
+  Stream<CallEventResult> get callEventsListener {
     /// The event channel used to listen the data stream from the native platform.
     const callEventChannel = EventChannel('$channelName/events/call_event');
     _callEventsListener ??= callEventChannel
         .receiveBroadcastStream()
-        .map((event) => CallEvent.fromString(event.toString()));
+        .map((dynamic callStatusDetails) => CallEventResult.fromMap(callStatusDetails));
     return _callEventsListener!;
   }
 
@@ -69,8 +87,10 @@ class MethodChannelCleverTapSignedCallFlutter
         EventChannel('$channelName/events/missed_call_action_click');
     _missedCallActionClickListener ??= missedCallActionClickEventChannel
         .receiveBroadcastStream()
-        .map((dynamic missedCallActionClickResult) =>
-            MissedCallActionClickResult.fromMap(missedCallActionClickResult));
+        .map((dynamic missedCallActionClickResult) {
+      notifyAck(SCMethodCall.ackMissedCallActionClickedStream);
+      return MissedCallActionClickResult.fromMap(missedCallActionClickResult);
+    });
     return _missedCallActionClickListener!;
   }
 
@@ -148,5 +168,42 @@ class MethodChannelCleverTapSignedCallFlutter
   @override
   Future<void> hangUpCall() {
     return _methodChannel.invokeMethod(SCMethodCall.hangUpCall);
+  }
+
+  void _registerEventHandler<T extends Function>(
+      T handler, String methodName) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+
+    Type handlerType = T;
+
+    if (!_registeredHandlers.containsKey(handlerType) ||
+        !_registeredHandlers[handlerType]!.initialized) {
+      _registeredHandlers[handlerType] =
+          HandlerInfo(handler: handler, initialized: true);
+
+      final CallbackHandle pluginCallbackHandle =
+          PluginUtilities.getCallbackHandle(backgroundCallbackDispatcher)!;
+      final CallbackHandle? userCallbackHandle =
+          PluginUtilities.getCallbackHandle(handler);
+
+      // Callback handler should be a top-level or static function, independent of any inner scopes.
+      if (userCallbackHandle == null) {
+        throw ArgumentError(
+            'Failed to setup background handle. `$handlerType` must be a TOP LEVEL or a STATIC method');
+      }
+
+      await _methodChannel.invokeMapMethod(methodName, {
+        'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
+        'userCallbackHandle': userCallbackHandle.toRawHandle(),
+      });
+    }
+  }
+
+  void notifyAck(String ackName) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _methodChannel.invokeMethod(ackName);
+    }
   }
 }

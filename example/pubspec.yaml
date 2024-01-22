@@ -3,7 +3,7 @@ description: Demonstrates how to use the clevertap_signedcall_flutter plugin.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
@@ -19,9 +19,10 @@ dependencies:
     sdk: flutter
   clevertap_signedcall_flutter:
     path: ../
-  clevertap_plugin: ^1.6.0
+  clevertap_plugin: ^1.9.1
   permission_handler: ^10.2.0
   shared_preferences: ^2.0.15
+  fluttertoast: ^8.2.4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -43,7 +44,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

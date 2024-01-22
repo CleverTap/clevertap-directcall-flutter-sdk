@@ -1,4 +1,4 @@
-import 'package:clevertap_signedcall_flutter/models/call_events.dart';
+import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter_method_channel.dart';
@@ -23,7 +23,7 @@ class MockCleverTapDirectcallFlutterPlatform
   }
 
   @override
-  Stream<CallEvent> get callEventsListener => throw UnimplementedError();
+  Stream<CallEventResult> get callEventsListener => throw UnimplementedError();
 
   @override
   Future<void> hangUpCall() {
@@ -52,6 +52,16 @@ class MockCleverTapDirectcallFlutterPlatform
 
   @override
   Future<void> disconnectSignallingSocket() {
+    throw UnimplementedError();
+  }
+
+  @override
+  void onBackgroundCallEvent(BackgroundCallEventHandler handler) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
     throw UnimplementedError();
   }
 }

@@ -2,31 +2,45 @@ import '../src/signed_call_logger.dart';
 
 ///Holds all the possible statuses of a VoIP call
 enum CallEvent {
-  //When a call is cancelled from the initiator's end
+  // Indicates that the call is successfully placed
+  callIsPlaced,
+
+  // Indicates that the call is cancelled from the initiator's end
   cancelled,
 
-  //When a call is declined from the receiver's end
+  // Indicates that the call is declined from the receiver's end
   declined,
 
-  //When a call is missed at the receiver's end
+  // Indicates that the call is missed at the receiver's end
   missed,
 
-  //When a call is picked up by the receiver
+  // Indicates that the call is picked up by the receiver
   answered,
 
-  //When connection to the receiver is established after the call is answered.
-  //Audio transfer begins at this state.
+  // Indicates that the connection to the receiver is established and the audio transfer begins at this state
   callInProgress,
 
-  //When a call has been ended.
+  // Indicates that the call has been ended.
   ended,
 
-  //When the receiver is busy on another call
-  receiverBusyOnAnotherCall;
+  // Indicates that the receiver is already busy on another call
+  receiverBusyOnAnotherCall,
+
+  // Indicates that the call is declined due to the receiver being logged out with the specific CUID
+  declinedDueToLoggedOutCuid,
+
+  // [Specific to Android-Platform]
+  // Indicates that the call is declined due to the notifications are disabled at the receiver's end.
+  declinedDueToNotificationsDisabled,
+
+  // Indicates that the microphone permission is not granted for the call.
+  declinedDueToMicrophonePermissionsNotGranted;
 
   ///parses the state of the call in a [CallEvent]
   static CallEvent fromString(String state) {
     switch (state) {
+      case "CallIsPlaced":
+        return CallEvent.callIsPlaced;
       case "Cancelled":
         return CallEvent.cancelled;
       case "Declined":
@@ -41,6 +55,12 @@ enum CallEvent {
         return CallEvent.ended;
       case "ReceiverBusyOnAnotherCall":
         return CallEvent.receiverBusyOnAnotherCall;
+      case "DeclinedDueToLoggedOutCuid":
+        return CallEvent.declinedDueToLoggedOutCuid;
+      case "DeclinedDueToNotificationsDisabled":
+        return CallEvent.declinedDueToNotificationsDisabled;
+      case "DeclinedDueToMicrophonePermissionsNotGranted":
+        return CallEvent.declinedDueToMicrophonePermissionsNotGranted;
       default:
         SignedCallLogger.d('$state is not a valid CallState.');
         throw ArgumentError('$state is not a valid CallState.');

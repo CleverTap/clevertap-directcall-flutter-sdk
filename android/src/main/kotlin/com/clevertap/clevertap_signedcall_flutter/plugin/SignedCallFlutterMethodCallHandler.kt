@@ -3,13 +3,16 @@ package com.clevertap.clevertap_signedcall_flutter.plugin
 import android.annotation.SuppressLint
 import android.content.Context
 import com.clevertap.android.sdk.CleverTapAPI
-import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.clevertap.android.signedcall.utils.SignedCallUtils
+import com.clevertap.clevertap_signedcall_flutter.Constants
+import com.clevertap.clevertap_signedcall_flutter.Constants.CALLBACK_HANDLE
+import com.clevertap.clevertap_signedcall_flutter.Constants.DISPATCHER_HANDLE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SOCKET_CONNECTION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
@@ -22,6 +25,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIM
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
@@ -30,10 +34,14 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGGING
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
+import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
@@ -45,6 +53,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
 
+@SuppressLint("RestrictedApi")
 class SignedCallFlutterMethodCallHandler(
     private val context: Context?, private val methodChannel: MethodChannel?
 ) : ISignedCallMethodCallHandler, MethodChannel.MethodCallHandler {
@@ -53,6 +62,7 @@ class SignedCallFlutterMethodCallHandler(
 
     init {
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
+        registerListeners()
     }
 
     companion object {
@@ -91,7 +101,23 @@ class SignedCallFlutterMethodCallHandler(
                 hangUpCall(result)
             }
 
+            REGISTER_BACKGROUND_CALL_EVENT_HANDLER,
+            REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER -> {
+                handleBackgroundEventHandler(call, result)
+            }
+
+            ACK_MISSED_CALL_ACTION_CLICKED -> {
+                handleMissedCallActionClickedAck(result)
+            }
             else -> result.notImplemented()
+        }
+    }
+
+    private fun registerListeners() {
+        if (!SignedCallUtils.isAppInBackground()) {
+            SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
+                streamCallEvent(callStatusDetails.toMap())
+            }
         }
     }
 
@@ -186,10 +212,6 @@ class SignedCallFlutterMethodCallHandler(
                 callContext,
                 callOptions,
                 object : OutgoingCallResponse {
-                    override fun callStatus(callStatus: VoIPCallStatus) {
-                        streamCallEvent(callStatus)
-                    }
-
                     override fun onSuccess() {
                         methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
                     }
@@ -228,20 +250,31 @@ class SignedCallFlutterMethodCallHandler(
         result.success(null)
     }
 
-    //Sends the real-time changes in the call-state in an observable event-stream
-    override fun streamCallEvent(event: VoIPCallStatus) {
-        Utils.log(message = "Streaming $event to event-channel")
-        CallEventStreamHandler.eventSink?.let { sink ->
-            val eventDescription = when (event) {
-                VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
-                VoIPCallStatus.CALL_DECLINED -> "Declined"
-                VoIPCallStatus.CALL_MISSED -> "Missed"
-                VoIPCallStatus.CALL_ANSWERED -> "Answered"
-                VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
-                VoIPCallStatus.CALL_OVER -> "Ended"
-                VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
-            }
-            sink.success(eventDescription)
+    private fun handleBackgroundEventHandler(call: MethodCall, result: Result) {
+        val dispatcherHandle = Utils.parseLong(call.argument(DISPATCHER_HANDLE))
+        val callbackHandle = Utils.parseLong(call.argument(CALLBACK_HANDLE))
+        val suffix = when (call.method) {
+            REGISTER_BACKGROUND_CALL_EVENT_HANDLER -> Constants.ISOLATE_SUFFIX_CALL_EVENT_CALLBACK
+            REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER -> Constants.ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK
+            else -> return
         }
+
+        if (dispatcherHandle != null && callbackHandle != null) {
+            IsolateHandlePreferences.saveCallbackKeys(context, dispatcherHandle, callbackHandle, suffix)
+        }
+
+        result.success(null)
+    }
+
+    private fun handleMissedCallActionClickedAck(result: Result) {
+        Utils.log(message = "missedCallActionClickedStream#ack is received!")
+        MissedCallActionClickHandler.resolveAckTimeOutHandler()
+        result.success(null)
+    }
+
+    //Sends the real-time changes in the call-state in an observable event-stream
+    override fun streamCallEvent(callEventResult: Map<String, Any>) {
+        Utils.log(message = "Streaming $callEventResult to event-channel with payload: $callEventResult")
+        CallEventStreamHandler.eventSink?.success(callEventResult)
     }
 }

@@ -7,6 +7,8 @@ class SCMethodCall {
   static const String logout = "logout";
   static const String hangUpCall = "hangUpCall";
   static const String logging = "logging";
+  static const String ackMissedCallActionClickedStream =
+      "missedCallActionClicked#ack";
 
   //Platform to Flutter
   static const String onSignedCallDidInitialize = "onSignedCallDidInitialize";

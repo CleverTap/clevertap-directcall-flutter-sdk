@@ -15,7 +15,7 @@ class SignedCallFlutterPluginRegistrant : FlutterPlugin {
      * This local reference serves to register the plugin with the Flutter Engine and unregister it
      * when the Flutter Engine is detached from the Activity
      */
-    var methodChannel: MethodChannel? = null
+    private var methodChannel: MethodChannel? = null
     private lateinit var methodCallHandler: MethodChannel.MethodCallHandler
 
     /**
@@ -24,8 +24,8 @@ class SignedCallFlutterPluginRegistrant : FlutterPlugin {
      * This local reference serves to create the pipeline and set the streamHandler
      *
      */
-    var callEventChannel: EventChannel? = null
-    var missedCallActionClickEventChannel: EventChannel? = null
+    private var callEventChannel: EventChannel? = null
+    private var missedCallActionClickEventChannel: EventChannel? = null
 
     var context: Context? = null
 
