@@ -78,7 +78,6 @@ fun VoIPCallStatus.formattedCallEvent(): String {
     }
 }
 
-
 /**
  * Converts CallDetails to a Map.
  *
@@ -86,9 +85,9 @@ fun VoIPCallStatus.formattedCallEvent(): String {
  */
 fun CallDetails.toMap(): Map<String, Any> {
     return mapOf(
-        KEY_CALLER_CUID to callerCuid,
-        KEY_CALLEE_CUID to calleeCuid,
-        KEY_CALL_CONTEXT to callContext,
+        KEY_CALLER_CUID to (callerCuid ?: ""),
+        KEY_CALLEE_CUID to (calleeCuid ?: ""),
+        KEY_CALL_CONTEXT to (callContext ?: ""),
         KEY_INITIATOR_IMAGE to initiatorImage,
         KEY_RECEIVER_IMAGE to receiverImage
     )
