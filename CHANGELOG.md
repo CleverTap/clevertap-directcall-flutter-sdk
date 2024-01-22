@@ -1,5 +1,42 @@
 ## CHANGE LOG
 
+### Version 0.0.4 (January 22, 2024 )
+-------------------------------------------
+
+**What's new**
+
+* **[Android Platform]**
+  * Supports [Signed Call Android SDK v0.0.5](https://repo1.maven.org/maven2/com/clevertap/android/clevertap-signedcall-sdk/0.0.5) which is compatible with [CleverTap Android SDK v5.2.2](https://github.com/CleverTap/clevertap-android-sdk/blob/master/docs/CTCORECHANGELOG.md#version-522-december-22-2023).
+  * Introduces new properties initiator_image and receiver_image in the MissedCallNotificationOpenResult object provided through the onMissedCallNotificationOpened(Context context, MissedCallNotificationOpenResult result) callback.
+  * Adds new public API registerVoIPCallStatusListener(SCVoIPCallStatusListener callStatusListener) to observe the changes in the call state, providing updates to both the initiator and receiver of the call.
+  
+* **[iOS Platform]**
+  * Supports [Signed Call iOS SDK v0.0.6](https://github.com/CleverTap/clevertap-signedcall-ios-sdk/blob/main/CHANGELOG.md#version-006-january-19-2024) which is compatible with [CleverTap iOS SDK v5.2.2](https://github.com/CleverTap/clevertap-ios-sdk/blob/master/CHANGELOG.md#version-522-november-21-2023).
+  * Adds new NSNotification.Name `SCCallStatusDidUpdate` to observe the changes in the call state, providing updates to both the initiator and receiver of the call.
+  
+**Breaking Changes**
+
+* **[Android Platform]**
+  * The callStatus(VoIPCallStatus voIPCallStatus) callback method in the OutgoingCallResponse callback is no longer supported. Please use the new public API registerVoIPCallStatusListener(SCVoIPCallStatusListener callStatusListener).
+    
+* **[iOS Platform]**
+  * The `MessageReceived` NSNotification observer is no longer supported. Please use the new NSNotification.Name `SCCallStatusDidUpdate`.
+  
+**Behaviour Changes**
+
+* **[Android Platform]**
+  * Handles UX issues during network loss or switch by invalidating the socket reconnection and establishing an active connection to process the call related actions.
+  * Modifies the SDK's behavior when the Notifications Settings are disabled for the application. Previously, if the app's notifications were disabled, the device rang on incoming calls without displaying the call screen in the background and killed states. In this version, the SDK now declines incoming calls when the notifications are disabled. If the notification settings are later enabled, the SDK resumes processing calls instead of automatically declining them.
+   
+**Fixes**
+
+* **[Android Platform]**
+  * Fixes multiple outgoing call requests initiated simultaneously through multiple calls of SignedCallAPI.call(). The SDK now processes only one call at a time while rejecting other requests with a failure exception.
+  * Addresses an IllegalStateException which occurs while prompting the user with the poor/bad network conditions on the call-screen.
+
+* **[Android and iOS Platform]**
+   * Addresses an infinite **Connecting** state issue on the call screen which was triggered by using CUIDs longer than 15 characters. In this version, the SDK extends support to CUIDs ranging from 5 to 50 characters.       
+
 ### Version 0.0.3 (September 11, 2023)
 -------------------------------------------
 
