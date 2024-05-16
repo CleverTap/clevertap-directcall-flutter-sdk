@@ -1,5 +1,19 @@
 ## CHANGE LOG
 
+### Version 0.0.5 (May 16, 2024 )
+-------------------------------------------
+
+**Added**
+* **[iOS Platform]**
+  * Supports [Signed Call iOS SDK v0.0.7](https://github.com/CleverTap/clevertap-signedcall-ios-sdk/blob/main/CHANGELOG.md#version-007-march-15-2024) which is compatible with [CleverTap iOS SDK v6.1.0](https://github.com/CleverTap/clevertap-ios-sdk/blob/master/CHANGELOG.md#version-610-february-22-2024) and higher.
+  * Supports [Socket.io v16.1.0](https://github.com/socketio/socket.io-client-swift/releases/tag/v16.1.0) and [Starscream v4.0.8](https://github.com/daltoniam/Starscream/releases/tag/4.0.8) dependency.
+  * Adds privacy manifest.
+  * Expose socket usage logging for debugging purpose.
+  
+**Bug Fixes**
+* **[iOS Platform]**
+  * Handles runtime exception caused by an incompatible deployment target assigned to the Starscream framework by the host application. The Signed Call iOS dependency uses the Starscream framework as a transitive dependency. The issue is now handled within the SDK.
+
 ### Version 0.0.4 (January 22, 2024 )
 -------------------------------------------
 
