@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'CleverTap-SignedCall-SDK', '0.0.6'
+  s.dependency 'CleverTap-SignedCall-SDK', '0.0.7'
 
   s.platform = :ios, '12.0'
 
