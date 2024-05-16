@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'clevertap_signedcall_flutter'
-  s.version          = '0.0.4'
+  s.version          = '0.0.5'
   s.summary          = 'CleverTap SignedCall Flutter plugin.'
   s.description      = <<-DESC
   CleverTap SignedCall supports 1-1 voice calls.
