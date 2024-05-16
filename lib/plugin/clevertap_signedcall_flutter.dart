@@ -13,7 +13,7 @@ class CleverTapSignedCallFlutter {
   static CleverTapSignedCallFlutter get shared => _shared;
 
   static const sdkName = 'ctscsdkversion-flutter';
-  static const sdkVersion = 00004; /// If the current version is X.X.X then pass as X0X0X
+  static const sdkVersion = 00005; /// If the current version is X.X.X then pass as X0X0X
 
   /// This is a private named constructor.
   /// It'll be called exactly once only in this class,
