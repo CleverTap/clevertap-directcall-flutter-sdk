@@ -57,7 +57,7 @@ enum CallEvent {
   failedDueToInternalError;
 
   ///parses the state of the call in a [CallEvent]
-  static CallEvent fromString(String state) {
+  static CallEvent? fromString(String state) {
     switch (state) {
       case "CallIsPlaced":
         return CallEvent.callIsPlaced;
@@ -94,8 +94,8 @@ enum CallEvent {
       case "FailedDueToInternalError":
         return CallEvent.failedDueToInternalError;
       default:
-        SignedCallLogger.d('$state is not a valid CallState.');
-        throw ArgumentError('$state is not a valid CallState.');
+        SignedCallLogger.d('$state is not a valid value for CallEvent.');
+        return null;
     }
   }
 }
