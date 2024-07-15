@@ -1,6 +1,23 @@
 package com.clevertap.clevertap_signedcall_flutter.extensions
 
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_BLOCKED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_ANSWERED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_CANCELLED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_CANCELLED_DUE_TO_RING_TIMEOUT
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_DECLINED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_DECLINED_DUE_TO_BUSY_ON_PSTN
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_DECLINED_DUE_TO_BUSY_ON_VOIP
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_DECLINED_DUE_TO_LOGGED_OUT_CUID
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_DECLINED_DUE_TO_NOTIFICATIONS_DISABLED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_FAILED_DUE_TO_INTERNAL_ERROR
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_IN_PROGRESS
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_IS_PLACED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_MISSED
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_OVER
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_RINGING
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.models.CallDetails
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
@@ -64,17 +81,24 @@ fun SCCallStatusDetails.toMap(): Map<String, Any> {
  */
 fun VoIPCallStatus.formattedCallEvent(): String {
     return when (this) {
-        VoIPCallStatus.CALL_IS_PLACED -> "CallIsPlaced"
-        VoIPCallStatus.CALL_CANCELLED -> "Cancelled"
-        VoIPCallStatus.CALL_DECLINED -> "Declined"
-        VoIPCallStatus.CALL_MISSED -> "Missed"
-        VoIPCallStatus.CALL_ANSWERED -> "Answered"
-        VoIPCallStatus.CALL_IN_PROGRESS -> "CallInProgress"
-        VoIPCallStatus.CALL_OVER -> "Ended"
-        VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
-        VoIPCallStatus.CALL_DECLINED_DUE_TO_LOGGED_OUT_CUID -> "DeclinedDueToLoggedOutCuid"
-        VoIPCallStatus.CALL_DECLINED_DUE_TO_NOTIFICATIONS_DISABLED -> "DeclinedDueToNotificationsDisabled"
-        VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED -> "DeclinedDueToMicrophonePermissionsNotGranted"
+        CALL_IS_PLACED -> "CallIsPlaced"
+        CALL_RINGING -> "Ringing"
+        CALL_CANCELLED -> "Cancelled"
+        CALL_CANCELLED_DUE_TO_RING_TIMEOUT -> "CancelledDueToRingTimeout"
+        CALL_DECLINED -> "Declined"
+        CALL_MISSED -> "Missed"
+        CALL_ANSWERED -> "Answered"
+        CALL_IN_PROGRESS -> "CallInProgress"
+        CALL_OVER -> "Ended"
+        CALLEE_BUSY_ON_ANOTHER_CALL -> "ReceiverBusyOnAnotherCall"
+        CALL_DECLINED_DUE_TO_LOGGED_OUT_CUID -> "DeclinedDueToLoggedOutCuid"
+        CALL_DECLINED_DUE_TO_NOTIFICATIONS_DISABLED -> "DeclinedDueToNotificationsDisabled"
+        CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED -> "DeclinedDueToMicrophonePermissionsNotGranted"
+        CALLEE_MICROPHONE_PERMISSION_BLOCKED -> "DeclinedDueToMicrophonePermissionBlocked"
+        CALL_DECLINED_DUE_TO_BUSY_ON_VOIP -> "DeclinedDueToBusyOnVoIP"
+        CALL_DECLINED_DUE_TO_BUSY_ON_PSTN -> "DeclinedDueToBusyOnPSTN"
+        CALL_FAILED_DUE_TO_INTERNAL_ERROR -> "FailedDueToInternalError"
+        else -> "Unknown"
     }
 }
 
