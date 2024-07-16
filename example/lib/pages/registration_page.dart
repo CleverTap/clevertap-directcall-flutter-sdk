@@ -153,6 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         initProperties[keyPromptReceiverReadPhoneStatePermission] =
             true; //optional
         initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
+        initProperties[keyNotificationPermissionRequired] = false; //optional
       }
 
       ///iOS only fields

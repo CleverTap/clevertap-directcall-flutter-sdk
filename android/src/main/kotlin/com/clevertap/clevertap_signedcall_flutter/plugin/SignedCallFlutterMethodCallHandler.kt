@@ -21,6 +21,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_NOTIFICATION_PERMISSION_REQUIRED
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
@@ -179,10 +180,14 @@ class SignedCallFlutterMethodCallHandler(
             val missedCallActionClickHandlerPath =
                 MissedCallActionClickHandler::class.java.canonicalName
 
+            val notificationPermissionRequired =
+                initProperties.getOrElse(KEY_NOTIFICATION_PERMISSION_REQUIRED) { true } as Boolean
+
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
+                    .setNotificationPermissionRequired(notificationPermissionRequired)
                     .overrideDefaultBranding(callScreenBranding).setMissedCallActions(
                         missedCallActionsList, missedCallActionClickHandlerPath
                     ).build()
