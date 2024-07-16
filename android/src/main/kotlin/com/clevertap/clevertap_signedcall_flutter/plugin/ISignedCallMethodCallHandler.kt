@@ -38,6 +38,13 @@ interface ISignedCallMethodCallHandler {
     fun disconnectSignallingSocket(result: MethodChannel.Result)
 
     /**
+     * Retrieves the current call state.
+     *
+     * @return The current call state.
+     */
+    fun getCallState(result: MethodChannel.Result)
+
+    /**
      * Defines implementation to logout the Signed Call SDK session
      */
     fun logout(result: MethodChannel.Result)

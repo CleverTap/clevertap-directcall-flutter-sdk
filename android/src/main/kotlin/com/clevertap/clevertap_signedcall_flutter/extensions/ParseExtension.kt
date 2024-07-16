@@ -1,5 +1,6 @@
 package com.clevertap.clevertap_signedcall_flutter.extensions
 
+import com.clevertap.android.signedcall.enums.SCCallState
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_BLOCKED
@@ -98,6 +99,22 @@ fun VoIPCallStatus.formattedCallEvent(): String {
         CALL_DECLINED_DUE_TO_BUSY_ON_VOIP -> "DeclinedDueToBusyOnVoIP"
         CALL_DECLINED_DUE_TO_BUSY_ON_PSTN -> "DeclinedDueToBusyOnPSTN"
         CALL_FAILED_DUE_TO_INTERNAL_ERROR -> "FailedDueToInternalError"
+        else -> "Unknown"
+    }
+}
+
+/**
+ * Converts [SCCallState] to a formatted string.
+ *
+ * @return A formatted call state string.
+ */
+fun SCCallState.formattedCallState(): String? {
+    return when (this) {
+        SCCallState.OUTGOING_CALL -> "OutgoingCall"
+        SCCallState.INCOMING_CALL -> "IncomingCall"
+        SCCallState.ONGOING_CALL -> "OngoingCall"
+        SCCallState.CLEANUP_CALL -> "CleanupCall"
+        SCCallState.NO_CALL -> "NoCall"
         else -> "Unknown"
     }
 }

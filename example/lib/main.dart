@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
+import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -16,6 +17,8 @@ void backgroundCallEventHandler(CallEventResult result) async {
   debugPrint(
       "backgroundCallEventHandler called from headless task with payload: $result");
   Utils.showToast("${result.callEvent} is called!" );
+
+  debugPrint("CallState in killed state is: => ${getCallState()}");
 }
 
 @pragma('vm:entry-point')
@@ -33,6 +36,12 @@ void main() {
   CleverTapSignedCallFlutter.shared.onBackgroundMissedCallActionClicked(
       backgroundMissedCallActionClickedHandler);
   runApp(const MyApp());
+}
+
+Future<SCCallState?> getCallState() async {
+  SCCallState? callState =
+  await CleverTapSignedCallFlutter.shared.getCallState();
+  return callState;
 }
 
 class MyApp extends StatefulWidget {
@@ -73,9 +82,11 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((result) {
+      debugPrint("Current CallState is: => ${getCallState()}");
+
       debugPrint(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${result.toString()}");
-      Utils.showToast("${result.callEvent} is called!" );
+      Utils.showToast("${result.callEvent} is called!");
       if (result.callEvent == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }

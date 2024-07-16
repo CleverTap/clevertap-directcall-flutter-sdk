@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -156,6 +157,13 @@ class MethodChannelCleverTapSignedCallFlutter
   @override
   Future<void> disconnectSignallingSocket() {
     return _methodChannel.invokeMethod(SCMethodCall.disconnectSignallingSocket);
+  }
+
+  /// Retrieves the current call state.
+  @override
+  Future<SCCallState?> getCallState() async {
+    var result = await _methodChannel.invokeMethod(SCMethodCall.getCallState);
+    return SCCallState.fromString(result);
   }
 
   ///Logs out the user from the Signed Call SDK session

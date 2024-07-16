@@ -3,6 +3,7 @@ package com.clevertap.clevertap_signedcall_flutter.plugin
 import android.annotation.SuppressLint
 import android.content.Context
 import com.clevertap.android.sdk.CleverTapAPI
+import com.clevertap.android.signedcall.enums.SCCallState
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
@@ -28,6 +29,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_CALL_STATE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.INIT
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGGING
@@ -37,6 +39,7 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DI
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
+import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
@@ -91,6 +94,10 @@ class SignedCallFlutterMethodCallHandler(
 
             DISCONNECT_SIGNALLING_SOCKET -> {
                 disconnectSignallingSocket(result)
+            }
+
+            GET_CALL_STATE -> {
+                getCallState(result)
             }
 
             LOGOUT -> {
@@ -236,6 +243,11 @@ class SignedCallFlutterMethodCallHandler(
     override fun disconnectSignallingSocket(result: Result) {
         SignedCallAPI.getInstance().disconnectSignallingSocket(context)
         result.success(null)
+    }
+
+    override fun getCallState(result: Result) {
+        val callState = SignedCallAPI.getInstance().callController?.callState?.formattedCallState()
+        result.success(callState)
     }
 
     //Logs out the Signed Call SDK session

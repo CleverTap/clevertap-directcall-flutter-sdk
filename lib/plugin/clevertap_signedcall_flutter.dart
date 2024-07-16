@@ -1,3 +1,4 @@
+import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 
 import '../models/call_event_result.dart';
@@ -80,6 +81,11 @@ class CleverTapSignedCallFlutter {
   Future<void> disconnectSignallingSocket() {
     return CleverTapSignedCallFlutterPlatform.instance
         .disconnectSignallingSocket();
+  }
+
+  /// Retrieves the current call state.
+  Future<SCCallState?> getCallState() {
+    return CleverTapSignedCallFlutterPlatform.instance.getCallState();
   }
 
   ///Logs out the user from the Signed Call SDK session
