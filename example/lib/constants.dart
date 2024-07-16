@@ -10,7 +10,10 @@ const String keyPromptReceiverReadPhoneStatePermission =
 const String keyOverrideDefaultBranding = "overrideDefaultBranding";
 const String keyPromptPushPrimer = "promptPushPrimer";
 const String keyMissedCallActions = "missedCallActions";
-const String keyNotificationPermissionRequired = "notificationPermissionRequired";
+const String keyNotificationPermissionRequired =
+    "notificationPermissionRequired";
+const String keySwipeOffBehaviourInForegroundService =
+    "swipeOffBehaviourInForegroundService";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
+import 'package:clevertap_signedcall_flutter/models/swipe_off_behaviour.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
@@ -154,6 +155,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
             true; //optional
         initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
         initProperties[keyNotificationPermissionRequired] = false; //optional
+        initProperties[keySwipeOffBehaviourInForegroundService] =
+            SCSwipeOffBehaviour.endCall; //optional
       }
 
       ///iOS only fields

@@ -15,6 +15,7 @@ object Constants {
     const val KEY_ALLOW_PERSIST_SOCKET_CONNECTION = "allowPersistSocketConnection"
     const val KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION = "promptReceiverReadPhoneStatePermission"
     const val KEY_NOTIFICATION_PERMISSION_REQUIRED = "notificationPermissionRequired"
+    const val KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE = "swipeOffBehaviourInForegroundService"
     const val KEY_OVERRIDE_DEFAULT_BRANDING = "overrideDefaultBranding"
     const val KEY_PROMPT_PUSH_PRIMER = "promptPushPrimer"
     const val KEY_MISSED_CALL_ACTIONS = "missedCallActions"

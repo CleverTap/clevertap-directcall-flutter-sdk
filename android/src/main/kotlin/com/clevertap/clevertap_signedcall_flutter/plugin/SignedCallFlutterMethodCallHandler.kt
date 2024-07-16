@@ -3,11 +3,12 @@ package com.clevertap.clevertap_signedcall_flutter.plugin
 import android.annotation.SuppressLint
 import android.content.Context
 import com.clevertap.android.sdk.CleverTapAPI
-import com.clevertap.android.signedcall.enums.SCCallState
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour.END_CALL
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
 import com.clevertap.android.signedcall.utils.SignedCallUtils
@@ -26,6 +27,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
@@ -53,6 +55,7 @@ import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMap
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseSwipeOffBehaviourFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -183,14 +186,19 @@ class SignedCallFlutterMethodCallHandler(
             val notificationPermissionRequired =
                 initProperties.getOrElse(KEY_NOTIFICATION_PERMISSION_REQUIRED) { true } as Boolean
 
+            val swipeOffBehaviour: SCSwipeOffBehaviour = initProperties[KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE]?.let {
+                parseSwipeOffBehaviourFromInitOptions(it as String)
+            } ?: END_CALL
+
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
                     .setNotificationPermissionRequired(notificationPermissionRequired)
-                    .overrideDefaultBranding(callScreenBranding).setMissedCallActions(
-                        missedCallActionsList, missedCallActionClickHandlerPath
-                    ).build()
+                    .overrideDefaultBranding(callScreenBranding)
+                    .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
+                    .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
+                    .build()
 
             SignedCallAPI.getInstance()
                 .init(context, initConfiguration, cleverTapAPI, object : SignedCallInitResponse {

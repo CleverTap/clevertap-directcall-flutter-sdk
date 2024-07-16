@@ -20,6 +20,7 @@ import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_MISSED
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_OVER
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_RINGING
 import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.models.CallDetails
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.signedcall.models.SCCallStatusDetails
@@ -108,7 +109,7 @@ fun VoIPCallStatus.formattedCallEvent(): String {
  *
  * @return A formatted call state string.
  */
-fun SCCallState.formattedCallState(): String? {
+fun SCCallState.formattedCallState(): String {
     return when (this) {
         SCCallState.OUTGOING_CALL -> "OutgoingCall"
         SCCallState.INCOMING_CALL -> "IncomingCall"
