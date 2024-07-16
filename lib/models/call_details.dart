@@ -14,7 +14,7 @@ class CallDetails {
 
   CallDetails.fromMap(map) {
     callId = map[keyCallId];
-    channel = map[keyChannel];
+    channel = SCSignalingChannelExtension.fromString(map[keyChannel]);
     callerCuid = map[keyCallerCuid];
     calleeCuid = map[keyCalleeCuid];
     callContext = map[keyCallContext];

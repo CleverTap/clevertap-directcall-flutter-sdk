@@ -5,8 +5,10 @@ import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter
 import 'package:clevertap_signedcall_flutter_example/pages/registration_page.dart';
 import 'package:clevertap_signedcall_flutter_example/shared_preference_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import '../Utils.dart';
+import '../widgets/toggle_switch_widget.dart';
 
 class DiallerPage extends StatefulWidget {
   static const routeName = '/dialler';
@@ -21,6 +23,31 @@ class DiallerPage extends StatefulWidget {
 class _DiallerPageState extends State<DiallerPage> {
   final receiverCuidController = TextEditingController();
   final callContextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    initializeService();
+  }
+
+  void initializeService() {
+    FlutterForegroundTask.init(
+      androidNotificationOptions: AndroidNotificationOptions(
+        channelId: 'foreground_service',
+        channelName: 'Foreground Service Notification',
+        channelDescription: 'This notification appears when the foreground service is running.',
+        channelImportance: NotificationChannelImportance.LOW,
+        priority: NotificationPriority.LOW,
+      ),
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: true,
+        playSound: false,
+      ),
+      foregroundTaskOptions:const ForegroundTaskOptions(
+        isOnceEvent: true,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +83,21 @@ class _DiallerPageState extends State<DiallerPage> {
                   decoration: const InputDecoration(
                     hintText: 'Context of the call',
                   ),
+                ),
+                const SizedBox(height: 10),
+                ToggleSwitchWidget(
+                  onToggleOn: () {
+                    debugPrint('Toggle is ON: Starting duty');
+                    FlutterForegroundTask.startService(
+                      notificationTitle: 'Foreground Service is running',
+                      notificationText: 'Tap to return to the app',
+                      callback: startCallback, // Function imported from ForegroundService.dart
+                    );
+                  },
+                  onToggleOff: () {
+                    debugPrint('Toggle is OFF: Stopping duty');
+                    FlutterForegroundTask.stopService();
+                  },
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
@@ -150,9 +192,14 @@ class _DiallerPageState extends State<DiallerPage> {
     CleverTapSignedCallFlutter.shared.getBackToCall().then((bool result) {
       if (!result) {
         debugPrint(
-            "CleverTap:SignedCallFlutter: No active call, invalid operation to get back to call!");
+            "CleverTap:SignedCallFlutter: No active call, invalid operation!");
         Utils.showToast("No active call, invalid operation to get back to call!");
       }
     });
   }
+}
+
+@pragma('vm:entry-point') // This decorator means that this function calls native code
+void startCallback() {
+  debugPrint("startCallback called!");
 }

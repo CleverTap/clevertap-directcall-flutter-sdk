@@ -129,7 +129,7 @@ fun SCCallState.formattedCallState(): String {
 fun CallDetails.toMap(): Map<String, Any> {
     return mapOf(
         KEY_CALL_ID to (callId ?: ""),
-        KEY_CHANNEL to (channel ?: ""),
+        KEY_CHANNEL to (channel.channelName ?: ""),
         KEY_CALLER_CUID to (callerCuid ?: ""),
         KEY_CALLEE_CUID to (calleeCuid ?: ""),
         KEY_CALL_CONTEXT to (callContext ?: ""),

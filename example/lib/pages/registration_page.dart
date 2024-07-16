@@ -27,7 +27,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +80,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ),
             CheckboxListTile(
-              title: Text("Hide Powered by SignedCall"),
+              title: const Text("Hide Powered by SignedCall"),
               value: isPoweredByChecked,
               onChanged: (newValue) {
                 setState(() {
@@ -86,7 +88,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 });
               },
               controlAffinity:
-                  ListTileControlAffinity.leading, //  <-- leading Checkbox
+                  ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              title: const Text("Required Notification Permission"),
+              value: notificationPermissionRequired,
+              onChanged: (newValue) {
+                setState(() {
+                  notificationPermissionRequired = newValue ?? false;
+                });
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              title: const Text("Persist Call on Swipe Off in self-managed FG Service?"),
+              value: swipeOffBehaviour == SCSwipeOffBehaviour.persistCall ? true : false,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    swipeOffBehaviour = newValue
+                        ? SCSwipeOffBehaviour.persistCall
+                        : SCSwipeOffBehaviour.endCall;
+                  });
+                }
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -144,8 +172,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyAccountId: scAccountId, //required
         keyApiKey: scApiKey, //required
         keyCuid: _userCuid, //required
-        keyOverrideDefaultBranding: callScreenBranding //optional
-        // keyPromptPushPrimer: getPushPrimerJson()
+        keyOverrideDefaultBranding: callScreenBranding ,//optional
+        keyPromptPushPrimer: getPushPrimerJson()
       };
 
       ///Android only fields
@@ -154,9 +182,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         initProperties[keyPromptReceiverReadPhoneStatePermission] =
             true; //optional
         initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
-        initProperties[keyNotificationPermissionRequired] = false; //optional
+        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
         initProperties[keySwipeOffBehaviourInForegroundService] =
-            SCSwipeOffBehaviour.endCall; //optional
+            swipeOffBehaviour; //optional
       }
 
       ///iOS only fields
@@ -193,6 +221,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void processNext() {
     //save the cuid in a local session
     SharedPreferenceManager.saveLoggedInCuid(_userCuid);
+    SharedPreferenceManager.savePoweredByChecked(isPoweredByChecked);
+    SharedPreferenceManager.saveNotificationPermissionRequired(
+        notificationPermissionRequired);
+    SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -207,9 +239,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void initSCSDKIfCuIDSignedIn() {
     SharedPreferenceManager.getLoggedInCuid().then((loggedInCuid) {
-      setState(() {
+      setState(() async {
         if (loggedInCuid != null) {
           _userCuid = loggedInCuid;
+          notificationPermissionRequired =
+          await SharedPreferenceManager.getNotificationPermissionRequired();
+          isPoweredByChecked =
+          await SharedPreferenceManager.getIsPoweredByChecked();
+          swipeOffBehaviour =
+          await SharedPreferenceManager.getSwipeOffBehaviour();
+
           initSignedCallSdk(loggedInCuid);
         }
       });
