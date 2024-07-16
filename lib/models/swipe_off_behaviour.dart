@@ -6,3 +6,15 @@ enum SCSwipeOffBehaviour {
   /// Indicates the behavior where the call persists even if the user swipes off the app.
   persistCall,
 }
+
+extension SCSwipeOffBehaviourExtension on SCSwipeOffBehaviour {
+  /// Converts the enum value to its string representation.
+  String toValue() {
+    switch (this) {
+      case SCSwipeOffBehaviour.endCall:
+        return 'endCall';
+      case SCSwipeOffBehaviour.persistCall:
+        return 'persistCall';
+    }
+  }
+}

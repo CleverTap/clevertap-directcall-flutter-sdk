@@ -10,6 +10,7 @@ import '../models/call_event_result.dart';
 import '../models/call_events.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
+import '../models/swipe_off_behaviour.dart';
 import '../src/callback_dispatcher.dart';
 import '../src/handler_info.dart';
 import '../src/signed_call_logger.dart';
@@ -127,8 +128,14 @@ class MethodChannelCleverTapSignedCallFlutter
   Future<void> init(
       Map<String, dynamic> initProperties, SignedCallInitHandler initHandler) {
     _initHandler = initHandler;
-    return _methodChannel
-        .invokeMethod(SCMethodCall.init, {argInitProperties: initProperties});
+    final convertedInitProperties = initProperties.map((key, value) {
+      if (value is SCSwipeOffBehaviour) {
+        return MapEntry(key, value.toValue());
+      }
+      return MapEntry(key, value);
+    });
+    return _methodChannel.invokeMethod(
+        SCMethodCall.init, {argInitProperties: convertedInitProperties});
   }
 
   ///Initiates a VoIP call
