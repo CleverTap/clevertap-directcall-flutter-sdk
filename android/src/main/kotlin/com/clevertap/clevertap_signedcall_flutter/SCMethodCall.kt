@@ -6,6 +6,7 @@ object SCMethodCall {
     const val INIT = "init"
     const val CALL = "call"
     const val DISCONNECT_SIGNALLING_SOCKET = "disconnectSignallingSocket"
+    const val GET_BACK_TO_CALL = "getBackToCall"
     const val GET_CALL_STATE = "getCallState"
     const val LOGOUT = "logout"
     const val HANG_UP_CALL = "hangUpCall"

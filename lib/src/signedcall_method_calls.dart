@@ -4,6 +4,7 @@ class SCMethodCall {
   static const String init = "init";
   static const String call = "call";
   static const String disconnectSignallingSocket = "disconnectSignallingSocket";
+  static const String getBackToCall = "getBackToCall";
   static const String getCallState = "getCallState";
   static const String logout = "logout";
   static const String hangUpCall = "hangUpCall";

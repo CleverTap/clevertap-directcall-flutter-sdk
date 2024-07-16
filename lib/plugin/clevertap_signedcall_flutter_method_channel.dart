@@ -159,6 +159,15 @@ class MethodChannelCleverTapSignedCallFlutter
     return _methodChannel.invokeMethod(SCMethodCall.disconnectSignallingSocket);
   }
 
+  /// Attempts to return to the active call screen.
+  /// It checks if there is an active call and if the client is on a VoIP call.
+  /// If the both conditions are met, it launches the call screen
+  @override
+  Future<bool> getBackToCall() async {
+    var result = await _methodChannel.invokeMethod(SCMethodCall.getBackToCall);
+    return result;
+  }
+
   /// Retrieves the current call state.
   @override
   Future<SCCallState?> getCallState() async {

@@ -83,6 +83,13 @@ class CleverTapSignedCallFlutter {
         .disconnectSignallingSocket();
   }
 
+  /// Attempts to return to the active call screen.
+  /// It checks if there is an active call and if the client is on a VoIP call.
+  /// If the both conditions are met, it launches the call screen
+  Future<bool> getBackToCall() {
+    return CleverTapSignedCallFlutterPlatform.instance.getBackToCall();
+  }
+
   /// Retrieves the current call state.
   Future<SCCallState?> getCallState() {
     return CleverTapSignedCallFlutterPlatform.instance.getCallState();

@@ -4,7 +4,6 @@ import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/pages/registration_page.dart';
 import 'package:clevertap_signedcall_flutter_example/shared_preference_manager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils.dart';
@@ -85,6 +84,16 @@ class _DiallerPageState extends State<DiallerPage> {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
+                    getBackToCall();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  ),
+                  child: const Text('Get Back to Call'),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
                     logoutSession();
                   },
                   style: ButtonStyle(
@@ -135,5 +144,15 @@ class _DiallerPageState extends State<DiallerPage> {
     CleverTapSignedCallFlutter.shared.logout();
     SharedPreferenceManager.clearData();
     Navigator.pushNamed(context, RegistrationPage.routeName);
+  }
+
+  void getBackToCall()  {
+    CleverTapSignedCallFlutter.shared.getBackToCall().then((bool result) {
+      if (!result) {
+        debugPrint(
+            "CleverTap:SignedCallFlutter: No active call, invalid operation to get back to call!");
+        Utils.showToast("No active call, invalid operation to get back to call!");
+      }
+    });
   }
 }

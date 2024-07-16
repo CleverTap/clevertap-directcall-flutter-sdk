@@ -29,6 +29,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
+import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_BACK_TO_CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_CALL_STATE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.INIT
@@ -94,6 +95,10 @@ class SignedCallFlutterMethodCallHandler(
 
             DISCONNECT_SIGNALLING_SOCKET -> {
                 disconnectSignallingSocket(result)
+            }
+
+            GET_BACK_TO_CALL -> {
+                getBackToCall(result)
             }
 
             GET_CALL_STATE -> {
@@ -243,6 +248,11 @@ class SignedCallFlutterMethodCallHandler(
     override fun disconnectSignallingSocket(result: Result) {
         SignedCallAPI.getInstance().disconnectSignallingSocket(context)
         result.success(null)
+    }
+
+    override fun getBackToCall(result: Result) {
+        val success = SignedCallAPI.getInstance().callController?.getBackToCall(context)
+        result.success(success)
     }
 
     override fun getCallState(result: Result) {
