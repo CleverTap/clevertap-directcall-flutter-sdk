@@ -20,7 +20,6 @@ import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_MISSED
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_OVER
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALL_RINGING
 import com.clevertap.android.signedcall.init.SignedCallAPI
-import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.models.CallDetails
 import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.signedcall.models.SCCallStatusDetails
@@ -31,6 +30,8 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLEE_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALLER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_DETAILS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_ID
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CHANNEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INITIATOR_IMAGE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_IMAGE
 
@@ -127,10 +128,12 @@ fun SCCallState.formattedCallState(): String {
  */
 fun CallDetails.toMap(): Map<String, Any> {
     return mapOf(
+        KEY_CALL_ID to (callId ?: ""),
+        KEY_CHANNEL to (channel ?: ""),
         KEY_CALLER_CUID to (callerCuid ?: ""),
         KEY_CALLEE_CUID to (calleeCuid ?: ""),
         KEY_CALL_CONTEXT to (callContext ?: ""),
         KEY_INITIATOR_IMAGE to initiatorImage,
-        KEY_RECEIVER_IMAGE to receiverImage
+        KEY_RECEIVER_IMAGE to receiverImage,
     )
 }

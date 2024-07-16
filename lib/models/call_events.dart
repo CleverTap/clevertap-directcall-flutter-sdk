@@ -11,7 +11,7 @@ enum CallEvent {
   // Indicates that the call is cancelled from the initiator's end
   cancelled,
 
-  // Indicates that the call is cancelled due to a ring timeout
+  // Indicates that the call is cancelled due to a ring timeout (35 secs)
   cancelledDueToRingTimeout,
 
   // Indicates that the call is declined from the receiver's end

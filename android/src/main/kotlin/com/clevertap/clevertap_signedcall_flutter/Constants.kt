@@ -38,6 +38,8 @@ object Constants {
     const val KEY_ACTION_ID = "actionId"
     const val KEY_ACTION_LABEL = "actionLabel"
     const val KEY_CALL_DETAILS = "callDetails"
+    const val KEY_CALL_ID = "callId"
+    const val KEY_CHANNEL = "channel"
     const val KEY_CALLER_CUID = "callerCuid"
     const val KEY_CALLEE_CUID = "calleeCuid"
     const val DISPATCHER_HANDLE = "pluginCallbackHandle"
