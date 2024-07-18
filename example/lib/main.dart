@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
+import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -14,8 +15,13 @@ import 'Utils.dart';
 @pragma('vm:entry-point')
 void backgroundCallEventHandler(CallEventResult result) async {
   debugPrint(
-      "backgroundCallEventHandler called from headless task with payload: $result");
+      "backgroundCallEventHandler called from headless task with payload1: $result");
   Utils.showToast("${result.callEvent} is called!" );
+
+  getCallState().then((value) => {
+    debugPrint(
+        "CleverTap:SignedCallFlutter: CallState in killed state is: => $value")
+  });
 }
 
 @pragma('vm:entry-point')
@@ -33,6 +39,12 @@ void main() {
   CleverTapSignedCallFlutter.shared.onBackgroundMissedCallActionClicked(
       backgroundMissedCallActionClickedHandler);
   runApp(const MyApp());
+}
+
+Future<SCCallState?> getCallState() async {
+  SCCallState? callState =
+  await CleverTapSignedCallFlutter.shared.getCallState();
+  return callState;
 }
 
 class MyApp extends StatefulWidget {
@@ -73,9 +85,18 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((result) {
+      getCallState().then((value) => {
+            debugPrint(
+                "CleverTap:SignedCallFlutter: Current CallState is: => $value")
+          });
+
       debugPrint(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${result.toString()}");
-      Utils.showToast("${result.callEvent} is called!" );
+      var callDetails = result.callDetails;
+      var callId = callDetails.callId;
+      var channel = callDetails.channel;
+
+      Utils.showToast("${callId?.substring(0, 3)}, ${channel.toString()}, ${result.callEvent.toString()} is called!");
       if (result.callEvent == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }
