@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,7 @@ import '../models/call_event_result.dart';
 import '../models/call_events.dart';
 import '../models/log_level.dart';
 import '../models/signed_call_error.dart';
+import '../models/swipe_off_behaviour.dart';
 import '../src/callback_dispatcher.dart';
 import '../src/handler_info.dart';
 import '../src/signed_call_logger.dart';
@@ -126,8 +128,14 @@ class MethodChannelCleverTapSignedCallFlutter
   Future<void> init(
       Map<String, dynamic> initProperties, SignedCallInitHandler initHandler) {
     _initHandler = initHandler;
-    return _methodChannel
-        .invokeMethod(SCMethodCall.init, {argInitProperties: initProperties});
+    final convertedInitProperties = initProperties.map((key, value) {
+      if (value is SCSwipeOffBehaviour) {
+        return MapEntry(key, value.toValue());
+      }
+      return MapEntry(key, value);
+    });
+    return _methodChannel.invokeMethod(
+        SCMethodCall.init, {argInitProperties: convertedInitProperties});
   }
 
   ///Initiates a VoIP call
@@ -156,6 +164,22 @@ class MethodChannelCleverTapSignedCallFlutter
   @override
   Future<void> disconnectSignallingSocket() {
     return _methodChannel.invokeMethod(SCMethodCall.disconnectSignallingSocket);
+  }
+
+  /// Attempts to return to the active call screen.
+  /// It checks if there is an active call and if the client is on a VoIP call.
+  /// If the both conditions are met, it launches the call screen
+  @override
+  Future<bool> getBackToCall() async {
+    var result = await _methodChannel.invokeMethod(SCMethodCall.getBackToCall);
+    return result;
+  }
+
+  /// Retrieves the current call state.
+  @override
+  Future<SCCallState?> getCallState() async {
+    var result = await _methodChannel.invokeMethod(SCMethodCall.getCallState);
+    return SCCallState.fromString(result);
   }
 
   ///Logs out the user from the Signed Call SDK session

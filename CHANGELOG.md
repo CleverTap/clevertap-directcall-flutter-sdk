@@ -1,5 +1,26 @@
 ## CHANGE LOG
 
+### Version 0.0.6 (July 18, 2024)
+-------------------------------------------
+
+**What's new**
+* **[Android Platform]**
+  * **Call Delivery Confirmation**:
+    * SDK displays the call delivery confirmation at the initiator by changing the *Calling...* state to the *Ringing...* state when the phone starts ringing at the receiver's end.
+  * **New Callback events support in the `callStatus(SCCallStatusDetails callDetails)` callback**:
+    * `VoIPCallStatus.CALL_RINGING`: Allows to determine that the call starts ringing on the receiver's device. This event is reported when the SDK successfully establishes communication with the receiver and the phone rings.
+    * `VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_BLOCKED`: Allows to determine the SDK-initiated decline cases when the microphone permission is blocked at the receiver's end.
+    * `VoIPCallStatus.CALL_FAILED_DUE_TO_INTERNAL_ERROR`: Allows to determine the call failure cases. Possible reasons could include low internet connectivity, low RAM available on device, SDK fails to set up the voice channel within the time limit, etc. Considering the nature of the failure, in most cases, retrying the calls will succeed.
+  * Exposes `channel` object in the `callStatus(SCCallStatusDetails callDetails)` callback. Use this to identify which signaling channel was used during the Signed Call. It could be either **Socket** or **FCM**.
+
+**Bug Fixes**
+* **[Android Platform]**
+  * Fixed an issue where the receiver accepted the call, but the call did not transition to the ongoing call state.
+
+#### Enhancements
+* **[Android Platform]**
+  * Added safeguard handling to prevent duplication in the system events which SDK records and external callback reporting.
+
 ### Version 0.0.5 (May 16, 2024 )
 -------------------------------------------
 
