@@ -6,7 +6,7 @@ import 'call_events.dart';
 class CallEventResult {
   late final CallDirection direction;
   late final CallDetails callDetails;
-  late final CallEvent? callEvent;
+  late final CallEvent callEvent;
 
   CallEventResult.fromMap(Map resultMap) {
     direction = resultMap[keyDirection] == 'INCOMING'
@@ -15,7 +15,7 @@ class CallEventResult {
 
     callDetails = CallDetails.fromMap(resultMap[keyCallDetails] ?? {});
 
-    callEvent = CallEvent.fromString(resultMap[keyCallEvent] ?? '');
+    callEvent = CallEvent.fromString(resultMap[keyCallEvent]);
   }
 
   @override

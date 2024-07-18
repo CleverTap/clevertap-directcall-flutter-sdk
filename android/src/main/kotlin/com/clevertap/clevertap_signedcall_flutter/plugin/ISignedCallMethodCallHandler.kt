@@ -38,21 +38,6 @@ interface ISignedCallMethodCallHandler {
     fun disconnectSignallingSocket(result: MethodChannel.Result)
 
     /**
-     * Attempts to return to the active call screen.
-     *
-     * It checks if there is an active call and if the client is on a VoIP call.
-     * If the both conditions are met, it launches the call screen.
-     */
-    fun getBackToCall(result: MethodChannel.Result)
-
-    /**
-     * Retrieves the current call state.
-     *
-     * @return The current call state.
-     */
-    fun getCallState(result: MethodChannel.Result)
-
-    /**
      * Defines implementation to logout the Signed Call SDK session
      */
     fun logout(result: MethodChannel.Result)

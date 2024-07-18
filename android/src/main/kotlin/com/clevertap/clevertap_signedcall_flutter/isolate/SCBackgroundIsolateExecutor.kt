@@ -18,7 +18,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.view.FlutterCallbackInformation
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -28,42 +27,34 @@ import java.util.concurrent.atomic.AtomicBoolean
 class SCBackgroundIsolateExecutor : MethodCallHandler {
 
     companion object {
+
         private const val TAG = "SCBackgroundIsolateExecutor"
     }
 
     private val isCallbackDispatcherReady = AtomicBoolean(false)
-    private val isProcessingPayload = AtomicBoolean(false)
-    private val isInitializing = AtomicBoolean(false)
-    private val isInitialized = AtomicBoolean(false)
     private var backgroundFlutterEngine: FlutterEngine? = null
     private lateinit var backgroundChannel: MethodChannel
 
-    private val payloadQueue = ConcurrentLinkedQueue<Pair<String, Map<String, Any>>>()
+    private var currentMethodName: String? = null
+    private var currentPayloadMap: Map<String, Any>? = null
 
     /**
      * Starts running a background Dart isolate within a new [FlutterEngine] using a previously
      * used entrypoint.
      */
     fun startBackgroundIsolate(context: Context, methodName: String, payloadMap: Map<String, Any>) {
-        payloadQueue.offer(Pair(methodName, payloadMap))
-        if (isInitialized.get()) {
-            processNextPayload(context)
-        } else if (isInitializing.compareAndSet(false, true)) {
-            initializeBackgroundIsolate(context)
-        }
-    }
+        currentMethodName = methodName
+        currentPayloadMap = payloadMap
 
-    /**
-     * Initializes the background Dart isolate.
-     */
-    private fun initializeBackgroundIsolate(context: Context) {
-        if (isCallbackDispatcherReady.get()) {
-            processNextPayload(context)
-            return
-        }
-        val callbackHandle = getPluginCallbackHandle(context)
-        if (callbackHandle != 0L) {
-            startBackgroundIsolate(context, callbackHandle, null)
+        if (isNotRunning()) {
+            log(TAG, "Starting a background isolate!")
+            val callbackHandle = getPluginCallbackHandle(context)
+            if (callbackHandle != 0L) {
+                startBackgroundIsolate(context, callbackHandle, null)
+            }
+        } else {
+            log(TAG, "A background isolate is already running, using it to execute the Dart callback!")
+            executeDartCallbackInBackgroundIsolate(context, currentMethodName, currentPayloadMap)
         }
     }
 
@@ -136,7 +127,6 @@ class SCBackgroundIsolateExecutor : MethodCallHandler {
     ) {
         if (backgroundFlutterEngine == null) {
             log(TAG, "A background message could not be handled in Dart as no background isolate has been created")
-            isProcessingPayload.set(false)
             return
         }
 
@@ -148,13 +138,9 @@ class SCBackgroundIsolateExecutor : MethodCallHandler {
                         "userCallbackHandle" to userCallbackHandle, "payload" to (payloadMap ?: emptyMap())
                     )
                 )
-                isProcessingPayload.set(false)
-                processNextPayload(context)
             }
         } catch (e: Exception) {
             log(TAG, "Failed to invoke the '$methodName' dart callback. ${e.localizedMessage}")
-            isProcessingPayload.set(false)
-            processNextPayload(context)
         }
     }
 
@@ -180,23 +166,9 @@ class SCBackgroundIsolateExecutor : MethodCallHandler {
     private fun onInitialized() {
         Log.i(TAG, "BackgroundCallbackDispatcher is initialized to receive a user's DartCallback request!")
         isCallbackDispatcherReady.set(true)
-        isInitialized.set(true)
-        isInitializing.set(false)
-        processNextPayload(SCAppContextHolder.getApplicationContext()!!)
-    }
-
-    /**
-     * Processes the next payload in the queue.
-     */
-    private fun processNextPayload(context: Context) {
-        if (isProcessingPayload.get() || payloadQueue.isEmpty()) return
-
-        val payload = payloadQueue.poll()
-        if (payload != null) {
-            val (methodName, payloadMap) = payload
-            isProcessingPayload.set(true)
-            executeDartCallbackInBackgroundIsolate(context, methodName, payloadMap)
-        }
+        executeDartCallbackInBackgroundIsolate(
+            SCAppContextHolder.getApplicationContext()!!, currentMethodName, currentPayloadMap
+        )
     }
 
     /**
