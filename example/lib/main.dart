@@ -15,10 +15,13 @@ import 'Utils.dart';
 @pragma('vm:entry-point')
 void backgroundCallEventHandler(CallEventResult result) async {
   debugPrint(
-      "backgroundCallEventHandler called from headless task with payload: $result");
+      "backgroundCallEventHandler called from headless task with payload1: $result");
   Utils.showToast("${result.callEvent} is called!" );
 
-  debugPrint("CallState in killed state is: => ${getCallState()}");
+  getCallState().then((value) => {
+    debugPrint(
+        "CleverTap:SignedCallFlutter: CallState in killed state is: => $value")
+  });
 }
 
 @pragma('vm:entry-point')
@@ -82,11 +85,18 @@ class _MyAppState extends State<MyApp> {
   void _startObservingCallEvents() {
     _callEventSubscription =
         CleverTapSignedCallFlutter.shared.callEventListener.listen((result) {
-      debugPrint("Current CallState is: => ${getCallState()}");
+      getCallState().then((value) => {
+            debugPrint(
+                "CleverTap:SignedCallFlutter: Current CallState is: => $value")
+          });
 
       debugPrint(
           "CleverTap:SignedCallFlutter: received callEvent stream with ${result.toString()}");
-      Utils.showToast("${result.callEvent} is called!");
+      var callDetails = result.callDetails;
+      var callId = callDetails.callId;
+      var channel = callDetails.channel;
+
+      Utils.showToast("${callId?.substring(0, 3)}, ${channel.toString()}, ${result.callEvent.toString()} is called!");
       if (result.callEvent == CallEvent.callInProgress) {
         //_startCallDurationMeterToEndCall();
       }

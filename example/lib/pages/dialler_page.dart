@@ -91,7 +91,7 @@ class _DiallerPageState extends State<DiallerPage> {
                     FlutterForegroundTask.startService(
                       notificationTitle: 'Foreground Service is running',
                       notificationText: 'Tap to return to the app',
-                      callback: startCallback, // Function imported from ForegroundService.dart
+                      callback: startCallback
                     );
                   },
                   onToggleOff: () {
