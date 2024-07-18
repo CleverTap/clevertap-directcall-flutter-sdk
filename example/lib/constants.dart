@@ -1,5 +1,5 @@
-const String scAccountId = "663dc7b83c9513787404205f";
-const String scApiKey = "PJ2klWx7Ej7uyYOdbKSa4nYWze9Hth3FAl4fCv9IKp5hDEeFLRWIkMWEHyyTFl1L";
+const String scAccountId = "YOUR_ACCOUNT_ID";
+const String scApiKey = "YOUR_API_KEY";
 const String keyAccountId = "accountId";
 const String keyApiKey = "apiKey";
 const String keyCuid = "cuid";
