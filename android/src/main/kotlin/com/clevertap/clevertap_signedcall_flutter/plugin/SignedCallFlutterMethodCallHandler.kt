@@ -7,8 +7,6 @@ import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
-import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
-import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour.END_CALL
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
 import com.clevertap.android.signedcall.utils.SignedCallUtils
@@ -22,18 +20,14 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
-import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_NOTIFICATION_PERMISSION_REQUIRED
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_READ_PHONE_STATE_PERMISSION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
-import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_BACK_TO_CALL
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_CALL_STATE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.HANG_UP_CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.INIT
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGGING
@@ -43,7 +37,6 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DI
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
-import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
@@ -55,7 +48,6 @@ import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMap
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
-import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseSwipeOffBehaviourFromInitOptions
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.Result
@@ -99,14 +91,6 @@ class SignedCallFlutterMethodCallHandler(
 
             DISCONNECT_SIGNALLING_SOCKET -> {
                 disconnectSignallingSocket(result)
-            }
-
-            GET_BACK_TO_CALL -> {
-                getBackToCall(result)
-            }
-
-            GET_CALL_STATE -> {
-                getCallState(result)
             }
 
             LOGOUT -> {
@@ -183,22 +167,13 @@ class SignedCallFlutterMethodCallHandler(
             val missedCallActionClickHandlerPath =
                 MissedCallActionClickHandler::class.java.canonicalName
 
-            val notificationPermissionRequired =
-                initProperties.getOrElse(KEY_NOTIFICATION_PERMISSION_REQUIRED) { true } as Boolean
-
-            val swipeOffBehaviour: SCSwipeOffBehaviour = initProperties[KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE]?.let {
-                parseSwipeOffBehaviourFromInitOptions(it as String)
-            } ?: END_CALL
-
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
-                    .setNotificationPermissionRequired(notificationPermissionRequired)
-                    .overrideDefaultBranding(callScreenBranding)
-                    .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
-                    .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
-                    .build()
+                    .overrideDefaultBranding(callScreenBranding).setMissedCallActions(
+                        missedCallActionsList, missedCallActionClickHandlerPath
+                    ).build()
 
             SignedCallAPI.getInstance()
                 .init(context, initConfiguration, cleverTapAPI, object : SignedCallInitResponse {
@@ -261,16 +236,6 @@ class SignedCallFlutterMethodCallHandler(
     override fun disconnectSignallingSocket(result: Result) {
         SignedCallAPI.getInstance().disconnectSignallingSocket(context)
         result.success(null)
-    }
-
-    override fun getBackToCall(result: Result) {
-        val success = SignedCallAPI.getInstance().callController?.getBackToCall(context)
-        result.success(success)
-    }
-
-    override fun getCallState(result: Result) {
-        val callState = SignedCallAPI.getInstance().callController?.callState?.formattedCallState()
-        result.success(callState)
     }
 
     //Logs out the Signed Call SDK session

@@ -1,4 +1,3 @@
-import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 
 import '../models/call_event_result.dart';
@@ -14,7 +13,7 @@ class CleverTapSignedCallFlutter {
   static CleverTapSignedCallFlutter get shared => _shared;
 
   static const sdkName = 'ctscsdkversion-flutter';
-  static const sdkVersion = 00006; /// If the current version is X.X.X then pass as X0X0X
+  static const sdkVersion = 00005; /// If the current version is X.X.X then pass as X0X0X
 
   /// This is a private named constructor.
   /// It'll be called exactly once only in this class,
@@ -81,18 +80,6 @@ class CleverTapSignedCallFlutter {
   Future<void> disconnectSignallingSocket() {
     return CleverTapSignedCallFlutterPlatform.instance
         .disconnectSignallingSocket();
-  }
-
-  /// Attempts to return to the active call screen.
-  /// It checks if there is an active call and if the client is on a VoIP call.
-  /// If the both conditions are met, it launches the call screen
-  Future<bool> getBackToCall() {
-    return CleverTapSignedCallFlutterPlatform.instance.getBackToCall();
-  }
-
-  /// Retrieves the current call state.
-  Future<SCCallState?> getCallState() {
-    return CleverTapSignedCallFlutterPlatform.instance.getCallState();
   }
 
   ///Logs out the user from the Signed Call SDK session

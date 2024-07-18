@@ -8,7 +8,6 @@ import com.clevertap.android.sdk.inapp.CTLocalInApp
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
-import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.models.MissedCallAction
 import com.clevertap.android.signedcall.models.SignedCallScreenBranding
 import com.clevertap.clevertap_signedcall_flutter.Constants
@@ -110,17 +109,6 @@ object Utils {
                 it.first as String?,
                 it.second as String?
             )
-        }
-    }
-
-    /**
-     * Retrieves the swipeOffBehaviour from the given initProperties object and parses to the instance of [SCSwipeOffBehaviour]
-     */
-    fun parseSwipeOffBehaviourFromInitOptions(swipeOffBehaviour: String): SCSwipeOffBehaviour {
-        return if (swipeOffBehaviour == "persistCall") {
-            SCSwipeOffBehaviour.PERSIST_CALL
-        } else {
-            SCSwipeOffBehaviour.END_CALL
         }
     }
 
