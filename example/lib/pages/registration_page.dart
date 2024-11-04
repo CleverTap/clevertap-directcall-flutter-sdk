@@ -27,7 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true, networkCheckBeforeOutgoingCallScreen = false;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
 
   @override
@@ -116,6 +116,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controlAffinity:
               ListTileControlAffinity.leading,
             ),
+            CheckboxListTile(
+              title: const Text("Check Network Before Outgoing Call Screen"),
+              value: networkCheckBeforeOutgoingCallScreen,
+              onChanged: (newValue) {
+                setState(() {
+                  networkCheckBeforeOutgoingCallScreen = newValue ?? false;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -185,6 +195,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
         initProperties[keySwipeOffBehaviourInForegroundService] =
             swipeOffBehaviour; //optional
+        initProperties[keyNetworkCheckBeforeOutgoingCallScreen] = networkCheckBeforeOutgoingCallScreen; //optional
       }
 
       ///iOS only fields
@@ -225,6 +236,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveNotificationPermissionRequired(
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
+    SharedPreferenceManager.saveNetworkCheckBeforeOutgoingCallScreen(networkCheckBeforeOutgoingCallScreen);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -248,6 +260,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           await SharedPreferenceManager.getIsPoweredByChecked();
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
+          networkCheckBeforeOutgoingCallScreen = await SharedPreferenceManager.getNetworkCheckBeforeOutgoingCallScreen();
 
           initSignedCallSdk(loggedInCuid);
         }

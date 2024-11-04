@@ -22,6 +22,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_NETWORK_CHECK_BEFORE_OUTGOING_CALL_SCREEN
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_NOTIFICATION_PERMISSION_REQUIRED
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_OVERRIDE_DEFAULT_BRANDING
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_PUSH_PRIMER
@@ -190,6 +191,9 @@ class SignedCallFlutterMethodCallHandler(
                 parseSwipeOffBehaviourFromInitOptions(it as String)
             } ?: END_CALL
 
+            val networkCheckBeforeOutgoingCallScreen =
+                initProperties.getOrElse(KEY_NETWORK_CHECK_BEFORE_OUTGOING_CALL_SCREEN) { false } as Boolean
+
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
@@ -198,6 +202,7 @@ class SignedCallFlutterMethodCallHandler(
                     .overrideDefaultBranding(callScreenBranding)
                     .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
                     .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
+                    .networkCheckBeforeOutgoingCallScreen(networkCheckBeforeOutgoingCallScreen)
                     .build()
 
             SignedCallAPI.getInstance()

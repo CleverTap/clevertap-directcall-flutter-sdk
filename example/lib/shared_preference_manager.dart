@@ -45,6 +45,16 @@ class SharedPreferenceManager {
     return SCSwipeOffBehaviourExtension.fromValue(behaviourString);
   }
 
+  static Future<bool> saveNetworkCheckBeforeOutgoingCallScreen(bool isChecked) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(keyNetworkCheckBeforeOutgoingCallScreen, isChecked);
+  }
+
+  static Future<bool> getNetworkCheckBeforeOutgoingCallScreen() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(keyNetworkCheckBeforeOutgoingCallScreen) ?? true;
+  }
+
   static clearData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(keyLoggedInCuid);
