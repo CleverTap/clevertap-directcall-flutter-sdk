@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
@@ -29,6 +30,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isLoadingVisible = false;
   bool isPoweredByChecked = false, notificationPermissionRequired = true;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
+  String cancelCountdownColor = '#F5FA55';
 
   @override
   void initState() {
@@ -116,6 +118,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controlAffinity:
               ListTileControlAffinity.leading,
             ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  cancelCountdownColor = getRandomHexColor();
+                });
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Color(int.parse(cancelCountdownColor.replaceFirst('#', '0xff'))),
+                shape: const RoundedRectangleBorder( borderRadius: BorderRadius.zero),
+              ),
+              child: const Text('Switch Color for Cancel Countdown Timer'),
+            ),
+
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -158,7 +173,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: !isPoweredByChecked
+        keyShowPoweredBySignedCall: !isPoweredByChecked,
+        keyCancelCountdownColor: cancelCountdownColor
       };
 
       const missedCallActionsMap = {
@@ -284,5 +300,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
       'negativeBtnText': 'Cancel',
       'fallbackToSettings': true
     };
+  }
+
+  String getRandomHexColor() {
+    final random = Random();
+
+    int red = random.nextInt(256);
+    int green = random.nextInt(256);
+    int blue = random.nextInt(256);
+
+    String toHex(int value) => value.toRadixString(16).padLeft(2, '0');
+
+    return '#${toHex(red)}${toHex(green)}${toHex(blue)}';
   }
 }
