@@ -34,6 +34,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_ID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CHANNEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INITIATOR_IMAGE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_IMAGE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_REMOTE_CONTEXT
 
 /**
  * Parses the [MissedCallNotificationOpenResult] instance to a map object
@@ -135,5 +136,6 @@ fun CallDetails.toMap(): Map<String, Any> {
         KEY_CALL_CONTEXT to (callContext ?: ""),
         KEY_INITIATOR_IMAGE to initiatorImage,
         KEY_RECEIVER_IMAGE to receiverImage,
+        KEY_REMOTE_CONTEXT to remoteContext
     )
 }
