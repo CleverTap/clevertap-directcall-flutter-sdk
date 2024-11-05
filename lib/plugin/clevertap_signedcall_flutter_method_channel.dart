@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:clevertap_signedcall_flutter/models/call_state.dart';
+import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/src/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -130,6 +131,8 @@ class MethodChannelCleverTapSignedCallFlutter
     _initHandler = initHandler;
     final convertedInitProperties = initProperties.map((key, value) {
       if (value is SCSwipeOffBehaviour) {
+        return MapEntry(key, value.toValue());
+      } else if (value is FCMProcessingMode) {
         return MapEntry(key, value.toValue());
       }
       return MapEntry(key, value);

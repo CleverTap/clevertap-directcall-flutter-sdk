@@ -14,6 +14,18 @@ const String keyNotificationPermissionRequired =
     "notificationPermissionRequired";
 const String keySwipeOffBehaviourInForegroundService =
     "swipeOffBehaviourInForegroundService";
+const String keyFCMProcessingMode =
+    "FCMProcessingMode";
+const String keyFCMNotification =
+    "FCMNotification";
+const String keyFCMNotificationTitle =
+    "FCMNotificationTitle";
+const String keyFCMNotificationSubtitle =
+    "FCMNotificationSubtitle";
+const String keyFCMNotificationLargeIcon =
+    "FCMNotificationLargeIcon";
+const String keyFCMNotificationCancelCtaLabel =
+    "FCMNotificationCancelCtaLabel";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

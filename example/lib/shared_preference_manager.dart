@@ -1,3 +1,4 @@
+import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/models/swipe_off_behaviour.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,6 +44,17 @@ class SharedPreferenceManager {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final behaviourString = prefs.getString(keySwipeOffBehaviour) ?? SCSwipeOffBehaviour.endCall.toValue();
     return SCSwipeOffBehaviourExtension.fromValue(behaviourString);
+  }
+
+  static Future<bool> saveFCMProcessingMode(FCMProcessingMode fcmProcessingMode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(keyFCMProcessingMode, fcmProcessingMode.toValue());
+  }
+
+  static Future<FCMProcessingMode> getFCMProcessingMode() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final processingModeString = prefs.getString(keyFCMProcessingMode) ?? FCMProcessingMode.background.toValue();
+    return FCMPocessingModeExtentsion.fromValue(processingModeString);
   }
 
   static clearData() async {

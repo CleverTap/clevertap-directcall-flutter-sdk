@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/models/swipe_off_behaviour.dart';
+import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
@@ -29,6 +30,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isLoadingVisible = false;
   bool isPoweredByChecked = false, notificationPermissionRequired = true;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
+  FCMProcessingMode fcmProcessingMode = FCMProcessingMode.background;
+  bool isForegroundServiceChecked = false;
+  final titleController = TextEditingController();
+  final subtitleController = TextEditingController();
+  final cancelCTALabelController = TextEditingController();
 
   @override
   void initState() {
@@ -61,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             const Text(
               'USER-REGISTRATION',
               // textAlign: TextAlign.center,
@@ -69,10 +75,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             Image.asset(
               'assets/clevertap-logo.png',
-              height: 200,
-              width: 200,
+              height: 100,
+              width: 100,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             TextField(
               controller: cuidController,
               decoration: const InputDecoration(
@@ -116,7 +122,52 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controlAffinity:
               ListTileControlAffinity.leading,
             ),
-            const SizedBox(height: 20),
+            CheckboxListTile(
+              title: const Text("Use Foreground Service for processing FCM?"),
+              value: isForegroundServiceChecked,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    isForegroundServiceChecked = newValue;
+                  });
+                }
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            // Show text input fields when the checkbox is checked
+            if (isForegroundServiceChecked) ...[
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                        hintText: 'FCM Notif Title',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Spacer between the fields
+                  Expanded(
+                    child: TextField(
+                      controller: subtitleController,
+                      decoration: const InputDecoration(
+                        hintText: 'FCM Notif Subtitle',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              TextField(
+                controller: cancelCTALabelController,
+                decoration: const InputDecoration(
+                  hintText: 'FCM Notif Cancel CTA Label',
+                ),
+              ),
+            ],
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 Utils.dismissKeyboard(context);
@@ -178,13 +229,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       ///Android only fields
       if (Platform.isAndroid) {
-        initProperties[keyAllowPersistSocketConnection] = true; //required
-        initProperties[keyPromptReceiverReadPhoneStatePermission] =
-            true; //optional
-        initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
-        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
-        initProperties[keySwipeOffBehaviourInForegroundService] =
-            swipeOffBehaviour; //optional
+        initProperties[keyAllowPersistSocketConnection] = true; // required
+        initProperties[keyPromptReceiverReadPhoneStatePermission] = true; // optional
+        initProperties[keyMissedCallActions] = missedCallActionsMap; // optional
+        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; // optional
+        initProperties[keySwipeOffBehaviourInForegroundService] = swipeOffBehaviour; // optional
+        initProperties[keyFCMProcessingMode] = fcmProcessingMode; // optional
+
+        if (fcmProcessingMode == FCMProcessingMode.foreground) {
+          final Map<String, dynamic> fcmNotification = {
+            keyFCMNotificationTitle: titleController.text, // Use input from the title field
+            keyFCMNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
+            keyFCMNotificationLargeIcon: "iconname", // optional
+            keyFCMNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
+          };
+          initProperties[keyFCMNotification] = fcmNotification; // optional
+        }
       }
 
       ///iOS only fields
@@ -225,6 +285,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveNotificationPermissionRequired(
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
+    SharedPreferenceManager.saveFCMProcessingMode(fcmProcessingMode);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,

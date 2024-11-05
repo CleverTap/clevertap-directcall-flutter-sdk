@@ -7,8 +7,10 @@ import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.FCMProcessingMode
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour.END_CALL
+import com.clevertap.android.signedcall.init.p2p.FCMProcessingNotification
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
 import com.clevertap.android.signedcall.utils.SignedCallUtils
@@ -19,6 +21,8 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_ALLOW_PERSIST_SO
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_CONTEXT
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_OPTIONS
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_PROPERTIES
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_PROCESSING_MODE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INIT_PROPERTIES
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOG_LEVEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_MISSED_CALL_ACTIONS
@@ -52,6 +56,8 @@ import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferenc
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseFCMProcessingModeFromInitOptions
+import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseFCMProcessingNotificationFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
@@ -190,6 +196,16 @@ class SignedCallFlutterMethodCallHandler(
                 parseSwipeOffBehaviourFromInitOptions(it as String)
             } ?: END_CALL
 
+            val fcmProcessingMode: FCMProcessingMode = initProperties[KEY_FCM_PROCESSING_MODE]?.let {
+                parseFCMProcessingModeFromInitOptions(it as String)
+            } ?: FCMProcessingMode.FOREGROUND
+
+            val fcmProcessingNotification: FCMProcessingNotification? = initProperties[KEY_FCM_NOTIFICATION]?.let {
+                if (context != null)
+                    parseFCMProcessingNotificationFromInitOptions(it as Map<*, *>, context)
+                else null
+            }
+
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
@@ -198,6 +214,7 @@ class SignedCallFlutterMethodCallHandler(
                     .overrideDefaultBranding(callScreenBranding)
                     .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
                     .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
+                    .setFCMProcessingMode(fcmProcessingMode, fcmProcessingNotification)
                     .build()
 
             SignedCallAPI.getInstance()
