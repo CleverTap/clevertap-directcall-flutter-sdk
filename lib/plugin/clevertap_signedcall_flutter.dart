@@ -1,3 +1,4 @@
+import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 
@@ -66,6 +67,14 @@ class CleverTapSignedCallFlutter {
   Stream<MissedCallActionClickResult> get missedCallActionClickListener =>
       CleverTapSignedCallFlutterPlatform.instance.missedCallActionClickListener;
 
+  ///Returns the listener to listen the fcm notification click stream
+  Stream<CallDetails> get fcmNotificationClickListener =>
+      CleverTapSignedCallFlutterPlatform.instance.fcmNotificationClickListener;
+
+  ///Returns the listener to listen the fcm notification cancel CTA click stream
+  Stream<CallDetails> get fcmNotificationCancelCTAClickListener =>
+      CleverTapSignedCallFlutterPlatform.instance.fcmNotificationCancelCTAClickListener;
+
   ///Disconnects the signalling socket.
   ///
   ///Call this method when all the expected/pending transactions are over
@@ -121,5 +130,13 @@ class CleverTapSignedCallFlutter {
   /// anonymous otherwise an [ArgumentError] will be thrown.
   void onBackgroundMissedCallActionClicked(BackgroundMissedCallActionClickedHandler handler) {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundMissedCallActionClicked(handler);
+  }
+
+  void onBackgroundFCMNotificationClicked(BackgroundFCMNotificationClickedHandler handler) {
+    CleverTapSignedCallFlutterPlatform.instance.onBackgroundFCMNotificationClicked(handler);
+  }
+
+  void onBackgroundFCMNotificationCancelCTAClicked(BackgroundFCMNotificationCancelCTAClickedHandler handler) {
+    CleverTapSignedCallFlutterPlatform.instance.onBackgroundFCMNotificationCancelCTAClicked(handler);
   }
 }

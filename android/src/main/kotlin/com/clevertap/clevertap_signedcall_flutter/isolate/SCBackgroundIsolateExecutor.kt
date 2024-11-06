@@ -7,6 +7,8 @@ import android.util.Log
 import com.clevertap.clevertap_signedcall_flutter.Constants
 import com.clevertap.clevertap_signedcall_flutter.SCAppContextHolder
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences.BACKGROUND_ISOLATE_CALL_EVENT
+import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences.BACKGROUND_ISOLATE_FCM_NOTIFICATION_CANCEL_CTA_CLICKED
+import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences.BACKGROUND_ISOLATE_FCM_NOTIFICATION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences.BACKGROUND_ISOLATE_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.log
 import io.flutter.embedding.engine.FlutterEngine
@@ -211,6 +213,8 @@ class SCBackgroundIsolateExecutor : MethodCallHandler {
         val callbackHandleSuffix = when (methodName) {
             BACKGROUND_ISOLATE_CALL_EVENT -> Constants.ISOLATE_SUFFIX_CALL_EVENT_CALLBACK
             BACKGROUND_ISOLATE_MISSED_CALL_ACTION_CLICKED -> Constants.ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK
+            BACKGROUND_ISOLATE_FCM_NOTIFICATION_CLICKED -> Constants.ISOLATE_SUFFIX_FCM_NOTIFICATION_CLICKED
+            BACKGROUND_ISOLATE_FCM_NOTIFICATION_CANCEL_CTA_CLICKED -> Constants.ISOLATE_SUFFIX_FCM_NOTIFICATION_CANCEL_CTA_CLICKED
             else -> return null
         }
         return IsolateHandlePreferences.getUserCallbackHandle(context, callbackHandleSuffix)

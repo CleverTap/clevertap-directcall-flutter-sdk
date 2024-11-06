@@ -11,6 +11,8 @@ object IsolateHandlePreferences {
 
     const val BACKGROUND_ISOLATE_CALL_EVENT = "onBackgroundCallEvent"
     const val BACKGROUND_ISOLATE_MISSED_CALL_ACTION_CLICKED = "onBackgroundMissedCallActionClicked"
+    const val BACKGROUND_ISOLATE_FCM_NOTIFICATION_CLICKED= "onBackgroundFCMNotificationClicked"
+    const val BACKGROUND_ISOLATE_FCM_NOTIFICATION_CANCEL_CTA_CLICKED= "onBackgroundFCMNotificationCancelCTAClicked"
 
     private fun getPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFS_FILE_NAME, Context.MODE_PRIVATE)

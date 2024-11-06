@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/call_events.dart';
 import 'package:clevertap_signedcall_flutter/models/call_state.dart';
@@ -32,12 +33,30 @@ void backgroundMissedCallActionClickedHandler(
   Utils.showToast("${result.action.actionLabel} is clicked!" );
 }
 
+@pragma('vm:entry-point')
+void backgroundFCMNotificationClickedHandler(
+    CallDetails callDetails) async {
+  debugPrint("backgroundFCMNotificationClickedHandler called from headless task with payload ${callDetails.toString()}");
+  Utils.showToast("FCM Notification is Clicked!,  ${callDetails.callId}" );
+}
+
+@pragma('vm:entry-point')
+void backgroundFCMNotificationCancelCTAClickedHandler(
+    CallDetails callDetails) async {
+  debugPrint("backgroundFCMNotificationCancelCTAClickedHandler called from headless task with payload ${callDetails.toString()}");
+  Utils.showToast("FCM Notification Cancel CTA is Clicked!,  ${callDetails.callId}" );
+}
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   CleverTapSignedCallFlutter.shared
       .onBackgroundCallEvent(backgroundCallEventHandler);
   CleverTapSignedCallFlutter.shared.onBackgroundMissedCallActionClicked(
       backgroundMissedCallActionClickedHandler);
+  CleverTapSignedCallFlutter.shared.onBackgroundFCMNotificationClicked(
+      backgroundFCMNotificationClickedHandler);
+  CleverTapSignedCallFlutter.shared.onBackgroundFCMNotificationCancelCTAClicked(
+      backgroundFCMNotificationCancelCTAClickedHandler);
   runApp(const MyApp());
 }
 
@@ -58,6 +77,8 @@ class _MyAppState extends State<MyApp> {
   late StreamSubscription<CallEventResult>? _callEventSubscription;
   late StreamSubscription<MissedCallActionClickResult>?
       _missedCallActionClickEventSubscription;
+  late StreamSubscription<CallDetails>? _fcmNotificationClickEventSubscription;
+  late StreamSubscription<CallDetails>? _fcmNotificationCancelCTAClickEventSubscription;
   static const int _callMeterDurationInSeconds = 15;
 
   @override
@@ -72,6 +93,8 @@ class _MyAppState extends State<MyApp> {
   void setup() {
     _startObservingCallEvents();
     _startObservingMissedCallActionClickEvent();
+    _startObservingFCMNotificationClickEvent();
+    _startObservingFCMNotificationCancelCTAClickEvent();
   }
 
   @override
@@ -116,6 +139,28 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  //Listens to the missed call action click events
+  void _startObservingFCMNotificationClickEvent() {
+    _fcmNotificationClickEventSubscription = CleverTapSignedCallFlutter
+        .shared.fcmNotificationClickListener
+        .listen((callDetails) {
+      debugPrint(
+          "CleverTap:SignedCallFlutter: received fcmNotificationClicked stream with ${callDetails.toString()}");
+      Utils.showToast("FCM Notification is Clicked!,  ${callDetails.callId}" );
+    });
+  }
+
+  //Listens to the missed call action click events
+  void _startObservingFCMNotificationCancelCTAClickEvent() {
+    _fcmNotificationCancelCTAClickEventSubscription = CleverTapSignedCallFlutter
+        .shared.fcmNotificationCancelCTAClickListener
+        .listen((callDetails) {
+      debugPrint(
+          "CleverTap:SignedCallFlutter: received fcmNotificationCancelCTAClicked stream with ${callDetails.toString()}");
+      Utils.showToast("FCM Notification Cancel CTA is Clicked!,  ${callDetails.callId}" );
+    });
+  }
+
   //Starts a timer and hang up the ongoing call when the timer finishes
   void _startCallDurationMeterToEndCall() {
     Timer(const Duration(seconds: _callMeterDurationInSeconds), () {
@@ -128,5 +173,7 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
     _callEventSubscription?.cancel();
     _missedCallActionClickEventSubscription?.cancel();
+    _fcmNotificationClickEventSubscription?.cancel();
+    _fcmNotificationCancelCTAClickEventSubscription?.cancel();
   }
 }

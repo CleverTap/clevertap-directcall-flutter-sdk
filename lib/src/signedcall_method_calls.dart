@@ -11,6 +11,10 @@ class SCMethodCall {
   static const String logging = "logging";
   static const String ackMissedCallActionClickedStream =
       "missedCallActionClicked#ack";
+  static const String ackFCMNotificationClickedStream =
+      "FCMNotificationClicked#ack";
+  static const String ackFCMNotificationCancelCTAClickedStream =
+      "FCMNotificationCancelCTAClicked#ack";
 
   //Platform to Flutter
   static const String onSignedCallDidInitialize = "onSignedCallDidInitialize";

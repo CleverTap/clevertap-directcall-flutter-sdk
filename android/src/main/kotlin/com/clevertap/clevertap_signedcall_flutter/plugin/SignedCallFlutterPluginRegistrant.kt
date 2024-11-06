@@ -3,6 +3,8 @@ package com.clevertap.clevertap_signedcall_flutter.plugin
 import android.content.Context
 import com.clevertap.clevertap_signedcall_flutter.Constants
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.FCMNotificationCancelCTAEventStreamHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.FCMNotificationEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
@@ -26,6 +28,8 @@ class SignedCallFlutterPluginRegistrant : FlutterPlugin {
      */
     private var callEventChannel: EventChannel? = null
     private var missedCallActionClickEventChannel: EventChannel? = null
+    private var fcmNotificationClickedEventChannel: EventChannel? = null
+    private var fcmNotificationCancelCTAClickedEventChannel: EventChannel? = null
 
     var context: Context? = null
 
@@ -55,8 +59,20 @@ class SignedCallFlutterPluginRegistrant : FlutterPlugin {
             binding.binaryMessenger,
             "${Constants.CHANNEL_NAME}/events/missed_call_action_click"
         )
+        fcmNotificationClickedEventChannel = EventChannel(
+            binding.binaryMessenger,
+            "${Constants.CHANNEL_NAME}/events/fcm_notification_click"
+        )
+        fcmNotificationCancelCTAClickedEventChannel = EventChannel(
+            binding.binaryMessenger,
+            "${Constants.CHANNEL_NAME}/events/fcm_notification_cancel_cta_click"
+        )
 
         callEventChannel?.setStreamHandler(CallEventStreamHandler)
         missedCallActionClickEventChannel?.setStreamHandler(MissedCallActionEventStreamHandler)
+        fcmNotificationClickedEventChannel?.setStreamHandler(FCMNotificationEventStreamHandler)
+        fcmNotificationCancelCTAClickedEventChannel?.setStreamHandler(
+            FCMNotificationCancelCTAEventStreamHandler
+        )
     }
 }

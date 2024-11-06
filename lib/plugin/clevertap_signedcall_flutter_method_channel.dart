@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
@@ -27,6 +28,8 @@ class MethodChannelCleverTapSignedCallFlutter
 
   Stream<CallEventResult>? _callEventsListener;
   Stream<MissedCallActionClickResult>? _missedCallActionClickListener;
+  Stream<CallDetails>? _fcmNotificationClickListener;
+  Stream<CallDetails>? _fcmNotificationCancelCTAClickListener;
 
   late SignedCallInitHandler _initHandler;
   late SignedCallVoIPCallHandler _voIPCallHandler;
@@ -71,6 +74,16 @@ class MethodChannelCleverTapSignedCallFlutter
     _registerEventHandler(handler, "registerBackgroundMissedCallActionClickedHandler");
   }
 
+  @override
+  void onBackgroundFCMNotificationClicked(BackgroundFCMNotificationClickedHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundFCMNotificationClickedHandler");
+  }
+
+  @override
+  void onBackgroundFCMNotificationCancelCTAClicked(BackgroundFCMNotificationCancelCTAClickedHandler handler) {
+    _registerEventHandler(handler, "registerBackgroundFCMNotificationCancelCTAClickedHandler");
+  }
+
   ///Broadcasts the [CallEvent] data stream to listen the real-time changes in the call-state.
   @override
   Stream<CallEventResult> get callEventsListener {
@@ -95,6 +108,31 @@ class MethodChannelCleverTapSignedCallFlutter
       return MissedCallActionClickResult.fromMap(missedCallActionClickResult);
     });
     return _missedCallActionClickListener!;
+  }
+
+  @override
+  Stream<CallDetails> get fcmNotificationClickListener {
+    const fcmNotificationClickEventChannel = EventChannel('$channelName/events/fcm_notification_click');
+    _fcmNotificationClickListener ??= fcmNotificationClickEventChannel
+        .receiveBroadcastStream()
+        .map((dynamic fcmNotificationClickResult) {
+      notifyAck(SCMethodCall.ackFCMNotificationClickedStream);
+      return CallDetails.fromMap(fcmNotificationClickResult);
+    });
+    return _fcmNotificationClickListener!;
+  }
+
+
+  @override
+  Stream<CallDetails> get fcmNotificationCancelCTAClickListener {
+    const fcmNotificationCancelCTAClickEventChannel = EventChannel('$channelName/events/fcm_notification_cancel_cta_click');
+    _fcmNotificationCancelCTAClickListener ??= fcmNotificationCancelCTAClickEventChannel
+        .receiveBroadcastStream()
+        .map((dynamic fcmNotificationCancelCTAClickResult) {
+      notifyAck(SCMethodCall.ackFCMNotificationCancelCTAClickedStream);
+      return CallDetails.fromMap(fcmNotificationCancelCTAClickResult);
+    });
+    return _fcmNotificationCancelCTAClickListener!;
   }
 
   ///Handles the Platform-specific method-calls

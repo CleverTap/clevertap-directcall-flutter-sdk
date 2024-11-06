@@ -1,3 +1,4 @@
+import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
 
 import '../models/call_event_result.dart';
@@ -54,9 +55,19 @@ abstract class CleverTapSignedCallFlutterPlatform {
   void onBackgroundMissedCallActionClicked(
       BackgroundMissedCallActionClickedHandler handler);
 
+  void onBackgroundFCMNotificationClicked(
+      BackgroundFCMNotificationClickedHandler handler);
+
+  void onBackgroundFCMNotificationCancelCTAClicked(
+      BackgroundFCMNotificationCancelCTAClickedHandler handler);
+
   ///Broadcasts the [MissedCallActionClickResult]  data stream to listen the
   ///missed call action click events.
   Stream<MissedCallActionClickResult> get missedCallActionClickListener;
+
+  Stream<CallDetails> get fcmNotificationClickListener;
+
+  Stream<CallDetails> get fcmNotificationCancelCTAClickListener;
 
   ///Disconnects the signalling socket.
   Future<void> disconnectSignallingSocket();
