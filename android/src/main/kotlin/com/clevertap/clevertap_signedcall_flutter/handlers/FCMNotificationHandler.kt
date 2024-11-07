@@ -5,6 +5,7 @@ import android.util.Log
 import com.clevertap.android.signedcall.interfaces.SCCancelCtaClickListener
 import com.clevertap.android.signedcall.interfaces.SCNotificationClickListener
 import com.clevertap.android.signedcall.models.CallDetails
+import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.clevertap_signedcall_flutter.Constants.LOG_TAG
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences.BACKGROUND_ISOLATE_FCM_NOTIFICATION_CANCEL_CTA_CLICKED
@@ -16,8 +17,7 @@ import java.util.TimerTask
 
 
 /**
- * `FcmNotificationClickReceiver` is a [BroadcastReceiver] that handles
- * notification clicks and cancel button clicks from FCM (Firebase Cloud Messaging) notifications.
+ * FCM Notification handler for notification clicks and cancel button clicks from FCM (Firebase Cloud Messaging) notifications.
  *
  * It processes two main types of actions:
  *
@@ -25,8 +25,7 @@ import java.util.TimerTask
  *  * [Constants.ACTION_CANCEL_CTA_CLICK] - When the Cancel CTA (Call To Action) is clicked.
  *
  *
- * Depending on the action, it triggers appropriate listeners and performs app-specific logic,
- * such as launching the app or handling call cancellation.
+ * Depending on the action, it triggers appropriate listeners
  */
 class FCMNotificationHandler : SCNotificationClickListener, SCCancelCtaClickListener {
 
@@ -46,6 +45,13 @@ class FCMNotificationHandler : SCNotificationClickListener, SCCancelCtaClickList
         }
     }
 
+
+    /**
+     * Gets called from the SC SDK when the user taps on the FCM Notification
+     *
+     * @param context - the app context
+     * @param callDetails  a [CallDetails] object having call related details
+     */
     override fun onNotificationClick(context: Context, callDetails: CallDetails) {
         try {
             Utils.log(
@@ -81,6 +87,13 @@ class FCMNotificationHandler : SCNotificationClickListener, SCCancelCtaClickList
         }
     }
 
+
+    /**
+     * Gets called from the SC SDK when the user taps on the FCM Notification Cancel CTA
+     *
+     * @param context - the app context
+     * @param callDetails  a [CallDetails] object having call related details
+     */
     override fun onCancelCtaClick(context: Context, callDetails: CallDetails) {
         try {
             Utils.log(
