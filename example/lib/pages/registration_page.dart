@@ -240,7 +240,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           final Map<String, dynamic> fcmNotification = {
             keyFCMNotificationTitle: titleController.text, // Use input from the title field
             keyFCMNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
-            keyFCMNotificationLargeIcon: "iconname", // optional
+            keyFCMNotificationLargeIcon: "ct_logo", // optional
             keyFCMNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
           };
           initProperties[keyFCMNotification] = fcmNotification; // optional
