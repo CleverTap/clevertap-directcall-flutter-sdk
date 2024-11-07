@@ -65,8 +65,12 @@ abstract class CleverTapSignedCallFlutterPlatform {
   ///missed call action click events.
   Stream<MissedCallActionClickResult> get missedCallActionClickListener;
 
+  ///Broadcasts the [CallDetails]  data stream to listen the
+  ///FCM notification click events.
   Stream<CallDetails> get fcmNotificationClickListener;
 
+  ///Broadcasts the [CallDetails]  data stream to listen the
+  ///FCM notification cancel CTA click events.
   Stream<CallDetails> get fcmNotificationCancelCTAClickListener;
 
   ///Disconnects the signalling socket.

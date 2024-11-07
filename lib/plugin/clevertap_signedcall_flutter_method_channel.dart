@@ -110,6 +110,8 @@ class MethodChannelCleverTapSignedCallFlutter
     return _missedCallActionClickListener!;
   }
 
+  ///Broadcasts the [CallDetails]  data stream to listen the
+  ///FCM notification click events.
   @override
   Stream<CallDetails> get fcmNotificationClickListener {
     const fcmNotificationClickEventChannel = EventChannel('$channelName/events/fcm_notification_click');
@@ -122,7 +124,8 @@ class MethodChannelCleverTapSignedCallFlutter
     return _fcmNotificationClickListener!;
   }
 
-
+  ///Broadcasts the [CallDetails]  data stream to listen the
+  ///FCM notification cancel CTA click events.
   @override
   Stream<CallDetails> get fcmNotificationCancelCTAClickListener {
     const fcmNotificationCancelCTAClickEventChannel = EventChannel('$channelName/events/fcm_notification_cancel_cta_click');

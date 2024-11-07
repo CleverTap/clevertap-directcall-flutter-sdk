@@ -132,10 +132,18 @@ class CleverTapSignedCallFlutter {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundMissedCallActionClicked(handler);
   }
 
+  /// Registers a callback to handle the FCM notification clicked when the app is in the killed state.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   void onBackgroundFCMNotificationClicked(BackgroundFCMNotificationClickedHandler handler) {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundFCMNotificationClicked(handler);
   }
 
+  /// Registers a callback to handle the FCM notification cancel CTA clicked when the app is in the killed state.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   void onBackgroundFCMNotificationCancelCTAClicked(BackgroundFCMNotificationCancelCTAClickedHandler handler) {
     CleverTapSignedCallFlutterPlatform.instance.onBackgroundFCMNotificationCancelCTAClicked(handler);
   }
