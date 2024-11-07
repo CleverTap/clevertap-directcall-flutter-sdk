@@ -66,7 +66,7 @@ class FCMNotificationHandler : SCNotificationClickListener, SCCancelCtaClickList
                         + ", channel: " + callDetails.channel.channelName
             )
 
-            //Sends the real-time changes in the call-state in an observable event-stream
+            //Sends the real-time changes in an observable event-stream
             FCMNotificationEventStreamHandler.eventSink?.success(callDetails.toMap())
             Utils.log(message = "stream is sent for FCM Notification Clicked!!")
 
@@ -108,7 +108,7 @@ class FCMNotificationHandler : SCNotificationClickListener, SCCancelCtaClickList
                         + ", channel: " + callDetails.channel.channelName
             )
 
-            //Sends the real-time changes in the call-state in an observable event-stream
+            //Sends the real-time changes in an observable event-stream
             FCMNotificationCancelCTAEventStreamHandler.eventSink?.success(callDetails.toMap())
             Utils.log(message = "stream is sent for FCM Notification Cancel CTA Clicked!!")
 
