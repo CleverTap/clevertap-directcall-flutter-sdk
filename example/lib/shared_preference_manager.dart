@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/models/swipe_off_behaviour.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
+import 'models/M2PSettings.dart';
 
 class SharedPreferenceManager {
   static Future<bool> saveLoggedInCuid(String cuid) async {
@@ -55,6 +58,21 @@ class SharedPreferenceManager {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final processingModeString = prefs.getString(keyFCMProcessingMode) ?? FCMProcessingMode.background.toValue();
     return FCMPocessingModeExtentsion.fromValue(processingModeString);
+  }
+
+  static Future<bool> saveM2PSettings(M2PSettings settings) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonString = jsonEncode(settings.toMap());
+    return prefs.setString(keyM2PSettings, jsonString);
+  }
+
+  static Future<M2PSettings?> loadM2PSettings() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(keyM2PSettings);
+    if (jsonString == null) return null;
+
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return M2PSettings.fromMap(Map<String, String>.from(jsonMap));
   }
 
   static clearData() async {

@@ -26,6 +26,8 @@ const String keyFCMNotificationLargeIcon =
     "FCMNotificationLargeIcon";
 const String keyFCMNotificationCancelCtaLabel =
     "FCMNotificationCancelCtaLabel";
+const String keyM2PSettings =
+    "M2PSettings";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

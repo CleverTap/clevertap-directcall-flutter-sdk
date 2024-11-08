@@ -11,6 +11,7 @@ import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/M2PSettings.dart';
 import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -31,10 +32,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool isPoweredByChecked = false, notificationPermissionRequired = true;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
   FCMProcessingMode fcmProcessingMode = FCMProcessingMode.background;
-  bool isForegroundServiceChecked = false;
   final titleController = TextEditingController();
   final subtitleController = TextEditingController();
   final cancelCTALabelController = TextEditingController();
+
+  String _m2pTitle = '';
+  String _m2pSubTitle = '';
+  String _m2pCancelCTA = '';
+
 
   @override
   void initState() {
@@ -124,18 +129,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             CheckboxListTile(
               title: const Text("Use Foreground Service for processing FCM?"),
-              value: isForegroundServiceChecked,
+              value: fcmProcessingMode == FCMProcessingMode.foreground? true: false,
               onChanged: (newValue) {
                 if (newValue != null) {
                   setState(() {
-                    isForegroundServiceChecked = newValue;
+                    fcmProcessingMode = newValue? FCMProcessingMode.foreground: FCMProcessingMode.background;
                   });
                 }
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),
             // Show text input fields when the checkbox is checked
-            if (isForegroundServiceChecked) ...[
+            if (fcmProcessingMode == FCMProcessingMode.foreground) ...[
               const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,6 +206,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     _userCuid = inputCuid;
+    _m2pTitle = titleController.text;
+    _m2pSubTitle = subtitleController.text;
+    _m2pCancelCTA = cancelCTALabelController.text;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       Map<String, dynamic> callScreenBranding = {
@@ -238,10 +246,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
         if (fcmProcessingMode == FCMProcessingMode.foreground) {
           final Map<String, dynamic> fcmNotification = {
-            keyFCMNotificationTitle: titleController.text, // Use input from the title field
-            keyFCMNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
+            keyFCMNotificationTitle: _m2pTitle, // Use input from the title field
+            keyFCMNotificationSubtitle: _m2pSubTitle, // Use input from the subtitle field
             keyFCMNotificationLargeIcon: "ct_logo", // optional
-            keyFCMNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
+            keyFCMNotificationCancelCtaLabel: _m2pCancelCTA, // Use input from the Cancel CTA Label field
           };
           initProperties[keyFCMNotification] = fcmNotification; // optional
         }
@@ -286,6 +294,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
     SharedPreferenceManager.saveFCMProcessingMode(fcmProcessingMode);
+    SharedPreferenceManager.saveM2PSettings(
+      M2PSettings(m2pTitle: _m2pTitle, m2pSubTitle: _m2pSubTitle, m2pCancelCTA: _m2pCancelCTA),
+    );
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -310,6 +321,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
 
+          fcmProcessingMode = await
+          SharedPreferenceManager.getFCMProcessingMode();
+
+          M2PSettings? settings = await SharedPreferenceManager.loadM2PSettings();
+          if (settings != null) {
+            _m2pTitle = settings.m2pTitle;
+            _m2pSubTitle = settings.m2pSubTitle;
+            _m2pCancelCTA = settings.m2pCancelCTA;
+
+            titleController.text = _m2pTitle;
+            subtitleController.text = _m2pSubTitle;
+            cancelCTALabelController.text = _m2pCancelCTA;
+          }
           initSignedCallSdk(loggedInCuid);
         }
       });
