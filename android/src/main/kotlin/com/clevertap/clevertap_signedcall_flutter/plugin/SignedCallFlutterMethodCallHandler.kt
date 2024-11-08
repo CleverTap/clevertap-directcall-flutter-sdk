@@ -187,7 +187,6 @@ class SignedCallFlutterMethodCallHandler(
                 parseSwipeOffBehaviourFromInitOptions(it as String)
             } ?: END_CALL
 
-            SignedCallAPI.getInstance().setMissedCallNotificationOpenedHandler(MissedCallActionClickHandler())
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
