@@ -36,11 +36,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final subtitleController = TextEditingController();
   final cancelCTALabelController = TextEditingController();
 
-  String _m2pTitle = '';
-  String _m2pSubTitle = '';
-  String _m2pCancelCTA = '';
-
-
   @override
   void initState() {
     super.initState();
@@ -206,9 +201,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     _userCuid = inputCuid;
-    _m2pTitle = titleController.text;
-    _m2pSubTitle = subtitleController.text;
-    _m2pCancelCTA = cancelCTALabelController.text;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       Map<String, dynamic> callScreenBranding = {
@@ -246,10 +238,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
         if (fcmProcessingMode == FCMProcessingMode.foreground) {
           final Map<String, dynamic> fcmNotification = {
-            keyFCMNotificationTitle: _m2pTitle, // Use input from the title field
-            keyFCMNotificationSubtitle: _m2pSubTitle, // Use input from the subtitle field
+            keyFCMNotificationTitle: titleController.text, // Use input from the title field
+            keyFCMNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
             keyFCMNotificationLargeIcon: "ct_logo", // optional
-            keyFCMNotificationCancelCtaLabel: _m2pCancelCTA, // Use input from the Cancel CTA Label field
+            keyFCMNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
           };
           initProperties[keyFCMNotification] = fcmNotification; // optional
         }
@@ -295,7 +287,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
     SharedPreferenceManager.saveFCMProcessingMode(fcmProcessingMode);
     SharedPreferenceManager.saveM2PSettings(
-      M2PSettings(m2pTitle: _m2pTitle, m2pSubTitle: _m2pSubTitle, m2pCancelCTA: _m2pCancelCTA),
+      M2PSettings(m2pTitle: titleController.text, m2pSubTitle: subtitleController.text, m2pCancelCTA: cancelCTALabelController.text),
     );
 
     //Navigate the user to the Dialler Page
@@ -326,13 +318,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
           M2PSettings? settings = await SharedPreferenceManager.loadM2PSettings();
           if (settings != null) {
-            _m2pTitle = settings.m2pTitle;
-            _m2pSubTitle = settings.m2pSubTitle;
-            _m2pCancelCTA = settings.m2pCancelCTA;
-
-            titleController.text = _m2pTitle;
-            subtitleController.text = _m2pSubTitle;
-            cancelCTALabelController.text = _m2pCancelCTA;
+            titleController.text = settings.m2pTitle;
+            subtitleController.text = settings.m2pSubTitle;
+            cancelCTALabelController.text = settings.m2pCancelCTA;
           }
           initSignedCallSdk(loggedInCuid);
         }
