@@ -12,6 +12,8 @@ const String keyPromptPushPrimer = "promptPushPrimer";
 const String keyMissedCallActions = "missedCallActions";
 const String keyNotificationPermissionRequired =
     "notificationPermissionRequired";
+const String keyNetworkCheckBeforeOutgoingCallScreen =
+    "networkCheckBeforeOutgoingCallScreen";
 const String keySwipeOffBehaviourInForegroundService =
     "swipeOffBehaviourInForegroundService";
 const String keyFCMProcessingMode =
@@ -28,6 +30,8 @@ const String keyFCMNotificationCancelCtaLabel =
     "FCMNotificationCancelCtaLabel";
 const String keyM2PSettings =
     "M2PSettings";
+const String keyCallScreenOnSignalling =
+    "callScreenOnSignalling";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

@@ -29,7 +29,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true, networkCheckBeforeOutgoingCallScreen = false, callScreenOnSignalling = false;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
   FCMProcessingMode fcmProcessingMode = FCMProcessingMode.background;
   final titleController = TextEditingController();
@@ -108,6 +108,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
+              title: const Text("Show Call Screen on Signalling"),
+              value: callScreenOnSignalling,
+              onChanged: (newValue) {
+                setState(() {
+                  callScreenOnSignalling = newValue ?? false;
+                });
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
               title: const Text("Persist Call on Swipe Off in self-managed FG Service?"),
               value: swipeOffBehaviour == SCSwipeOffBehaviour.persistCall ? true : false,
               onChanged: (newValue) {
@@ -168,6 +179,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ],
             const SizedBox(height: 10),
+            CheckboxListTile(
+              title: const Text("Check Network Before Outgoing Call Screen"),
+              value: networkCheckBeforeOutgoingCallScreen,
+              onChanged: (newValue) {
+                setState(() {
+                  networkCheckBeforeOutgoingCallScreen = newValue ?? false;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Utils.dismissKeyboard(context);
@@ -245,6 +267,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
           };
           initProperties[keyFCMNotification] = fcmNotification; // optional
         }
+        initProperties[keyAllowPersistSocketConnection] = true; //required
+        initProperties[keyPromptReceiverReadPhoneStatePermission] =
+            true; //optional
+        initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
+        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
+        initProperties[keySwipeOffBehaviourInForegroundService] =
+            swipeOffBehaviour; //optional
+        initProperties[keyNetworkCheckBeforeOutgoingCallScreen] = networkCheckBeforeOutgoingCallScreen; //optional
+        initProperties[keyCallScreenOnSignalling] = callScreenOnSignalling; //optional
       }
 
       ///iOS only fields
@@ -289,6 +320,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveM2PSettings(
       M2PSettings(m2pTitle: titleController.text, m2pSubTitle: subtitleController.text, m2pCancelCTA: cancelCTALabelController.text),
     );
+    SharedPreferenceManager.saveNetworkCheckBeforeOutgoingCallScreen(networkCheckBeforeOutgoingCallScreen);
+    SharedPreferenceManager.saveCallScreenOnSignalling(networkCheckBeforeOutgoingCallScreen);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -312,6 +345,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           await SharedPreferenceManager.getIsPoweredByChecked();
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
+          networkCheckBeforeOutgoingCallScreen = await SharedPreferenceManager.getNetworkCheckBeforeOutgoingCallScreen();
+          callScreenOnSignalling = await SharedPreferenceManager.getCallScreenOnSignalling();
 
           fcmProcessingMode = await
           SharedPreferenceManager.getFCMProcessingMode();
