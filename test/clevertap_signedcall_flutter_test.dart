@@ -1,4 +1,3 @@
-import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/call_event_result.dart';
 import 'package:clevertap_signedcall_flutter/models/call_state.dart';
 import 'package:clevertap_signedcall_flutter/models/log_level.dart';
@@ -68,16 +67,6 @@ class MockCleverTapDirectcallFlutterPlatform
   }
 
   @override
-  void onBackgroundFCMNotificationClicked(BackgroundFCMNotificationClickedHandler handler) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void onBackgroundFCMNotificationCancelCTAClicked(BackgroundFCMNotificationClickedHandler handler) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<bool> getBackToCall() {
     // TODO: implement getBackToCall
     throw UnimplementedError();
@@ -88,12 +77,6 @@ class MockCleverTapDirectcallFlutterPlatform
     // TODO: implement getCallState
     throw UnimplementedError();
   }
-
-  @override
-  Stream<CallDetails> get fcmNotificationCancelCTAClickListener => throw UnimplementedError();
-
-  @override
-  Stream<CallDetails> get fcmNotificationClickListener => throw UnimplementedError();
 }
 
 void main() {

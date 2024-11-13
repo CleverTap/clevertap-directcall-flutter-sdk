@@ -14,13 +14,7 @@ object SCMethodCall {
     const val REGISTER_BACKGROUND_CALL_EVENT_HANDLER = "registerBackgroundCallEventHandler"
     const val REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER =
         "registerBackgroundMissedCallActionClickedHandler"
-    const val REGISTER_BACKGROUND_FCM_NOTIFICATION_CLICKED_HANDLER =
-        "registerBackgroundFCMNotificationClickedHandler"
-    const val REGISTER_BACKGROUND_FCM_NOTIFICATION_CANCEL_CTA_CLICKED_HANDLER =
-        "registerBackgroundFCMNotificationCancelCTAClickedHandler"
     const val ACK_MISSED_CALL_ACTION_CLICKED = "missedCallActionClicked#ack"
-    const val ACK_FCM_NOTIFICATION_CLICKED = "FCMNotificationClicked#ack"
-    const val ACK_FCM_NOTIFICATION_CANCEL_CTA_CLICKED = "FCMNotificationCancelCTAClicked#ack"
 
     //Platform to Flutter
     const val ON_SIGNED_CALL_DID_INITIALIZE = "onSignedCallDidInitialize"

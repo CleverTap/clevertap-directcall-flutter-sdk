@@ -32,31 +32,3 @@ object MissedCallActionEventStreamHandler : EventChannel.StreamHandler {
         eventSink = null
     }
 }
-
-object FCMNotificationEventStreamHandler : EventChannel.StreamHandler {
-    internal var eventSink: EventChannel.EventSink? = null
-
-    //Handles a request to set up an event stream.
-    override fun onListen(p0: Any?, sink: EventChannel.EventSink) {
-        eventSink = sink
-    }
-
-    //Gets called when the most recently created event stream is closed
-    override fun onCancel(p0: Any?) {
-        eventSink = null
-    }
-}
-
-object FCMNotificationCancelCTAEventStreamHandler : EventChannel.StreamHandler {
-    internal var eventSink: EventChannel.EventSink? = null
-
-    //Handles a request to set up an event stream.
-    override fun onListen(p0: Any?, sink: EventChannel.EventSink) {
-        eventSink = sink
-    }
-
-    //Gets called when the most recently created event stream is closed
-    override fun onCancel(p0: Any?) {
-        eventSink = null
-    }
-}

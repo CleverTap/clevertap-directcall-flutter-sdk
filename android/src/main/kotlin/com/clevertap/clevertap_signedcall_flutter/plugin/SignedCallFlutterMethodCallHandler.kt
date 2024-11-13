@@ -47,22 +47,17 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.LOGOUT
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_INITIALIZE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_FCM_NOTIFICATION_CANCEL_CTA_CLICKED_HANDLER
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_FCM_NOTIFICATION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
 import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
-import com.clevertap.clevertap_signedcall_flutter.handlers.FCMNotificationHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseExceptionToMapObject
-import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseFCMProcessingModeFromInitOptions
-import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseFCMProcessingNotificationFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseInitOptionsFromInitProperties
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseMissedCallActionsFromInitOptions
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parsePushPrimerConfigFromInitOptions
@@ -128,25 +123,13 @@ class SignedCallFlutterMethodCallHandler(
                 hangUpCall(result)
             }
 
-            REGISTER_BACKGROUND_CALL_EVENT_HANDLER,
-            REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER,
-            REGISTER_BACKGROUND_FCM_NOTIFICATION_CLICKED_HANDLER,
-            REGISTER_BACKGROUND_FCM_NOTIFICATION_CANCEL_CTA_CLICKED_HANDLER-> {
+            REGISTER_BACKGROUND_CALL_EVENT_HANDLER -> {
                 handleBackgroundEventHandler(call, result)
             }
 
             ACK_MISSED_CALL_ACTION_CLICKED -> {
                 handleMissedCallActionClickedAck(result)
             }
-
-            ACK_FCM_NOTIFICATION_CLICKED -> {
-                handleFCMNotificationClickedAck(result)
-            }
-
-            ACK_FCM_NOTIFICATION_CANCEL_CTA_CLICKED -> {
-                handleFCMNotificationCancelCTAClickedAck(result)
-            }
-
             else -> result.notImplemented()
         }
     }
@@ -220,11 +203,6 @@ class SignedCallFlutterMethodCallHandler(
                 if (context != null)
                     parseFCMProcessingNotificationFromInitOptions(it as Map<*, *>, context)
                 else null
-            }
-
-            if(fcmProcessingNotification != null) {
-                fcmProcessingNotification.registerCancelCtaClickListener(FCMNotificationHandler())
-                fcmProcessingNotification.registerClickListener(FCMNotificationHandler())
             }
 
             val initConfiguration =
@@ -329,8 +307,6 @@ class SignedCallFlutterMethodCallHandler(
         val suffix = when (call.method) {
             REGISTER_BACKGROUND_CALL_EVENT_HANDLER -> Constants.ISOLATE_SUFFIX_CALL_EVENT_CALLBACK
             REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER -> Constants.ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK
-            REGISTER_BACKGROUND_FCM_NOTIFICATION_CLICKED_HANDLER -> Constants.ISOLATE_SUFFIX_FCM_NOTIFICATION_CLICKED
-            REGISTER_BACKGROUND_FCM_NOTIFICATION_CANCEL_CTA_CLICKED_HANDLER -> Constants.ISOLATE_SUFFIX_FCM_NOTIFICATION_CANCEL_CTA_CLICKED
             else -> return
         }
 
@@ -344,18 +320,6 @@ class SignedCallFlutterMethodCallHandler(
     private fun handleMissedCallActionClickedAck(result: Result) {
         Utils.log(message = "missedCallActionClickedStream#ack is received!")
         MissedCallActionClickHandler.resolveAckTimeOutHandler()
-        result.success(null)
-    }
-
-    private fun handleFCMNotificationClickedAck(result: Result) {
-        Utils.log(message = "FCMNotificationClickedStream#ack is received!")
-        FCMNotificationHandler.resolveAckTimeOutHandlerNotification()
-        result.success(null)
-    }
-
-    private fun handleFCMNotificationCancelCTAClickedAck(result: Result) {
-        Utils.log(message = "FCMNotificationCancelCTAClickedStream#ack is received!")
-        FCMNotificationHandler.resolveAckTimeOutHandlerCancelCTA()
         result.success(null)
     }
 

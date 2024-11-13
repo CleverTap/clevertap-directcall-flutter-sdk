@@ -52,6 +52,4 @@ object Constants {
     const val CALLBACK_HANDLE = "userCallbackHandle"
     const val ISOLATE_SUFFIX_CALL_EVENT_CALLBACK = "callEvent"
     const val ISOLATE_SUFFIX_MISSED_CALL_ACTION_CLICKED_CALLBACK = "missedCallNotificationClicked"
-    const val ISOLATE_SUFFIX_FCM_NOTIFICATION_CLICKED = "FCMNotificationClicked"
-    const val ISOLATE_SUFFIX_FCM_NOTIFICATION_CANCEL_CTA_CLICKED = "FCMNotificationCancelCTAClicked"
 }

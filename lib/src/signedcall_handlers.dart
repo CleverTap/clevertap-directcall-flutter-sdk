@@ -1,4 +1,3 @@
-import 'package:clevertap_signedcall_flutter/models/call_details.dart';
 import 'package:clevertap_signedcall_flutter/models/missed_call_action_click_result.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 
@@ -16,9 +15,3 @@ typedef BackgroundCallEventHandler = void Function(
 
 typedef BackgroundMissedCallActionClickedHandler = void Function(
     MissedCallActionClickResult callStatusDetails);
-
-typedef BackgroundFCMNotificationClickedHandler = void Function(
-    CallDetails callDetails);
-
-typedef BackgroundFCMNotificationCancelCTAClickedHandler = void Function(
-    CallDetails callDetails);
