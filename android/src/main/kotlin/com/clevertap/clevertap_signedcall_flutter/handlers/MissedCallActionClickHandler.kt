@@ -48,6 +48,8 @@ class MissedCallActionClickHandler : MissedCallNotificationOpenedHandler {
                         + ", cuid of callee: " + result.callDetails.calleeCuid
                         + ", initiator-image: " + result.callDetails.initiatorImage
                         + ", receiver-image: " + result.callDetails.receiverImage
+                        + ", remote-context: " + result.callDetails.remoteContext
+
             )
 
             //Sends the real-time changes in the call-state in an observable event-stream
