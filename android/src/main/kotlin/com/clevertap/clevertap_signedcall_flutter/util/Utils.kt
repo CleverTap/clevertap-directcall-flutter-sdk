@@ -22,6 +22,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_LARGE_ICON
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_SUBTITLE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_TITLE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CANCEL_COUNTDOWN_COLOR
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SHOW_POWERED_BY_SIGNED_CALL
@@ -91,6 +92,7 @@ object Utils {
         val logoUrl = brandingMap[KEY_LOGO_URL] as? String
         val buttonTheme = brandingMap[KEY_BUTTON_THEME] as? String
         val showPoweredBySignedCall = brandingMap[KEY_SHOW_POWERED_BY_SIGNED_CALL] as? Boolean
+        val cancelCountdownColor = brandingMap[KEY_CANCEL_COUNTDOWN_COLOR] as? String
 
         val callScreenBranding = SignedCallScreenBranding(
             bgColor, fontColor, logoUrl,
@@ -101,6 +103,10 @@ object Utils {
         )
         if (showPoweredBySignedCall != null) {
             callScreenBranding.showPoweredBySignedCall = showPoweredBySignedCall
+        }
+
+        if(cancelCountdownColor != null) {
+            callScreenBranding.cancelCountdownColor = cancelCountdownColor
         }
         return callScreenBranding
     }
