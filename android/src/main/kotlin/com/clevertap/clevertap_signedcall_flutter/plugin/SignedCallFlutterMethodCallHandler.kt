@@ -33,8 +33,6 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_FCM_NOTIFICATION_CANCEL_CTA_CLICKED
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_FCM_NOTIFICATION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
@@ -123,7 +121,8 @@ class SignedCallFlutterMethodCallHandler(
                 hangUpCall(result)
             }
 
-            REGISTER_BACKGROUND_CALL_EVENT_HANDLER -> {
+            REGISTER_BACKGROUND_CALL_EVENT_HANDLER,
+            REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER -> {
                 handleBackgroundEventHandler(call, result)
             }
 
