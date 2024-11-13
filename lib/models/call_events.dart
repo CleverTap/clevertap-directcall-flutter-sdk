@@ -54,7 +54,10 @@ enum CallEvent {
   // Indicates that the call is failed due to an internal error.
   // Possible reasons could include low internet connectivity, low RAM available
   // on device or SDK fails to set up the voice channel within the time limit.
-  failedDueToInternalError;
+  failedDueToInternalError,
+
+  // Indicates that the call is declined due to user initiated click on cancel CTA of the FCM notification.
+  userInitiatedCallDeclinedOnCancelCTA;
 
   ///parses the state of the call in a [CallEvent]
   static CallEvent? fromString(String state) {
@@ -93,6 +96,9 @@ enum CallEvent {
         return CallEvent.declinedDueToBusyOnPSTN;
       case "FailedDueToInternalError":
         return CallEvent.failedDueToInternalError;
+      case "USER_INITIATED_CALL_DECLINED_ON_CANCEL_CTA":
+        return CallEvent.userInitiatedCallDeclinedOnCancelCTA;
+        // @todo Fix this once official support has been added in the native sdk
       default:
         SignedCallLogger.d('$state is not a valid value for CallEvent.');
         return null;
