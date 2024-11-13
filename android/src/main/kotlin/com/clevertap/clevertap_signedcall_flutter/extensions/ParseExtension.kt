@@ -101,7 +101,7 @@ fun VoIPCallStatus.formattedCallEvent(): String {
         CALL_DECLINED_DUE_TO_BUSY_ON_VOIP -> "DeclinedDueToBusyOnVoIP"
         CALL_DECLINED_DUE_TO_BUSY_ON_PSTN -> "DeclinedDueToBusyOnPSTN"
         CALL_FAILED_DUE_TO_INTERNAL_ERROR -> "FailedDueToInternalError"
-        else -> "Unknown"
+        else -> this.name         // @todo Fix this once official support has been added in the native sdk
     }
 }
 
