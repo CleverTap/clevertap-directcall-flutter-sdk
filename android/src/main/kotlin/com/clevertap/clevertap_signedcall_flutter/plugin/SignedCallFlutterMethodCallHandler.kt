@@ -186,9 +186,6 @@ class SignedCallFlutterMethodCallHandler(
                 parseMissedCallActionsFromInitOptions(it as Map<*, *>)
             }
 
-            val missedCallActionClickHandlerPath =
-                MissedCallActionClickHandler::class.java.canonicalName
-
             val notificationPermissionRequired =
                 initProperties.getOrElse(KEY_NOTIFICATION_PERMISSION_REQUIRED) { true } as Boolean
 
@@ -212,7 +209,7 @@ class SignedCallFlutterMethodCallHandler(
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
                     .setNotificationPermissionRequired(notificationPermissionRequired)
                     .overrideDefaultBranding(callScreenBranding)
-                    .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
+                    .setMissedCallActions(missedCallActionsList)
                     .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
                     .setFCMProcessingMode(fcmProcessingMode, fcmProcessingNotification)
                     .build()
