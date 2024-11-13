@@ -65,22 +65,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       body: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 5),
+            const SizedBox(height: 2),
             const Text(
               'USER-REGISTRATION',
               // textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Image.asset(
               'assets/clevertap-logo.png',
-              height: 100,
+              height: 50,
               width: 100,
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 2),
             TextField(
               controller: cuidController,
               decoration: const InputDecoration(
@@ -88,7 +88,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ),
             CheckboxListTile(
-              title: const Text("Hide Powered by SignedCall"),
+              title: const Text(
+                  "Hide Powered by SignedCall",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: isPoweredByChecked,
               onChanged: (newValue) {
                 setState(() {
@@ -99,7 +102,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Required Notification Permission"),
+              title: const Text(
+                  "Required Notification Permission",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: notificationPermissionRequired,
               onChanged: (newValue) {
                 setState(() {
@@ -110,7 +116,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Show Call Screen on Signalling"),
+              title: const Text(
+                  "Show Call Screen on Signalling",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: callScreenOnSignalling,
               onChanged: (newValue) {
                 setState(() {
@@ -121,7 +130,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Persist Call on Swipe Off in self-managed FG Service?"),
+              title: const Text(
+                  "Persist Call on Swipe Off in self-managed FG Service?",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: swipeOffBehaviour == SCSwipeOffBehaviour.persistCall ? true : false,
               onChanged: (newValue) {
                 if (newValue != null) {
@@ -136,7 +148,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Use Foreground Service for processing FCM?"),
+              title: const Text(
+                  "Use Foreground Service for processing FCM?",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: fcmProcessingMode == FCMProcessingMode.foreground? true: false,
               onChanged: (newValue) {
                 if (newValue != null) {
@@ -149,7 +164,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             // Show text input fields when the checkbox is checked
             if (fcmProcessingMode == FCMProcessingMode.foreground) ...[
-              const SizedBox(height: 5),
+              const SizedBox(height: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -172,7 +187,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 2),
               TextField(
                 controller: cancelCTALabelController,
                 decoration: const InputDecoration(
@@ -180,9 +195,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
             ],
-            const SizedBox(height: 10),
             CheckboxListTile(
-              title: const Text("Check Network Before Outgoing Call Screen"),
+              title: const Text(
+                  "Check Network Before Outgoing Call Screen",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: networkCheckBeforeOutgoingCallScreen,
               onChanged: (newValue) {
                 setState(() {
@@ -204,7 +221,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: const Text('Switch Color for Cancel Countdown Timer'),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 2),
             ElevatedButton(
               onPressed: () {
                 Utils.dismissKeyboard(context);
