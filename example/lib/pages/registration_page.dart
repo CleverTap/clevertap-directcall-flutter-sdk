@@ -11,7 +11,7 @@ import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../models/M2PSettings.dart';
+import '../models/FcmProcessingNotification.dart';
 import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -286,8 +286,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
     SharedPreferenceManager.saveFCMProcessingMode(fcmProcessingMode);
-    SharedPreferenceManager.saveM2PSettings(
-      M2PSettings(m2pTitle: titleController.text, m2pSubTitle: subtitleController.text, m2pCancelCTA: cancelCTALabelController.text),
+    SharedPreferenceManager.saveFcmProcessingNotification(
+      FCMProcessingNotification(title: titleController.text, subTitle: subtitleController.text, cancelCTA: cancelCTALabelController.text),
     );
 
     //Navigate the user to the Dialler Page
@@ -316,11 +316,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
           fcmProcessingMode = await
           SharedPreferenceManager.getFCMProcessingMode();
 
-          M2PSettings? settings = await SharedPreferenceManager.loadM2PSettings();
+          FCMProcessingNotification? settings = await SharedPreferenceManager.loadFcmProcessingNotification();
           if (settings != null) {
-            titleController.text = settings.m2pTitle;
-            subtitleController.text = settings.m2pSubTitle;
-            cancelCTALabelController.text = settings.m2pCancelCTA;
+            titleController.text = settings.title;
+            subtitleController.text = settings.subTitle;
+            cancelCTALabelController.text = settings.cancelCTA;
           }
           initSignedCallSdk(loggedInCuid);
         }
