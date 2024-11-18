@@ -9,10 +9,8 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour.END_CALL
-import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
-import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.signedcall.utils.SignedCallUtils
 import com.clevertap.clevertap_signedcall_flutter.Constants
 import com.clevertap.clevertap_signedcall_flutter.Constants.CALLBACK_HANDLE
@@ -31,7 +29,6 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_BACK_TO_CALL
@@ -49,7 +46,6 @@ import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
-import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
@@ -125,9 +121,6 @@ class SignedCallFlutterMethodCallHandler(
                 handleBackgroundEventHandler(call, result)
             }
 
-            ACK_MISSED_CALL_ACTION_CLICKED -> {
-                handleMissedCallActionClickedAck(result)
-            }
             else -> result.notImplemented()
         }
     }
@@ -301,12 +294,6 @@ class SignedCallFlutterMethodCallHandler(
             IsolateHandlePreferences.saveCallbackKeys(context, dispatcherHandle, callbackHandle, suffix)
         }
 
-        result.success(null)
-    }
-
-    private fun handleMissedCallActionClickedAck(result: Result) {
-        Utils.log(message = "missedCallActionClickedStream#ack is received!")
-        MissedCallActionClickHandler.resolveAckTimeOutHandler()
         result.success(null)
     }
 
