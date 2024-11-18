@@ -14,20 +14,18 @@ const String keyNotificationPermissionRequired =
     "notificationPermissionRequired";
 const String keySwipeOffBehaviourInForegroundService =
     "swipeOffBehaviourInForegroundService";
-const String keyFCMProcessingMode =
-    "FCMProcessingMode";
-const String keyFCMNotification =
-    "FCMNotification";
-const String keyFCMNotificationTitle =
-    "FCMNotificationTitle";
-const String keyFCMNotificationSubtitle =
-    "FCMNotificationSubtitle";
-const String keyFCMNotificationLargeIcon =
-    "FCMNotificationLargeIcon";
-const String keyFCMNotificationCancelCtaLabel =
-    "FCMNotificationCancelCtaLabel";
-const String keyM2PSettings =
-    "M2PSettings";
+const String keyFcmProcessingMode =
+    "fcmProcessingMode";
+const String keyFcmNotification =
+    "fcmNotification";
+const String keyFcmNotificationTitle =
+    "fcmNotificationTitle";
+const String keyFcmNotificationSubtitle =
+    "fcmNotificationSubtitle";
+const String keyFcmNotificationLargeIcon =
+    "fcmNotificationLargeIcon";
+const String keyFcmNotificationCancelCtaLabel =
+    "fcmNotificationCancelCtaLabel";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";

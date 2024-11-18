@@ -51,24 +51,24 @@ class SharedPreferenceManager {
 
   static Future<bool> saveFCMProcessingMode(FCMProcessingMode fcmProcessingMode) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(keyFCMProcessingMode, fcmProcessingMode.toValue());
+    return prefs.setString(keyFcmProcessingMode, fcmProcessingMode.toValue());
   }
 
   static Future<FCMProcessingMode> getFCMProcessingMode() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final processingModeString = prefs.getString(keyFCMProcessingMode) ?? FCMProcessingMode.background.toValue();
+    final processingModeString = prefs.getString(keyFcmProcessingMode) ?? FCMProcessingMode.background.toValue();
     return FCMPocessingModeExtentsion.fromValue(processingModeString);
   }
 
   static Future<bool> saveM2PSettings(M2PSettings settings) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String jsonString = jsonEncode(settings.toMap());
-    return prefs.setString(keyM2PSettings, jsonString);
+    return prefs.setString(keyFcmNotification, jsonString);
   }
 
   static Future<M2PSettings?> loadM2PSettings() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonString = prefs.getString(keyM2PSettings);
+    String? jsonString = prefs.getString(keyFcmNotification);
     if (jsonString == null) return null;
 
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);

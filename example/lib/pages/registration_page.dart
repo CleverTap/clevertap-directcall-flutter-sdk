@@ -234,16 +234,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
         initProperties[keyMissedCallActions] = missedCallActionsMap; // optional
         initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; // optional
         initProperties[keySwipeOffBehaviourInForegroundService] = swipeOffBehaviour; // optional
-        initProperties[keyFCMProcessingMode] = fcmProcessingMode; // optional
+        initProperties[keyFcmProcessingMode] = fcmProcessingMode; // optional
 
         if (fcmProcessingMode == FCMProcessingMode.foreground) {
           final Map<String, dynamic> fcmNotification = {
-            keyFCMNotificationTitle: titleController.text, // Use input from the title field
-            keyFCMNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
-            keyFCMNotificationLargeIcon: "ct_logo", // optional
-            keyFCMNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
+            keyFcmNotificationTitle: titleController.text, // Use input from the title field
+            keyFcmNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
+            keyFcmNotificationLargeIcon: "ct_logo", // optional
+            keyFcmNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
           };
-          initProperties[keyFCMNotification] = fcmNotification; // optional
+          initProperties[keyFcmNotification] = fcmNotification; // optional
         }
       }
 
