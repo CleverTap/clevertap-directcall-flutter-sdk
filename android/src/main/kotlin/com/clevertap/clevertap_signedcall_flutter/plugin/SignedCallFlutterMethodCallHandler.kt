@@ -9,8 +9,10 @@ import com.clevertap.android.signedcall.init.SignedCallAPI
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour.END_CALL
+import com.clevertap.android.signedcall.interfaces.MissedCallNotificationOpenedHandler
 import com.clevertap.android.signedcall.interfaces.OutgoingCallResponse
 import com.clevertap.android.signedcall.interfaces.SignedCallInitResponse
+import com.clevertap.android.signedcall.models.MissedCallNotificationOpenResult
 import com.clevertap.android.signedcall.utils.SignedCallUtils
 import com.clevertap.clevertap_signedcall_flutter.Constants
 import com.clevertap.clevertap_signedcall_flutter.Constants.CALLBACK_HANDLE
@@ -48,6 +50,7 @@ import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
@@ -133,6 +136,9 @@ class SignedCallFlutterMethodCallHandler(
         if (!SignedCallUtils.isAppInBackground()) {
             SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
                 streamCallEvent(callStatusDetails.toMap())
+            }
+            SignedCallAPI.getInstance().setMissedCallNotificationOpenedHandler { _, result ->
+                streamMissedCallCtaClick(result.toMap())
             }
         }
     }
@@ -306,7 +312,13 @@ class SignedCallFlutterMethodCallHandler(
 
     //Sends the real-time changes in the call-state in an observable event-stream
     override fun streamCallEvent(callEventResult: Map<String, Any>) {
-        Utils.log(message = "Streaming $callEventResult to event-channel with payload: $callEventResult")
+        Utils.log(message = "Streaming call-event to event-channel with payload: $callEventResult")
         CallEventStreamHandler.eventSink?.success(callEventResult)
+    }
+
+    //Sends the missed call CTA click in an observable event stream
+    override fun streamMissedCallCtaClick(clickResult: Map<String, Any>) {
+        Utils.log(message = "Streaming missed-call CTA click to event-channel with payload: $clickResult")
+        MissedCallActionEventStreamHandler.eventSink?.success(clickResult)
     }
 }
