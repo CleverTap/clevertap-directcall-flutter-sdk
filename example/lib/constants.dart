@@ -12,8 +12,6 @@ const String keyPromptPushPrimer = "promptPushPrimer";
 const String keyMissedCallActions = "missedCallActions";
 const String keyNotificationPermissionRequired =
     "notificationPermissionRequired";
-const String keyNetworkCheckBeforeOutgoingCallScreen =
-    "networkCheckBeforeOutgoingCallScreen";
 const String keySwipeOffBehaviourInForegroundService =
     "swipeOffBehaviourInForegroundService";
 const String keyCallScreenOnSignalling =
