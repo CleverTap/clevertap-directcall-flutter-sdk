@@ -17,15 +17,15 @@ const String keySwipeOffBehaviourInForegroundService =
 const String keyFcmProcessingMode =
     "fcmProcessingMode";
 const String keyFcmNotification =
-    "fcmNotification";
+    "fcmProcessingNotification";
 const String keyFcmNotificationTitle =
-    "fcmNotificationTitle";
+    "title";
 const String keyFcmNotificationSubtitle =
-    "fcmNotificationSubtitle";
+    "subtitle";
 const String keyFcmNotificationLargeIcon =
-    "fcmNotificationLargeIcon";
+    "largeIcon";
 const String keyFcmNotificationCancelCtaLabel =
-    "fcmNotificationCancelCtaLabel";
+    "cancelCtaLabel";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";
