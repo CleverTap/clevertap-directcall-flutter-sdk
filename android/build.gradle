@@ -1,5 +1,5 @@
 group 'com.clevertap.clevertap_signedcall_flutter'
-version '0.0.5'
+version '0.0.7'
 
 buildscript {
     ext.kotlin_version = '1.6.10'
