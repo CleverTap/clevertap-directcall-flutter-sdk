@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -161,7 +162,13 @@ class _DiallerPageState extends State<DiallerPage> {
 
   void initiateVoIPCall(String? receiverCuid, String? callContext, String? remoteCallContext) async {
     if (receiverCuid != null && callContext != null) {
-      var callOptions = {keyRemoteContext: remoteCallContext, keyInitiatorImage: null, keyReceiverImage: null};
+      Map<String, String?> callOptions = HashMap<String, String>();
+
+      if (remoteCallContext!.isNotEmpty) {
+        // callOptions = {keyRemoteContext: remoteCallContext, keyInitiatorImage: null, keyReceiverImage: null};
+        callOptions = {keyRemoteContext: remoteCallContext};
+      }
+
       CleverTapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,
