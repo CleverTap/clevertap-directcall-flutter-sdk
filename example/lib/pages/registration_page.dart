@@ -28,7 +28,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true, callScreenOnSignalling = false;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
   String cancelCountdownColor = '#F5FA55';
 
@@ -98,6 +98,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
               onChanged: (newValue) {
                 setState(() {
                   notificationPermissionRequired = newValue ?? false;
+                });
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              title: const Text("Show Call Screen on Signalling"),
+              value: callScreenOnSignalling,
+              onChanged: (newValue) {
+                setState(() {
+                  callScreenOnSignalling = newValue ?? false;
                 });
               },
               controlAffinity:
@@ -201,6 +212,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
         initProperties[keySwipeOffBehaviourInForegroundService] =
             swipeOffBehaviour; //optional
+        initProperties[keyCallScreenOnSignalling] = callScreenOnSignalling; //optional
       }
 
       ///iOS only fields
@@ -241,6 +253,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveNotificationPermissionRequired(
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
+    SharedPreferenceManager.saveCallScreenOnSignalling(callScreenOnSignalling);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -264,6 +277,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           await SharedPreferenceManager.getIsPoweredByChecked();
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
+          callScreenOnSignalling = await SharedPreferenceManager.getCallScreenOnSignalling();
 
           initSignedCallSdk(loggedInCuid);
         }

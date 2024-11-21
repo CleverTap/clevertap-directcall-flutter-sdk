@@ -14,6 +14,8 @@ const String keyNotificationPermissionRequired =
     "notificationPermissionRequired";
 const String keySwipeOffBehaviourInForegroundService =
     "swipeOffBehaviourInForegroundService";
+const String keyCallScreenOnSignalling =
+    "callScreenOnSignalling";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";
