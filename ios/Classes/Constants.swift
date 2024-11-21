@@ -113,6 +113,7 @@ enum SCMethodParams: String {
     case CALLOPTIONS = "callOptions"
     
     //calloptions
+    case REMOTE_CONTEXT = "remoteContext"
     case INITIATORIMG = "initiatorImage"
     case RECEIVERIMG = "receiverImage"
     
