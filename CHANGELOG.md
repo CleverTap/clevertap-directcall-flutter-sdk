@@ -1,6 +1,6 @@
 ## CHANGE LOG
 
-### Version 0.0.7 (November 20, 2024)
+### Version 0.0.7 (November 21, 2024)
 -------------------------------------------
 
 **What's new**
