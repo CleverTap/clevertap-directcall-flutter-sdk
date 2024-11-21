@@ -197,12 +197,6 @@ class SignedCallFlutterMethodCallHandler(
                 parseSwipeOffBehaviourFromInitOptions(it as String)
             } ?: END_CALL
 
-            val callScreenOnSignalling =
-                initProperties.getOrElse(KEY_CALL_SCREEN_ON_SIGNALLING) { false } as Boolean
-
-            val networkCheckBeforeOutgoingCallScreen =
-                initProperties.getOrElse(KEY_NETWORK_CHECK_BEFORE_OUTGOING_CALL_SCREEN) { false } as Boolean
-
             val fcmProcessingMode: FCMProcessingMode = initProperties[KEY_FCM_PROCESSING_MODE]?.let {
                 parseFCMProcessingModeFromInitOptions(it as String)
             } ?: FCMProcessingMode.FOREGROUND
@@ -213,6 +207,12 @@ class SignedCallFlutterMethodCallHandler(
                 else null
             }
 
+            val callScreenOnSignalling =
+                initProperties.getOrElse(KEY_CALL_SCREEN_ON_SIGNALLING) { false } as Boolean
+
+            val networkCheckBeforeOutgoingCallScreen =
+                initProperties.getOrElse(KEY_NETWORK_CHECK_BEFORE_OUTGOING_CALL_SCREEN) { false } as Boolean
+
             val initConfiguration =
                 SignedCallInitConfiguration.Builder(initOptions, allowPersistSocketConnection)
                     .promptPushPrimer(pushPrimerConfig)
@@ -221,9 +221,9 @@ class SignedCallFlutterMethodCallHandler(
                     .overrideDefaultBranding(callScreenBranding)
                     .setMissedCallActions(missedCallActionsList)
                     .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
+                    .setFCMProcessingMode(fcmProcessingMode, fcmProcessingNotification)
                     .callScreenOnSignalling(callScreenOnSignalling)
                     .networkCheckBeforeOutgoingCallScreen(networkCheckBeforeOutgoingCallScreen)
-                    .setFCMProcessingMode(fcmProcessingMode, fcmProcessingNotification)
                     .build()
 
             SignedCallAPI.getInstance()
