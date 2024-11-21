@@ -1,6 +1,7 @@
 package com.clevertap.clevertap_signedcall_flutter.util
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -8,13 +9,19 @@ import com.clevertap.android.sdk.inapp.CTLocalInApp
 import com.clevertap.android.signedcall.exception.CallException
 import com.clevertap.android.signedcall.exception.InitException
 import com.clevertap.android.signedcall.init.SignedCallAPI
+import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.FCMProcessingMode
 import com.clevertap.android.signedcall.init.SignedCallInitConfiguration.SCSwipeOffBehaviour
+import com.clevertap.android.signedcall.init.p2p.FCMProcessingNotification
 import com.clevertap.android.signedcall.models.MissedCallAction
 import com.clevertap.android.signedcall.models.SignedCallScreenBranding
 import com.clevertap.clevertap_signedcall_flutter.Constants
 import com.clevertap.clevertap_signedcall_flutter.Constants.DARK_THEME
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_BG_COLOR
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_BUTTON_THEME
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_CANCEL_CTA_LABEL
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_LARGE_ICON
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_SUBTITLE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FCM_NOTIFICATION_TITLE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CANCEL_COUNTDOWN_COLOR
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_FONT_COLOR
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_LOGO_URL
@@ -128,6 +135,38 @@ object Utils {
         } else {
             SCSwipeOffBehaviour.END_CALL
         }
+    }
+
+    /**
+     * Retrieves the FCMProcessingMode from the given initProperties object and parses to the instance of [FCMProcessingMode]
+     */
+    fun parseFCMProcessingModeFromInitOptions(fcmProcessingMode: String): FCMProcessingMode {
+        return if (fcmProcessingMode == "foreground") {
+            FCMProcessingMode.FOREGROUND
+        } else {
+            FCMProcessingMode.BACKGROUND
+        }
+    }
+
+    /**
+     * Retrieves the FCMProcessingNotification from the given initProperties object and parses to the instance of [FCMProcessingNotification]
+     */
+    fun parseFCMProcessingNotificationFromInitOptions(notificationMap: Map<*, *>, context: Context): FCMProcessingNotification {
+        val title = notificationMap[KEY_FCM_NOTIFICATION_TITLE] as? String
+        val subTitle = notificationMap[KEY_FCM_NOTIFICATION_SUBTITLE] as? String
+        val cancelCtaLabel = notificationMap[KEY_FCM_NOTIFICATION_CANCEL_CTA_LABEL] as? String
+        val largeIcon = notificationMap[KEY_FCM_NOTIFICATION_LARGE_ICON] as? String
+
+        val largeIconResourceId = largeIcon?.let {
+            context.resources.getIdentifier(it, "drawable", context.packageName)
+        } ?: 0
+
+        val fcmProcessingNotification = FCMProcessingNotification.Builder(title, subTitle)
+            .setLargeIcon(largeIconResourceId)
+            .setCancelCtaLabel(cancelCtaLabel)
+            .build()
+
+        return fcmProcessingNotification
     }
 
     /**

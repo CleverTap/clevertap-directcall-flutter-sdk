@@ -2,6 +2,7 @@ package com.clevertap.clevertap_signedcall_flutter.extensions
 
 import com.clevertap.android.signedcall.enums.SCCallState
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.APP_INITIATED_CALL_DECLINED_DUE_TO_NETWORK_QUALITY
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_BLOCKED
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED
@@ -102,7 +103,8 @@ fun VoIPCallStatus.formattedCallEvent(): String {
         CALL_DECLINED_DUE_TO_BUSY_ON_VOIP -> "DeclinedDueToBusyOnVoIP"
         CALL_DECLINED_DUE_TO_BUSY_ON_PSTN -> "DeclinedDueToBusyOnPSTN"
         CALL_FAILED_DUE_TO_INTERNAL_ERROR -> "FailedDueToInternalError"
-        else -> "Unknown"
+        APP_INITIATED_CALL_DECLINED_DUE_TO_NETWORK_QUALITY -> "AppInitiatedCallDeclinedDueToNetworkQuality"
+        else -> this.name         // @todo Fix this once official support has been added in the native sdk
     }
 }
 
