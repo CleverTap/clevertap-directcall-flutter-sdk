@@ -67,6 +67,8 @@ class SignedCallFlutterMethodCallHandler(
 
     private var cleverTapAPI: CleverTapAPI? = null
 
+    private lateinit var outgoingCallResponse: OutgoingCallResponse
+
     init {
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
         registerListeners()
@@ -228,22 +230,25 @@ class SignedCallFlutterMethodCallHandler(
                 if (it[KEY_CALL_OPTIONS] != null) JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) else null
             }
 
+            outgoingCallResponse = object : OutgoingCallResponse {
+                override fun onSuccess() {
+                    methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
+                }
+
+                override fun onFailure(callException: CallException) {
+                    methodChannel?.invokeMethod(
+                        ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE,
+                        parseExceptionToMapObject(callException)
+                    )
+                }
+            }
+
             SignedCallAPI.getInstance().call(context,
                 receiverCuid,
                 callContext,
                 callOptions,
-                object : OutgoingCallResponse {
-                    override fun onSuccess() {
-                        methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
-                    }
-
-                    override fun onFailure(callException: CallException) {
-                        methodChannel?.invokeMethod(
-                            ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE,
-                            parseExceptionToMapObject(callException)
-                        )
-                    }
-                })
+                outgoingCallResponse
+            )
             result.success(null)
         } catch (e: Exception) {
             e.printStackTrace()
