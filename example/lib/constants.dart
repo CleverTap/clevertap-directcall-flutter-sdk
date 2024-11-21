@@ -26,16 +26,20 @@ const String keyFcmNotificationLargeIcon =
     "largeIcon";
 const String keyFcmNotificationCancelCtaLabel =
     "cancelCtaLabel";
+const String keyCallScreenOnSignalling =
+    "callScreenOnSignalling";
 const String keyBgColor = "bgColor";
 const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";
 const String keyButtonTheme = "buttonTheme";
 const String keyShowPoweredBySignedCall = "showPoweredBySignedCall";
+const String keyCancelCountdownColor = "cancelCountdownColor";
 const String keyReceiverCuid = "receiverCuid";
 const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
 const String keyInitiatorImage = "initiatorImage";
 const String keyReceiverImage = "receiverImage";
+const String keyRemoteContext = "remoteContext";
 const String keyErrorCode = "errorCode";
 const String keyErrorMessage = "errorMessage";
 const String keyErrorDescription = "errorDescription";

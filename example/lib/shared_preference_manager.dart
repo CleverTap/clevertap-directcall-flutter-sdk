@@ -75,6 +75,17 @@ class SharedPreferenceManager {
     return FCMProcessingNotification.fromMap(Map<String, String>.from(jsonMap));
   }
 
+  static Future<bool> saveCallScreenOnSignalling(bool isChecked) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(keyCallScreenOnSignalling, isChecked);
+  }
+
+  static Future<bool> getCallScreenOnSignalling() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(keyCallScreenOnSignalling) ?? true;
+  }
+
+
   static clearData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(keyLoggedInCuid);

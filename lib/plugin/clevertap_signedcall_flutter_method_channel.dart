@@ -91,7 +91,6 @@ class MethodChannelCleverTapSignedCallFlutter
     _missedCallActionClickListener ??= missedCallActionClickEventChannel
         .receiveBroadcastStream()
         .map((dynamic missedCallActionClickResult) {
-      notifyAck(SCMethodCall.ackMissedCallActionClickedStream);
       return MissedCallActionClickResult.fromMap(missedCallActionClickResult);
     });
     return _missedCallActionClickListener!;
@@ -225,12 +224,6 @@ class MethodChannelCleverTapSignedCallFlutter
         'pluginCallbackHandle': pluginCallbackHandle.toRawHandle(),
         'userCallbackHandle': userCallbackHandle.toRawHandle(),
       });
-    }
-  }
-
-  void notifyAck(String ackName) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      _methodChannel.invokeMethod(ackName);
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import '../Utils.dart';
+import '../constants.dart';
 import '../widgets/toggle_switch_widget.dart';
 
 class DiallerPage extends StatefulWidget {
@@ -23,6 +25,7 @@ class DiallerPage extends StatefulWidget {
 class _DiallerPageState extends State<DiallerPage> {
   final receiverCuidController = TextEditingController();
   final callContextController = TextEditingController();
+  final remoteCallContextController = TextEditingController();
 
   @override
   void initState() {
@@ -77,11 +80,16 @@ class _DiallerPageState extends State<DiallerPage> {
                     hintText: 'Receiver CUID',
                   ),
                 ),
-                const SizedBox(height: 30),
                 TextField(
                   controller: callContextController,
                   decoration: const InputDecoration(
                     hintText: 'Context of the call',
+                  ),
+                ),
+                TextField(
+                  controller: remoteCallContextController,
+                  decoration: const InputDecoration(
+                    hintText: 'Remote Context of the call (Optional)',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -105,7 +113,7 @@ class _DiallerPageState extends State<DiallerPage> {
                     Utils.dismissKeyboard(context);
                     Utils.askMicroPhonePermission().then((value) => {
                           initiateVoIPCall(receiverCuidController.text,
-                              callContextController.text)
+                              callContextController.text, remoteCallContextController.text)
                         });
                   },
                   style: ButtonStyle(
@@ -152,13 +160,19 @@ class _DiallerPageState extends State<DiallerPage> {
         });
   }
 
-  void initiateVoIPCall(String? receiverCuid, String? callContext) async {
+  void initiateVoIPCall(String? receiverCuid, String? callContext, String? remoteCallContext) async {
     if (receiverCuid != null && callContext != null) {
-      //const callOptions = {keyInitiatorImage: null, keyReceiverImage: null};
+      Map<String, String?> callOptions = HashMap<String, String>();
+
+      if (remoteCallContext!.isNotEmpty) {
+        // callOptions = {keyRemoteContext: remoteCallContext, keyInitiatorImage: null, keyReceiverImage: null};
+        callOptions = {keyRemoteContext: remoteCallContext};
+      }
+
       CleverTapSignedCallFlutter.shared.call(
           receiverCuid: receiverCuid,
           callContext: callContext,
-          callOptions: null,
+          callOptions: callOptions,
           voIPCallHandler: _signedCallVoIPCallHandler);
     } else {
       Utils.showSnack(

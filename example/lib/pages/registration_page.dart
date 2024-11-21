@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
@@ -29,8 +30,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true, callScreenOnSignalling = false;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
+  String cancelCountdownColor = '#F5FA55';
   FCMProcessingMode fcmProcessingMode = FCMProcessingMode.background;
   final titleController = TextEditingController();
   final subtitleController = TextEditingController();
@@ -108,6 +110,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
+              title: const Text("Show Call Screen on Signalling"),
+              value: callScreenOnSignalling,
+              onChanged: (newValue) {
+                setState(() {
+                  callScreenOnSignalling = newValue ?? false;
+                });
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
               title: const Text("Persist Call on Swipe Off in self-managed FG Service?"),
               value: swipeOffBehaviour == SCSwipeOffBehaviour.persistCall ? true : false,
               onChanged: (newValue) {
@@ -168,6 +181,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ],
             const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  cancelCountdownColor = getRandomHexColor();
+                });
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Color(int.parse(cancelCountdownColor.replaceFirst('#', '0xff'))),
+                shape: const RoundedRectangleBorder( borderRadius: BorderRadius.zero),
+              ),
+              child: const Text('Switch Color for Cancel Countdown Timer'),
+            ),
+
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Utils.dismissKeyboard(context);
@@ -209,7 +236,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: !isPoweredByChecked
+        keyShowPoweredBySignedCall: !isPoweredByChecked,
+        keyCancelCountdownColor: cancelCountdownColor
       };
 
       const missedCallActionsMap = {
@@ -245,6 +273,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           };
           initProperties[keyFcmNotification] = fcmNotification; // optional
         }
+        initProperties[keyCallScreenOnSignalling] = callScreenOnSignalling; //optional
       }
 
       ///iOS only fields
@@ -289,6 +318,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveFcmProcessingNotification(
       FCMProcessingNotification(title: titleController.text, subTitle: subtitleController.text, cancelCTA: cancelCTALabelController.text),
     );
+    SharedPreferenceManager.saveCallScreenOnSignalling(callScreenOnSignalling);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -312,6 +342,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           await SharedPreferenceManager.getIsPoweredByChecked();
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
+          callScreenOnSignalling = await SharedPreferenceManager.getCallScreenOnSignalling();
 
           fcmProcessingMode = await
           SharedPreferenceManager.getFCMProcessingMode();
@@ -357,5 +388,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
       'negativeBtnText': 'Cancel',
       'fallbackToSettings': true
     };
+  }
+
+  String getRandomHexColor() {
+    final random = Random();
+
+    int red = random.nextInt(256);
+    int green = random.nextInt(256);
+    int blue = random.nextInt(256);
+
+    String toHex(int value) => value.toRadixString(16).padLeft(2, '0');
+
+    return '#${toHex(red)}${toHex(green)}${toHex(blue)}';
   }
 }
