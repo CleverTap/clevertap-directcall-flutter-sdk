@@ -146,9 +146,10 @@ public class SwiftClevertapSignedCallFlutterPlugin: NSObject, FlutterPlugin {
         
         var customMetaData: SCCustomMetadata?
         if let callOptions = callData[SCMethodParams.CALLOPTIONS.rawValue] as? [String: String] {
+            let remoteContext = callOptions[SCMethodParams.REMOTE_CONTEXT.rawValue]
             let initiatorImage = callOptions[SCMethodParams.INITIATORIMG.rawValue]
             let receiverImage = callOptions[SCMethodParams.RECEIVERIMG.rawValue]
-            customMetaData = SCCustomMetadata(initiatorImage: initiatorImage, receiverImage: receiverImage)
+            customMetaData = SCCustomMetadata(remoteContext: remoteContext, initiatorImage: initiatorImage, receiverImage: receiverImage)
         }
         
         let callOptionsModel = SCCallOptionsModel(context: context, receiverCuid: receiverCuid, customMetaData: customMetaData)

@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:clevertap_signedcall_flutter/models/signed_call_error.dart';
 import 'package:clevertap_signedcall_flutter/models/swipe_off_behaviour.dart';
+import 'package:clevertap_signedcall_flutter/models/fcm_processing_mode.dart';
 import 'package:clevertap_signedcall_flutter/plugin/clevertap_signedcall_flutter.dart';
 import 'package:clevertap_signedcall_flutter_example/Utils.dart';
 import 'package:clevertap_signedcall_flutter_example/constants.dart';
@@ -10,6 +12,7 @@ import 'package:clevertap_signedcall_flutter_example/pages/dialler_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/FcmProcessingNotification.dart';
 import '../shared_preference_manager.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -27,8 +30,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _userCuid = '';
   final cuidController = TextEditingController();
   bool isLoadingVisible = false;
-  bool isPoweredByChecked = false, notificationPermissionRequired = true;
+  bool isPoweredByChecked = false, notificationPermissionRequired = true, callScreenOnSignalling = false;
   SCSwipeOffBehaviour swipeOffBehaviour = SCSwipeOffBehaviour.endCall;
+  FCMProcessingMode fcmProcessingMode = FCMProcessingMode.background;
+  final titleController = TextEditingController();
+  final subtitleController = TextEditingController();
+  final cancelCTALabelController = TextEditingController();
+  String cancelCountdownColor = '#F5FA55';
 
   @override
   void initState() {
@@ -57,22 +65,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       body: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 2),
             const Text(
               'USER-REGISTRATION',
               // textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Image.asset(
               'assets/clevertap-logo.png',
-              height: 200,
-              width: 200,
+              height: 50,
+              width: 100,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 2),
             TextField(
               controller: cuidController,
               decoration: const InputDecoration(
@@ -80,7 +88,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
             ),
             CheckboxListTile(
-              title: const Text("Hide Powered by SignedCall"),
+              title: const Text(
+                  "Hide Powered by SignedCall",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: isPoweredByChecked,
               onChanged: (newValue) {
                 setState(() {
@@ -91,7 +102,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Required Notification Permission"),
+              title: const Text(
+                  "Required Notification Permission",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: notificationPermissionRequired,
               onChanged: (newValue) {
                 setState(() {
@@ -102,7 +116,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
-              title: const Text("Persist Call on Swipe Off in self-managed FG Service?"),
+              title: const Text(
+                  "Show Call Screen on Signalling",
+                  style: TextStyle(fontSize: 12)
+              ),
+              value: callScreenOnSignalling,
+              onChanged: (newValue) {
+                setState(() {
+                  callScreenOnSignalling = newValue ?? false;
+                });
+              },
+              controlAffinity:
+              ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              title: const Text(
+                  "Persist Call on Swipe Off in self-managed FG Service?",
+                  style: TextStyle(fontSize: 12)
+              ),
               value: swipeOffBehaviour == SCSwipeOffBehaviour.persistCall ? true : false,
               onChanged: (newValue) {
                 if (newValue != null) {
@@ -116,7 +147,69 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controlAffinity:
               ListTileControlAffinity.leading,
             ),
-            const SizedBox(height: 20),
+            CheckboxListTile(
+              title: const Text(
+                  "Use Foreground Service for processing FCM?",
+                  style: TextStyle(fontSize: 12)
+              ),
+              value: fcmProcessingMode == FCMProcessingMode.foreground? true: false,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    fcmProcessingMode = newValue? FCMProcessingMode.foreground: FCMProcessingMode.background;
+                  });
+                }
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            // Show text input fields when the checkbox is checked
+            if (fcmProcessingMode == FCMProcessingMode.foreground) ...[
+              const SizedBox(height: 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                        hintText: 'FCM Notif Title',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Spacer between the fields
+                  Expanded(
+                    child: TextField(
+                      controller: subtitleController,
+                      decoration: const InputDecoration(
+                        hintText: 'FCM Notif Subtitle',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              TextField(
+                controller: cancelCTALabelController,
+                decoration: const InputDecoration(
+                  hintText: 'FCM Notif Cancel CTA Label',
+                ),
+              ),
+            ],
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  cancelCountdownColor = getRandomHexColor();
+                });
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Color(int.parse(cancelCountdownColor.replaceFirst('#', '0xff'))),
+                shape: const RoundedRectangleBorder( borderRadius: BorderRadius.zero),
+              ),
+              child: const Text('Switch Color for Cancel Countdown Timer'),
+            ),
+
+            const SizedBox(height: 2),
             ElevatedButton(
               onPressed: () {
                 Utils.dismissKeyboard(context);
@@ -158,7 +251,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         keyLogoUrl:
             "https://res.cloudinary.com/dsakrbtd6/image/upload/v1642409353/ct-logo_mkicxg.png",
         keyButtonTheme: "light",
-        keyShowPoweredBySignedCall: !isPoweredByChecked
+        keyShowPoweredBySignedCall: !isPoweredByChecked,
+        keyCancelCountdownColor: cancelCountdownColor
       };
 
       const missedCallActionsMap = {
@@ -178,13 +272,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
       ///Android only fields
       if (Platform.isAndroid) {
-        initProperties[keyAllowPersistSocketConnection] = true; //required
-        initProperties[keyPromptReceiverReadPhoneStatePermission] =
-            true; //optional
-        initProperties[keyMissedCallActions] = missedCallActionsMap; //optional
-        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; //optional
-        initProperties[keySwipeOffBehaviourInForegroundService] =
-            swipeOffBehaviour; //optional
+        initProperties[keyAllowPersistSocketConnection] = true; // required
+        initProperties[keyPromptReceiverReadPhoneStatePermission] = true; // optional
+        initProperties[keyMissedCallActions] = missedCallActionsMap; // optional
+        initProperties[keyNotificationPermissionRequired] = notificationPermissionRequired; // optional
+        initProperties[keySwipeOffBehaviourInForegroundService] = swipeOffBehaviour; // optional
+        initProperties[keyFcmProcessingMode] = fcmProcessingMode; // optional
+
+        if (fcmProcessingMode == FCMProcessingMode.foreground) {
+          final Map<String, dynamic> fcmNotification = {
+            keyFcmNotificationTitle: titleController.text, // Use input from the title field
+            keyFcmNotificationSubtitle: subtitleController.text, // Use input from the subtitle field
+            keyFcmNotificationLargeIcon: "ct_logo", // optional
+            keyFcmNotificationCancelCtaLabel: cancelCTALabelController.text, // Use input from the Cancel CTA Label field
+          };
+          initProperties[keyFcmNotification] = fcmNotification; // optional
+        }
+        initProperties[keyCallScreenOnSignalling] = callScreenOnSignalling; //optional
       }
 
       ///iOS only fields
@@ -225,6 +329,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     SharedPreferenceManager.saveNotificationPermissionRequired(
         notificationPermissionRequired);
     SharedPreferenceManager.saveSwipeOffBehaviour(swipeOffBehaviour);
+    SharedPreferenceManager.saveFCMProcessingMode(fcmProcessingMode);
+    SharedPreferenceManager.saveFcmProcessingNotification(
+      FCMProcessingNotification(title: titleController.text, subTitle: subtitleController.text, cancelCTA: cancelCTALabelController.text),
+    );
+    SharedPreferenceManager.saveCallScreenOnSignalling(callScreenOnSignalling);
 
     //Navigate the user to the Dialler Page
     Navigator.pushNamed(context, DiallerPage.routeName,
@@ -248,7 +357,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
           await SharedPreferenceManager.getIsPoweredByChecked();
           swipeOffBehaviour =
           await SharedPreferenceManager.getSwipeOffBehaviour();
+          callScreenOnSignalling = await SharedPreferenceManager.getCallScreenOnSignalling();
 
+          fcmProcessingMode = await
+          SharedPreferenceManager.getFCMProcessingMode();
+
+          FCMProcessingNotification? settings = await SharedPreferenceManager.loadFcmProcessingNotification();
+          if (settings != null) {
+            titleController.text = settings.title;
+            subtitleController.text = settings.subTitle;
+            cancelCTALabelController.text = settings.cancelCTA;
+          }
           initSignedCallSdk(loggedInCuid);
         }
       });
@@ -284,5 +403,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
       'negativeBtnText': 'Cancel',
       'fallbackToSettings': true
     };
+  }
+
+  String getRandomHexColor() {
+    final random = Random();
+
+    int red = random.nextInt(256);
+    int green = random.nextInt(256);
+    int blue = random.nextInt(256);
+
+    String toHex(int value) => value.toRadixString(16).padLeft(2, '0');
+
+    return '#${toHex(red)}${toHex(green)}${toHex(blue)}';
   }
 }
