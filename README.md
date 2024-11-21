@@ -17,7 +17,7 @@ To get started, sign up [here](https://clevertap.com/live-product-demo/).
 
 ```yaml
 dependencies:
-  clevertap_signedcall_plugin: 0.0.6
+  clevertap_signedcall_plugin: 0.0.7
 ```
 
 - Run `flutter pub get` to install the SDK.
