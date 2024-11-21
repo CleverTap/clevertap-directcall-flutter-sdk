@@ -15,7 +15,7 @@ import 'Utils.dart';
 @pragma('vm:entry-point')
 void backgroundCallEventHandler(CallEventResult result) async {
   debugPrint(
-      "backgroundCallEventHandler called from headless task with payload1: $result");
+      "CleverTap:SignedCallFlutter: backgroundCallEventHandler called from headless task with payload1: $result");
   Utils.showToast("${result.callEvent} is called!" );
 
   getCallState().then((value) => {
@@ -28,7 +28,7 @@ void backgroundCallEventHandler(CallEventResult result) async {
 void backgroundMissedCallActionClickedHandler(
     MissedCallActionClickResult result) async {
   debugPrint(
-      "backgroundMissedCallActionClickedHandler called from headless task with payload: $result");
+      "CleverTap:SignedCallFlutter: backgroundMissedCallActionClickedHandler called from headless task with payload: $result");
   Utils.showToast("${result.action.actionLabel} is clicked!" );
 }
 

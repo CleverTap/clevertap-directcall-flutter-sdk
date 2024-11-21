@@ -29,7 +29,6 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_PROMPT_RECEIVER_
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_CUID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_SWIPE_OFF_BEHAVIOUR_IN_FOREGROUND_SERVICE
 import com.clevertap.clevertap_signedcall_flutter.Constants.TAG
-import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ACK_MISSED_CALL_ACTION_CLICKED
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.CALL
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.DISCONNECT_SIGNALLING_SOCKET
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.GET_BACK_TO_CALL
@@ -48,7 +47,7 @@ import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
 import com.clevertap.clevertap_signedcall_flutter.handlers.CallEventStreamHandler
-import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionClickHandler
+import com.clevertap.clevertap_signedcall_flutter.handlers.MissedCallActionEventStreamHandler
 import com.clevertap.clevertap_signedcall_flutter.isolate.IsolateHandlePreferences
 import com.clevertap.clevertap_signedcall_flutter.util.Utils
 import com.clevertap.clevertap_signedcall_flutter.util.Utils.parseBrandingFromInitOptions
@@ -68,6 +67,8 @@ class SignedCallFlutterMethodCallHandler(
 ) : ISignedCallMethodCallHandler, MethodChannel.MethodCallHandler {
 
     private var cleverTapAPI: CleverTapAPI? = null
+
+    private lateinit var outgoingCallResponse: OutgoingCallResponse
 
     init {
         cleverTapAPI = CleverTapAPI.getDefaultInstance(context)
@@ -123,9 +124,6 @@ class SignedCallFlutterMethodCallHandler(
                 handleBackgroundEventHandler(call, result)
             }
 
-            ACK_MISSED_CALL_ACTION_CLICKED -> {
-                handleMissedCallActionClickedAck(result)
-            }
             else -> result.notImplemented()
         }
     }
@@ -134,6 +132,9 @@ class SignedCallFlutterMethodCallHandler(
         if (!SignedCallUtils.isAppInBackground()) {
             SignedCallAPI.getInstance().registerVoIPCallStatusListener { callStatusDetails ->
                 streamCallEvent(callStatusDetails.toMap())
+            }
+            SignedCallAPI.getInstance().setMissedCallNotificationOpenedHandler { _, result ->
+                streamMissedCallCtaClick(result.toMap())
             }
         }
     }
@@ -181,9 +182,6 @@ class SignedCallFlutterMethodCallHandler(
                 parseMissedCallActionsFromInitOptions(it as Map<*, *>)
             }
 
-            val missedCallActionClickHandlerPath =
-                MissedCallActionClickHandler::class.java.canonicalName
-
             val notificationPermissionRequired =
                 initProperties.getOrElse(KEY_NOTIFICATION_PERMISSION_REQUIRED) { true } as Boolean
 
@@ -197,7 +195,7 @@ class SignedCallFlutterMethodCallHandler(
                     .promptReceiverReadPhoneStatePermission(promptReceiverReadPhoneStatePermission)
                     .setNotificationPermissionRequired(notificationPermissionRequired)
                     .overrideDefaultBranding(callScreenBranding)
-                    .setMissedCallActions(missedCallActionsList, missedCallActionClickHandlerPath)
+                    .setMissedCallActions(missedCallActionsList)
                     .setSwipeOffBehaviourInForegroundService(swipeOffBehaviour)
                     .build()
 
@@ -238,22 +236,25 @@ class SignedCallFlutterMethodCallHandler(
                 }
             }
 
+            outgoingCallResponse = object : OutgoingCallResponse {
+                override fun onSuccess() {
+                    methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
+                }
+
+                override fun onFailure(callException: CallException) {
+                    methodChannel?.invokeMethod(
+                        ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE,
+                        parseExceptionToMapObject(callException)
+                    )
+                }
+            }
+
             SignedCallAPI.getInstance().call(context,
                 receiverCuid,
                 callContext,
                 callOptions,
-                object : OutgoingCallResponse {
-                    override fun onSuccess() {
-                        methodChannel?.invokeMethod(ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE, null)
-                    }
-
-                    override fun onFailure(callException: CallException) {
-                        methodChannel?.invokeMethod(
-                            ON_SIGNED_CALL_DID_VOIP_CALL_INITIATE,
-                            parseExceptionToMapObject(callException)
-                        )
-                    }
-                })
+                outgoingCallResponse
+            )
             result.success(null)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -307,15 +308,15 @@ class SignedCallFlutterMethodCallHandler(
         result.success(null)
     }
 
-    private fun handleMissedCallActionClickedAck(result: Result) {
-        Utils.log(message = "missedCallActionClickedStream#ack is received!")
-        MissedCallActionClickHandler.resolveAckTimeOutHandler()
-        result.success(null)
-    }
-
     //Sends the real-time changes in the call-state in an observable event-stream
     override fun streamCallEvent(callEventResult: Map<String, Any>) {
-        Utils.log(message = "Streaming $callEventResult to event-channel with payload: $callEventResult")
+        Utils.log(message = "Streaming call-event to event-channel with payload: $callEventResult")
         CallEventStreamHandler.eventSink?.success(callEventResult)
+    }
+
+    //Sends the missed call CTA click in an observable event stream
+    override fun streamMissedCallCtaClick(clickResult: Map<String, Any>) {
+        Utils.log(message = "Streaming missed-call CTA click to event-channel with payload: $clickResult")
+        MissedCallActionEventStreamHandler.eventSink?.success(clickResult)
     }
 }

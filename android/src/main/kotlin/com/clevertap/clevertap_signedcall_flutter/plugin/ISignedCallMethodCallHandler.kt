@@ -33,6 +33,11 @@ interface ISignedCallMethodCallHandler {
     fun streamCallEvent(callEventResult: Map<String, Any>)
 
     /**
+     * Sends the missed call CTA click in an observable event stream
+     */
+    fun streamMissedCallCtaClick(clickResult: Map<String, Any>)
+
+    /**
      * Disconnects the signalling socket
      */
     fun disconnectSignallingSocket(result: MethodChannel.Result)
