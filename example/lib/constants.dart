@@ -19,6 +19,7 @@ const String keyFontColor = "fontColor";
 const String keyLogoUrl = "logoUrl";
 const String keyButtonTheme = "buttonTheme";
 const String keyShowPoweredBySignedCall = "showPoweredBySignedCall";
+const String keyCancelCountdownColor = "cancelCountdownColor";
 const String keyReceiverCuid = "receiverCuid";
 const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
