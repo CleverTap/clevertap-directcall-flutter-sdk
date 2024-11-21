@@ -24,6 +24,7 @@ const String keyCallContext = "callContext";
 const String keyCallOptions = "callOptions";
 const String keyInitiatorImage = "initiatorImage";
 const String keyReceiverImage = "receiverImage";
+const String keyRemoteContext = "remoteContext";
 const String keyErrorCode = "errorCode";
 const String keyErrorMessage = "errorMessage";
 const String keyErrorDescription = "errorDescription";

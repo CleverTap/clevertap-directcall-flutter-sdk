@@ -34,6 +34,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_ID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CHANNEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INITIATOR_IMAGE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_IMAGE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_REMOTE_CONTEXT
 
 /**
  * Parses the [MissedCallNotificationOpenResult] instance to a map object
@@ -135,5 +136,30 @@ fun CallDetails.toMap(): Map<String, Any> {
         KEY_CALL_CONTEXT to (callContext ?: ""),
         KEY_INITIATOR_IMAGE to initiatorImage,
         KEY_RECEIVER_IMAGE to receiverImage,
+        KEY_REMOTE_CONTEXT to remoteContext
     )
+}
+
+/**
+ * Converts the keys of a Map from camel case to snake case.
+ *
+ * Iterates over each entry in the map, modifies the keys by converting
+ * them from camel case to snake case, and returns a new map with the modified keys.
+ */
+fun Map<String, Any>.convertKeysToSnakeCase(): Map<String, Any> {
+    return this.mapKeys { (key, _) ->
+        key.camelToSnakeCase()
+    }
+}
+
+/**
+ * Converts a camel case string to snake case.
+ *
+ * Identifies sequences of lowercase letters followed by uppercase letters
+ * and inserts an underscore between them, then converts the entire string to lowercase.
+ *
+ */
+fun String.camelToSnakeCase(): String {
+    return replace(Regex("([a-z])([A-Z]+)"), "$1_$2")
+        .lowercase()
 }

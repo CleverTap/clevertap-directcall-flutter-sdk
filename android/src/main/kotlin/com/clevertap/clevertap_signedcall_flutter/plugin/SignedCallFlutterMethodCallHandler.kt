@@ -42,6 +42,7 @@ import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.ON_SIGNED_CALL_DI
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_CALL_EVENT_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.REGISTER_BACKGROUND_MISSED_CALL_ACTION_CLICKED_HANDLER
 import com.clevertap.clevertap_signedcall_flutter.SCMethodCall.TRACK_SDK_VERSION
+import com.clevertap.clevertap_signedcall_flutter.extensions.convertKeysToSnakeCase
 import com.clevertap.clevertap_signedcall_flutter.extensions.formattedCallState
 import com.clevertap.clevertap_signedcall_flutter.extensions.toMap
 import com.clevertap.clevertap_signedcall_flutter.extensions.toSignedCallLogLevel
@@ -226,8 +227,13 @@ class SignedCallFlutterMethodCallHandler(
             val callProperties = call.argument<Map<String, Any>>(KEY_CALL_PROPERTIES)
             val receiverCuid = callProperties?.let { it[KEY_RECEIVER_CUID] as String }
             val callContext = callProperties?.let { it[KEY_CALL_CONTEXT] as String }
-            val callOptions = callProperties?.let {
-                if (it[KEY_CALL_OPTIONS] != null) JSONObject(it[KEY_CALL_OPTIONS] as Map<*, *>) else null
+            val callOptions = callProperties?.get(KEY_CALL_OPTIONS)?.let { options ->
+                if (options is Map<*, *>) {
+                    val callOptionsMap = options as Map<String, Any>
+                    JSONObject(callOptionsMap.convertKeysToSnakeCase())
+                } else {
+                    null
+                }
             }
 
             outgoingCallResponse = object : OutgoingCallResponse {
