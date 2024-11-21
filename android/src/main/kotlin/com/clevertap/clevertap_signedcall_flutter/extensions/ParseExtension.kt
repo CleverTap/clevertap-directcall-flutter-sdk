@@ -2,6 +2,7 @@ package com.clevertap.clevertap_signedcall_flutter.extensions
 
 import com.clevertap.android.signedcall.enums.SCCallState
 import com.clevertap.android.signedcall.enums.VoIPCallStatus
+import com.clevertap.android.signedcall.enums.VoIPCallStatus.APP_INITIATED_CALL_DECLINED_DUE_TO_NETWORK_QUALITY
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_BUSY_ON_ANOTHER_CALL
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_BLOCKED
 import com.clevertap.android.signedcall.enums.VoIPCallStatus.CALLEE_MICROPHONE_PERMISSION_NOT_GRANTED
@@ -34,6 +35,7 @@ import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CALL_ID
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_CHANNEL
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_INITIATOR_IMAGE
 import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_RECEIVER_IMAGE
+import com.clevertap.clevertap_signedcall_flutter.Constants.KEY_REMOTE_CONTEXT
 
 /**
  * Parses the [MissedCallNotificationOpenResult] instance to a map object
@@ -101,7 +103,8 @@ fun VoIPCallStatus.formattedCallEvent(): String {
         CALL_DECLINED_DUE_TO_BUSY_ON_VOIP -> "DeclinedDueToBusyOnVoIP"
         CALL_DECLINED_DUE_TO_BUSY_ON_PSTN -> "DeclinedDueToBusyOnPSTN"
         CALL_FAILED_DUE_TO_INTERNAL_ERROR -> "FailedDueToInternalError"
-        else -> "Unknown"
+        APP_INITIATED_CALL_DECLINED_DUE_TO_NETWORK_QUALITY -> "AppInitiatedCallDeclinedDueToNetworkQuality"
+        else -> this.name         // @todo Fix this once official support has been added in the native sdk
     }
 }
 
@@ -135,5 +138,30 @@ fun CallDetails.toMap(): Map<String, Any> {
         KEY_CALL_CONTEXT to (callContext ?: ""),
         KEY_INITIATOR_IMAGE to initiatorImage,
         KEY_RECEIVER_IMAGE to receiverImage,
+        KEY_REMOTE_CONTEXT to remoteContext
     )
+}
+
+/**
+ * Converts the keys of a Map from camel case to snake case.
+ *
+ * Iterates over each entry in the map, modifies the keys by converting
+ * them from camel case to snake case, and returns a new map with the modified keys.
+ */
+fun Map<String, Any>.convertKeysToSnakeCase(): Map<String, Any> {
+    return this.mapKeys { (key, _) ->
+        key.camelToSnakeCase()
+    }
+}
+
+/**
+ * Converts a camel case string to snake case.
+ *
+ * Identifies sequences of lowercase letters followed by uppercase letters
+ * and inserts an underscore between them, then converts the entire string to lowercase.
+ *
+ */
+fun String.camelToSnakeCase(): String {
+    return replace(Regex("([a-z])([A-Z]+)"), "$1_$2")
+        .lowercase()
 }

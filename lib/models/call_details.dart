@@ -11,6 +11,7 @@ class CallDetails {
   late String? callContext;
   late String? initiatorImage;
   late String? receiverImage;
+  late String? remoteContext;
 
   CallDetails.fromMap(map) {
     callId = map[keyCallId];
@@ -20,10 +21,11 @@ class CallDetails {
     callContext = map[keyCallContext];
     initiatorImage = map[keyInitiatorImage];
     receiverImage = map[keyReceiverImage];
+    remoteContext = map[keyRemoteContext];
   }
 
   @override
   String toString() {
-    return 'CallDetails{callId: $callId, channel: $channel, callerCuid: $callerCuid, calleeCuid: $calleeCuid, callContext: $callContext, initiatorImage: $initiatorImage, receiverImage: $receiverImage}';
+    return 'CallDetails{callId: $callId, channel: $channel, callerCuid: $callerCuid, calleeCuid: $calleeCuid, callContext: $callContext, initiatorImage: $initiatorImage, receiverImage: $receiverImage}, remoteContext: $remoteContext';
   }
 }
